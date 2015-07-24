@@ -1,0 +1,228 @@
+Restore Archived Project report for DE0_NANO_LTC1668
+Fri Jul 24 11:40:43 2015
+Quartus II 64-Bit Version 14.1.0 Build 186 12/03/2014 SJ Full Version
+
+
+---------------------
+; Table of Contents ;
+---------------------
+  1. Legal Notice
+  2. Restore Archived Project Summary
+  3. Restore Archived Project Messages
+  4. Files Restored
+  5. Files Not Restored
+
+
+
+----------------
+; Legal Notice ;
+----------------
+Copyright (C) 1991-2014 Altera Corporation. All rights reserved.
+Your use of Altera Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Altera Program License 
+Subscription Agreement, the Altera Quartus II License Agreement,
+the Altera MegaCore Function License Agreement, or other 
+applicable license agreement, including, without limitation, 
+that your use is for the sole purpose of programming logic 
+devices manufactured by Altera and sold by Altera or its 
+authorized distributors.  Please refer to the applicable 
+agreement for further details.
+
+
+
++-------------------------------------------------------------------------+
+; Restore Archived Project Summary                                        ;
++---------------------------------+---------------------------------------+
+; Restore Archived Project Status ; Successful - Fri Jul 24 11:40:43 2015 ;
+; Revision Name                   ; DE0_NANO_LTC1668                      ;
+; Top-level Entity Name           ; DE0_NANO_LTC1668                      ;
+; Family                          ; Cyclone IV E                          ;
++---------------------------------+---------------------------------------+
+
+
++-----------------------------------+
+; Restore Archived Project Messages ;
++-----------------------------------+
+Info: Successfully restored 'Z:/Documents/Altera/DE0_NANO_LTC1668/DE0_NANO_LTC1668_test_minimal.qar' into the 'Z:/Documents/Altera/DE0_NANO_LTC1668_test_minimal_restored/' directory
+Info: Generated report 'DE0_NANO_LTC1668.restore.rpt'
+Info (23030): Evaluation of Tcl script c:/altera/14.1/quartus/common/tcl/apps/qpm/qar.tcl was successful
+Info: Quartus II 64-Bit Shell was successful. 0 errors, 0 warnings
+    Info: Peak virtual memory: 328 megabytes
+    Info: Processing ended: Fri Jul 24 11:40:43 2015
+    Info: Elapsed time: 00:00:04
+    Info: Total CPU time (on all processors): 00:00:03
+
+
++---------------------------------------------------------------------+
+; Files Restored                                                      ;
++---------------------------------------------------------------------+
+; File Name                                                           ;
++---------------------------------------------------------------------+
+; qar_info.json                                                       ;
+; DE0_NANO_LTC1668.out.sdc                                            ;
+; DE0_NANO_LTC1668.qpf                                                ;
+; DE0_NANO_LTC1668.qsf                                                ;
+; DE0_NANO_LTC1668.sdc                                                ;
+; DE0_NANO_LTC1668_assignment_defaults.qdf                            ;
+; DE0_nano_ltc1668_generate_jic.cof                                   ;
+; NCO2/NCO2.bsf                                                       ;
+; NCO2/NCO2.html                                                      ;
+; NCO2/NCO2.qip                                                       ;
+; NCO2/NCO2.v                                                         ;
+; NCO2/NCO2.vec                                                       ;
+; NCO2/NCO2_bb.v                                                      ;
+; NCO2/NCO2_model.m                                                   ;
+; NCO2/NCO2_nativelink.tcl                                            ;
+; NCO2/NCO2_st.v                                                      ;
+; NCO2/NCO2_tb.m                                                      ;
+; NCO2/NCO2_tb.v                                                      ;
+; NCO2/NCO2_vho_msim.tcl                                              ;
+; NCO2/NCO2_vo_msim.tcl                                               ;
+; NCO2/NCO2_wave.do                                                   ;
+; NCO2/nco-library/asj_altq.ocp                                       ;
+; NCO2/nco-library/asj_altq.v                                         ;
+; NCO2/nco-library/asj_altqmcash.ocp                                  ;
+; NCO2/nco-library/asj_altqmcash.v                                    ;
+; NCO2/nco-library/asj_altqmcpipe.ocp                                 ;
+; NCO2/nco-library/asj_altqmcpipe.v                                   ;
+; NCO2/nco-library/asj_altqmcpipe_rst.v                               ;
+; NCO2/nco-library/asj_crd.v                                          ;
+; NCO2/nco-library/asj_crs.v                                          ;
+; NCO2/nco-library/asj_dxx.v                                          ;
+; NCO2/nco-library/asj_dxx_g.v                                        ;
+; NCO2/nco-library/asj_gal.v                                          ;
+; NCO2/nco-library/asj_gam.v                                          ;
+; NCO2/nco-library/asj_gam_dp.v                                       ;
+; NCO2/nco-library/asj_gar.v                                          ;
+; NCO2/nco-library/asj_nco_apr_dxx.v                                  ;
+; NCO2/nco-library/asj_nco_aprid_dxx.v                                ;
+; NCO2/nco-library/asj_nco_as_m.v                                     ;
+; NCO2/nco-library/asj_nco_as_m_cen.v                                 ;
+; NCO2/nco-library/asj_nco_as_m_dp.v                                  ;
+; NCO2/nco-library/asj_nco_as_m_dp_cen.v                              ;
+; NCO2/nco-library/asj_nco_d1gam.v                                    ;
+; NCO2/nco-library/asj_nco_derot.v                                    ;
+; NCO2/nco-library/asj_nco_fxx.v                                      ;
+; NCO2/nco-library/asj_nco_isdr.v                                     ;
+; NCO2/nco-library/asj_nco_isdr_mc.v                                  ;
+; NCO2/nco-library/asj_nco_isdr_throughput2.v                         ;
+; NCO2/nco-library/asj_nco_lp_m.v                                     ;
+; NCO2/nco-library/asj_nco_m.v                                        ;
+; NCO2/nco-library/asj_nco_madx.v                                     ;
+; NCO2/nco-library/asj_nco_madx_cen.v                                 ;
+; NCO2/nco-library/asj_nco_mady.v                                     ;
+; NCO2/nco-library/asj_nco_mady_cen.v                                 ;
+; NCO2/nco-library/asj_nco_mcin.v                                     ;
+; NCO2/nco-library/asj_nco_mciosel.v                                  ;
+; NCO2/nco-library/asj_nco_mcout.v                                    ;
+; NCO2/nco-library/asj_nco_mob_rw.v                                   ;
+; NCO2/nco-library/asj_nco_mob_sw.v                                   ;
+; NCO2/nco-library/asj_nco_mob_w.v                                    ;
+; NCO2/nco-library/asj_nco_pmd2.v                                     ;
+; NCO2/nco-library/asj_nco_pmd2gam.v                                  ;
+; NCO2/nco-library/asj_nco_pxx.v                                      ;
+; NCO2/nco-library/asj_xnqg.v                                         ;
+; NCO2/nco-library/auk_dspip_avalon_streaming_block_sink.vhd          ;
+; NCO2/nco-library/auk_dspip_avalon_streaming_block_sink_fftfprvs.vhd ;
+; NCO2/nco-library/auk_dspip_avalon_streaming_block_source.vhd        ;
+; NCO2/nco-library/auk_dspip_avalon_streaming_controller.vhd          ;
+; NCO2/nco-library/auk_dspip_avalon_streaming_controller_pe.vhd       ;
+; NCO2/nco-library/auk_dspip_avalon_streaming_sink.vhd                ;
+; NCO2/nco-library/auk_dspip_avalon_streaming_source.vhd              ;
+; NCO2/nco-library/auk_dspip_delay.vhd                                ;
+; NCO2/nco-library/auk_dspip_lib_pkg.vhd                              ;
+; NCO2/nco-library/auk_dspip_math_pkg.vhd                             ;
+; NCO2/nco-library/auk_dspip_text_pkg.vhd                             ;
+; NCO2/nco-library/cord_2c.v                                          ;
+; NCO2/nco-library/cord_acc_ena.v                                     ;
+; NCO2/nco-library/cord_en.v                                          ;
+; NCO2/nco-library/cord_fs.v                                          ;
+; NCO2/nco-library/cord_init.v                                        ;
+; NCO2/nco-library/cord_init_pm.v                                     ;
+; NCO2/nco-library/cord_init_ser.v                                    ;
+; NCO2/nco-library/cord_init_ser_pm.v                                 ;
+; NCO2/nco-library/cord_lut.v                                         ;
+; NCO2/nco-library/cord_lut_1p.v                                      ;
+; NCO2/nco-library/cord_rot_dual.v                                    ;
+; NCO2/nco-library/cord_rot_sgl.v                                     ;
+; NCO2/nco-library/cord_seg_sel.v                                     ;
+; NCO2/nco-library/cordic_10_m.v                                      ;
+; NCO2/nco-library/cordic_11_m.v                                      ;
+; NCO2/nco-library/cordic_12_m.v                                      ;
+; NCO2/nco-library/cordic_13_m.v                                      ;
+; NCO2/nco-library/cordic_14_m.v                                      ;
+; NCO2/nco-library/cordic_15_m.v                                      ;
+; NCO2/nco-library/cordic_16_m.v                                      ;
+; NCO2/nco-library/cordic_17_m.v                                      ;
+; NCO2/nco-library/cordic_18_m.v                                      ;
+; NCO2/nco-library/cordic_19_m.v                                      ;
+; NCO2/nco-library/cordic_20_m.v                                      ;
+; NCO2/nco-library/cordic_21_m.v                                      ;
+; NCO2/nco-library/cordic_22_m.v                                      ;
+; NCO2/nco-library/cordic_23_m.v                                      ;
+; NCO2/nco-library/cordic_24_m.v                                      ;
+; NCO2/nco-library/cordic_25_m.v                                      ;
+; NCO2/nco-library/cordic_26_m.v                                      ;
+; NCO2/nco-library/cordic_27_m.v                                      ;
+; NCO2/nco-library/cordic_28_m.v                                      ;
+; NCO2/nco-library/cordic_29_m.v                                      ;
+; NCO2/nco-library/cordic_30_m.v                                      ;
+; NCO2/nco-library/cordic_31_m.v                                      ;
+; NCO2/nco-library/cordic_32_m.v                                      ;
+; NCO2/nco-library/cordic_3_m.v                                       ;
+; NCO2/nco-library/cordic_4_m.v                                       ;
+; NCO2/nco-library/cordic_5_m.v                                       ;
+; NCO2/nco-library/cordic_6_m.v                                       ;
+; NCO2/nco-library/cordic_7_m.v                                       ;
+; NCO2/nco-library/cordic_8_m.v                                       ;
+; NCO2/nco-library/cordic_9_m.v                                       ;
+; NCO2/nco-library/cordic_axor_0p_lpm.v                               ;
+; NCO2/nco-library/cordic_axor_1p_lpm.v                               ;
+; NCO2/nco-library/cordic_axor_2p_lpm.v                               ;
+; NCO2/nco-library/cordic_axor_ser.v                                  ;
+; NCO2/nco-library/cordic_cnt.v                                       ;
+; NCO2/nco-library/cordic_cnt_sig.v                                   ;
+; NCO2/nco-library/cordic_reg_ser.v                                   ;
+; NCO2/nco-library/cordic_sxor_0p_lpm.v                               ;
+; NCO2/nco-library/cordic_sxor_1p_lpm.v                               ;
+; NCO2/nco-library/cordic_sxor_2p_lpm.v                               ;
+; NCO2/nco-library/cordic_sxor_ser.v                                  ;
+; NCO2/nco-library/cordic_zxor_0p_lpm.v                               ;
+; NCO2/nco-library/cordic_zxor_1p_lpm.v                               ;
+; NCO2/nco-library/cordic_zxor_2p_lpm.v                               ;
+; NCO2/nco-library/cordic_zxor_ser.v                                  ;
+; NCO2/nco-library/dop_reg.v                                          ;
+; NCO2/nco-library/freq_sel_st.v                                      ;
+; NCO2/nco-library/las.v                                              ;
+; NCO2/nco-library/lms.v                                              ;
+; NCO2/nco-library/lmsd.v                                             ;
+; NCO2/nco-library/m_output_blk_reg.v                                 ;
+; NCO2/nco-library/m_output_blk_rw.v                                  ;
+; NCO2/nco-library/m_output_blk_w.v                                   ;
+; NCO2/nco-library/mac_i_lpm.v                                        ;
+; NCO2/nco-library/mac_i_lpmd.v                                       ;
+; NCO2/nco-library/segment_arr_tdl.v                                  ;
+; NCO2/nco-library/segment_sel.v                                      ;
+; NCO2/nco-library/segment_sel_sgl.v                                  ;
+; NCO2/nco-library/sid_2c_1p.v                                        ;
+; NCO2/nco-library/sop_reg.v                                          ;
+; de0_nano_ltc1668.v                                                  ;
+; pll2/pll2.ppf                                                       ;
+; pll2/pll2.qip                                                       ;
+; pll2/pll2.v                                                         ;
+; pll2/pll2_bb.v                                                      ;
+; pll2/pll2_inst.v                                                    ;
++---------------------------------------------------------------------+
+
+
++--------------------+
+; Files Not Restored ;
++--------------------+
+; File Name          ;
++--------------------+
+
+
