@@ -38,12 +38,12 @@ set_module_property ALLOW_GREYBOX_GENERATION false
 add_fileset QUARTUS_SYNTH QUARTUS_SYNTH "" ""
 set_fileset_property QUARTUS_SYNTH TOP_LEVEL mem_master
 set_fileset_property QUARTUS_SYNTH ENABLE_RELATIVE_INCLUDE_PATHS false
-add_fileset_file mem_master.v VERILOG PATH ../../ring/mem_master/mem_master.v TOP_LEVEL_FILE
+add_fileset_file mem_master.v VERILOG PATH mem_master.v TOP_LEVEL_FILE
 
 add_fileset SIM_VERILOG SIM_VERILOG "" ""
 set_fileset_property SIM_VERILOG TOP_LEVEL mem_master
 set_fileset_property SIM_VERILOG ENABLE_RELATIVE_INCLUDE_PATHS false
-add_fileset_file mem_master.v VERILOG PATH ../../ring/mem_master/mem_master.v
+add_fileset_file mem_master.v VERILOG PATH mem_master.v
 
 
 # 
