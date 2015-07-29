@@ -69,7 +69,7 @@
    {
       datum _sortIndex
       {
-         value = "24";
+         value = "22";
          type = "int";
       }
    }
@@ -85,7 +85,7 @@
    {
       datum _sortIndex
       {
-         value = "10";
+         value = "8";
          type = "int";
       }
    }
@@ -129,27 +129,11 @@
          type = "int";
       }
    }
-   element mem_master_1
-   {
-      datum _sortIndex
-      {
-         value = "6";
-         type = "int";
-      }
-   }
-   element mem_master_14_0
-   {
-      datum _sortIndex
-      {
-         value = "7";
-         type = "int";
-      }
-   }
    element output_0x40
    {
       datum _sortIndex
       {
-         value = "11";
+         value = "9";
          type = "int";
       }
    }
@@ -165,7 +149,7 @@
    {
       datum _sortIndex
       {
-         value = "12";
+         value = "10";
          type = "int";
       }
    }
@@ -181,7 +165,7 @@
    {
       datum _sortIndex
       {
-         value = "13";
+         value = "11";
          type = "int";
       }
    }
@@ -197,7 +181,7 @@
    {
       datum _sortIndex
       {
-         value = "14";
+         value = "12";
          type = "int";
       }
    }
@@ -213,7 +197,7 @@
    {
       datum _sortIndex
       {
-         value = "15";
+         value = "13";
          type = "int";
       }
       datum sopceditor_expanded
@@ -234,7 +218,7 @@
    {
       datum _sortIndex
       {
-         value = "16";
+         value = "14";
          type = "int";
       }
       datum sopceditor_expanded
@@ -255,7 +239,7 @@
    {
       datum _sortIndex
       {
-         value = "17";
+         value = "15";
          type = "int";
       }
       datum sopceditor_expanded
@@ -276,7 +260,7 @@
    {
       datum _sortIndex
       {
-         value = "18";
+         value = "16";
          type = "int";
       }
       datum sopceditor_expanded
@@ -297,7 +281,7 @@
    {
       datum _sortIndex
       {
-         value = "19";
+         value = "17";
          type = "int";
       }
       datum sopceditor_expanded
@@ -318,7 +302,7 @@
    {
       datum _sortIndex
       {
-         value = "20";
+         value = "18";
          type = "int";
       }
       datum sopceditor_expanded
@@ -339,7 +323,7 @@
    {
       datum _sortIndex
       {
-         value = "21";
+         value = "19";
          type = "int";
       }
       datum sopceditor_expanded
@@ -360,7 +344,7 @@
    {
       datum _sortIndex
       {
-         value = "22";
+         value = "20";
          type = "int";
       }
    }
@@ -368,7 +352,7 @@
    {
       datum _sortIndex
       {
-         value = "9";
+         value = "7";
          type = "int";
       }
    }
@@ -384,7 +368,7 @@
    {
       datum _sortIndex
       {
-         value = "8";
+         value = "6";
          type = "int";
       }
    }
@@ -400,7 +384,7 @@
    {
       datum _sortIndex
       {
-         value = "23";
+         value = "21";
          type = "int";
       }
    }
@@ -459,10 +443,6 @@
    internal="ltscope_controller_0.avalon_streaming_sink"
    type="avalon_streaming"
    dir="end" />
- <interface name="mem_master_1_conduit_end" internal="mem_master_1.conduit_end" />
- <interface
-   name="mem_master_1_conduit_end_1"
-   internal="mem_master_14_0.conduit_end" />
  <interface
    name="mem_master_1_conduit_end_1_1"
    internal="mem_master_0.conduit_end"
@@ -1472,8 +1452,6 @@
   <parameter name="WRBUFFER_ADDR_WIDTH" value="6" />
  </module>
  <module name="mem_master_0" kind="mem_master" version="1.0" enabled="1" />
- <module name="mem_master_1" kind="mem_master" version="1.0" enabled="0" />
- <module name="mem_master_14_0" kind="mem_master_14" version="1.0" enabled="0" />
  <module
    name="output_0x40"
    kind="altera_avalon_pio"
@@ -1745,24 +1723,6 @@
  <connection
    kind="avalon"
    version="14.1"
-   start="mem_master_1.avalon_master"
-   end="mem_if_ddr3_emif_0.avl">
-  <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x0000" />
-  <parameter name="defaultConnection" value="false" />
- </connection>
- <connection
-   kind="avalon"
-   version="14.1"
-   start="mem_master_14_0.avalon_master"
-   end="mem_if_ddr3_emif_0.avl">
-  <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x0000" />
-  <parameter name="defaultConnection" value="false" />
- </connection>
- <connection
-   kind="avalon"
-   version="14.1"
    start="mem_master_0.avalon_master"
    end="mem_if_ddr3_emif_0.avl">
   <parameter name="arbitrationPriority" value="1" />
@@ -1996,16 +1956,6 @@
    kind="clock"
    version="14.1"
    start="clk_0.clk"
-   end="mem_master_1.clock" />
- <connection
-   kind="clock"
-   version="14.1"
-   start="clk_0.clk"
-   end="mem_master_14_0.clock" />
- <connection
-   kind="clock"
-   version="14.1"
-   start="clk_0.clk"
    end="mem_master_0.clock" />
  <connection
    kind="clock"
@@ -2123,16 +2073,6 @@
    version="14.1"
    start="clk_0.clk_reset"
    end="input_0x100.reset" />
- <connection
-   kind="reset"
-   version="14.1"
-   start="clk_0.clk_reset"
-   end="mem_master_1.reset_sink" />
- <connection
-   kind="reset"
-   version="14.1"
-   start="clk_0.clk_reset"
-   end="mem_master_14_0.reset_sink" />
  <connection
    kind="reset"
    version="14.1"
