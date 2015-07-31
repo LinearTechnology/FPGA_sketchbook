@@ -641,6 +641,134 @@ set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_B[1]
 set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_B[0]
 set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_CLK_A
 set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_CLK_B
+set_instance_assignment -name IO_STANDARD "SSTL-15" -to OSC_50_B3B -tag __fos_demo_system_v2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL "GLOBAL CLOCK" -to u0|mem_if_ddr3_emif_0|pll0|pll_afi_clk -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL "DUAL-REGIONAL CLOCK" -to u0|mem_if_ddr3_emif_0|pll0|pll_addr_cmd_clk -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL "DUAL-REGIONAL CLOCK" -to u0|mem_if_ddr3_emif_0|pll0|pll_avl_clk -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL "DUAL-REGIONAL CLOCK" -to u0|mem_if_ddr3_emif_0|pll0|pll_config_clk -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|p0|umemphy|ureset|phy_reset_mem_stable_n -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|p0|umemphy|ureset|phy_reset_n -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|s0|sequencer_rw_mgr_inst|rw_mgr_inst|rw_mgr_core_inst|rw_soft_reset_n -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|reset_n_fifo_write_side[0] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|reset_n_fifo_wraddress[0] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|reset_n_fifo_write_side[1] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|reset_n_fifo_wraddress[1] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|reset_n_fifo_write_side[2] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|reset_n_fifo_wraddress[2] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|reset_n_fifo_write_side[3] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|reset_n_fifo_wraddress[3] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name ENABLE_BENEFICIAL_SKEW_OPTIMIZATION_FOR_NON_GLOBAL_CLOCKS ON -to u0|mem_if_ddr3_emif_0 -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name PLL_COMPENSATION_MODE DIRECT -to u0|mem_if_ddr3_emif_0|pll0|fbout -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name IO_STANDARD "SSTL-15" -to clk
+set_location_assignment PIN_AA26 -to adc_clk
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to adc_clk
+set_location_assignment PIN_D10 -to busy_u1
+set_location_assignment PIN_G8 -to busy_u2
+set_location_assignment PIN_B5 -to drdyl_u1
+set_location_assignment PIN_J9 -to drdyl_u2
+set_location_assignment PIN_E11 -to mclk_u1
+set_location_assignment PIN_F10 -to mclk_u2
+set_location_assignment PIN_F11 -to pre_u1
+set_location_assignment PIN_G10 -to pre_u2
+set_location_assignment PIN_C13 -to rdl_filt_u1
+set_location_assignment PIN_F9 -to rdl_filt_u2
+set_location_assignment PIN_B12 -to rdl_u1
+set_location_assignment PIN_F8 -to rdl_u2
+set_location_assignment PIN_E12 -to sclk_filt_u1
+set_location_assignment PIN_J7 -to sclk_filt_u2
+set_location_assignment PIN_D12 -to sclk_u1
+set_location_assignment PIN_E9 -to sdi_filt_u1
+set_location_assignment PIN_K7 -to sdi_filt_u2
+set_location_assignment PIN_D9 -to sdo_filt_u1
+set_location_assignment PIN_K8 -to sdo_filt_u2
+set_location_assignment PIN_D11 -to sdo_u1
+set_location_assignment PIN_H8 -to sdo_u2
+set_location_assignment PIN_B6 -to sync_u1
+set_location_assignment PIN_J10 -to sync_u2
+set_location_assignment PIN_H7 -to sclk_u2
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to pre_u1
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to pre_u2
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to rdl_filt_u1
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to rdl_filt_u2
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to rdl_u1
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to rdl_u2
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sclk_filt_u1
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sclk_filt_u2
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sclk_u1
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sclk_u2
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sdi_filt_u1
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sdi_filt_u2
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sdo_filt_u1
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sdo_filt_u2
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sdo_u1
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sdo_u2
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sync_u1
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sync_u2
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to drdyl_u1
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to drdyl_u2
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to mclk_u1
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to mclk_u2
+set_location_assignment PIN_G13 -to ltc6954_sync
+set_location_assignment PIN_C9 -to ltc6954_cs
+set_location_assignment PIN_C10 -to ltc6954_sck
+set_location_assignment PIN_H13 -to ltc6954_sdi
+set_location_assignment PIN_H12 -to ltc6954_sdo
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to ltc6954_cs
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to ltc6954_sck
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to ltc6954_sdi
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to ltc6954_sdo
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to ltc6954_sync
+set_location_assignment PIN_F14 -to gpo0
+set_location_assignment PIN_F15 -to gpo1
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to gpo0
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to gpo1
+set_instance_assignment -name D5_DELAY 4 -to fpga_memory_mem_dqs[0] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name D6_DELAY 0 -to fpga_memory_mem_dqs[0] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name D5_DELAY 4 -to fpga_memory_mem_dqs[1] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name D6_DELAY 0 -to fpga_memory_mem_dqs[1] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name D5_DELAY 4 -to fpga_memory_mem_dqs[2] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name D6_DELAY 0 -to fpga_memory_mem_dqs[2] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name D5_DELAY 4 -to fpga_memory_mem_dqs[3] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name D6_DELAY 0 -to fpga_memory_mem_dqs[3] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name D5_DELAY 4 -to fpga_memory_mem_dqs_n[0] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name D6_DELAY 0 -to fpga_memory_mem_dqs_n[0] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name D5_DELAY 4 -to fpga_memory_mem_dqs_n[1] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name D6_DELAY 0 -to fpga_memory_mem_dqs_n[1] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name D5_DELAY 4 -to fpga_memory_mem_dqs_n[2] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name D6_DELAY 0 -to fpga_memory_mem_dqs_n[2] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name D5_DELAY 4 -to fpga_memory_mem_dqs_n[3] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name D6_DELAY 0 -to fpga_memory_mem_dqs_n[3] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[0].read_capture_clk_buffer -tag __LTQsys_blob3_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[1].read_capture_clk_buffer -tag __LTQsys_blob3_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[2].read_capture_clk_buffer -tag __LTQsys_blob3_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[3].read_capture_clk_buffer -tag __LTQsys_blob3_mem_if_ddr3_emif_0_p0
+set_location_assignment PIN_AD11 -to KEY[3]
+set_location_assignment PIN_AD9 -to KEY[2]
+set_location_assignment PIN_AE12 -to KEY[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to busy_u2
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to busy_u1
+set_global_assignment -name VERILOG_FILE ../../LT_Modules/LTC2500_controller_mark/LTC2500_controller.v
+set_global_assignment -name VERILOG_FILE ../../LT_Modules/pid_controller_v2/pid.v
+set_global_assignment -name VERILOG_FILE ../../LT_Modules/pulse_gen/pulse_gen.v
+set_global_assignment -name VERILOG_FILE ../../LT_Modules/LTscope_trigger_block/trigger_block.v
+set_global_assignment -name QIP_FILE nco_iq_14_1/nco_iq_14_1/synthesis/nco_iq_14_1.qip
+set_global_assignment -name QIP_FILE upcount_mem_addr/upcount_mem_addr.qip
+set_global_assignment -name QIP_FILE mux_4to1_32stream/mux_4to1_32stream.qip
+set_global_assignment -name QIP_FILE ../../Altera_LT_IP/LTQsys_blob2/LTQsys_blob2/synthesis/LTQsys_blob2.qip
+set_global_assignment -name QIP_FILE ../../Altera_LT_IP/LTscope_reader/sub.qip
+set_global_assignment -name QIP_FILE ../../Altera_LT_IP/LTscope_ring_buffer/upcounter.qip
+set_global_assignment -name VERILOG_FILE ../../Altera_LT_IP/LTscope_ring_buffer/ring_buffer_addr.v
+set_global_assignment -name VERILOG_FILE ../../Altera_LT_IP/LTscope_reader/latency_aware_read_master.v
+set_global_assignment -name VERILOG_FILE ../../Altera_LT_IP/LTscope_reader/reader.v
+set_global_assignment -name VERILOG_FILE ../../Altera_LT_IP/LTscope_ring_buffer/ring_buffer.v
+set_global_assignment -name QIP_FILE ADC_fifo/ADC_fifo.qip
+set_global_assignment -name VERILOG_FILE DC2390_multi_application.v
+set_global_assignment -name SDC_FILE fos_demo_top.sdc
+set_global_assignment -name QIP_FILE ram_lut/ram_lut.qip
+set_global_assignment -name MIF_FILE ram_lut/lut_initialization.mif
+set_global_assignment -name QIP_FILE updown_count16/updown_count16.qip
+set_global_assignment -name QIP_FILE mux_4to1_16/mux_4to1_16.qip
+set_global_assignment -name QIP_FILE mux_8to1_32stream/mux_8to1_32stream.qip
 set_instance_assignment -name IO_STANDARD "SSTL-15" -to oct_rzqin -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
 set_instance_assignment -name IO_STANDARD "SSTL-15 CLASS I" -to fpga_memory_mem_dq[0] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
 set_instance_assignment -name INPUT_TERMINATION "PARALLEL 50 OHM WITH CALIBRATION" -to fpga_memory_mem_dq[0] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
@@ -824,133 +952,21 @@ set_instance_assignment -name IO_STANDARD "SSTL-15 CLASS I" -to fpga_memory_mem_
 set_instance_assignment -name OUTPUT_TERMINATION "SERIES 50 OHM WITH CALIBRATION" -to fpga_memory_mem_dm[2] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
 set_instance_assignment -name IO_STANDARD "SSTL-15 CLASS I" -to fpga_memory_mem_dm[3] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
 set_instance_assignment -name OUTPUT_TERMINATION "SERIES 50 OHM WITH CALIBRATION" -to fpga_memory_mem_dm[3] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name IO_STANDARD "SSTL-15" -to OSC_50_B3B -tag __fos_demo_system_v2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name GLOBAL_SIGNAL "GLOBAL CLOCK" -to u0|mem_if_ddr3_emif_0|pll0|pll_afi_clk -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name GLOBAL_SIGNAL "DUAL-REGIONAL CLOCK" -to u0|mem_if_ddr3_emif_0|pll0|pll_addr_cmd_clk -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name GLOBAL_SIGNAL "DUAL-REGIONAL CLOCK" -to u0|mem_if_ddr3_emif_0|pll0|pll_avl_clk -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name GLOBAL_SIGNAL "DUAL-REGIONAL CLOCK" -to u0|mem_if_ddr3_emif_0|pll0|pll_config_clk -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|p0|umemphy|ureset|phy_reset_mem_stable_n -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|p0|umemphy|ureset|phy_reset_n -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|s0|sequencer_rw_mgr_inst|rw_mgr_inst|rw_mgr_core_inst|rw_soft_reset_n -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|reset_n_fifo_write_side[0] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|reset_n_fifo_wraddress[0] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|reset_n_fifo_write_side[1] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|reset_n_fifo_wraddress[1] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|reset_n_fifo_write_side[2] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|reset_n_fifo_wraddress[2] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|reset_n_fifo_write_side[3] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|reset_n_fifo_wraddress[3] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name ENABLE_BENEFICIAL_SKEW_OPTIMIZATION_FOR_NON_GLOBAL_CLOCKS ON -to u0|mem_if_ddr3_emif_0 -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name PLL_COMPENSATION_MODE DIRECT -to u0|mem_if_ddr3_emif_0|pll0|fbout -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name IO_STANDARD "SSTL-15" -to clk
-set_location_assignment PIN_AA26 -to adc_clk
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to adc_clk
-set_location_assignment PIN_D10 -to busy_u1
-set_location_assignment PIN_G8 -to busy_u2
-set_location_assignment PIN_B5 -to drdyl_u1
-set_location_assignment PIN_J9 -to drdyl_u2
-set_location_assignment PIN_E11 -to mclk_u1
-set_location_assignment PIN_F10 -to mclk_u2
-set_location_assignment PIN_F11 -to pre_u1
-set_location_assignment PIN_G10 -to pre_u2
-set_location_assignment PIN_C13 -to rdl_filt_u1
-set_location_assignment PIN_F9 -to rdl_filt_u2
-set_location_assignment PIN_B12 -to rdl_u1
-set_location_assignment PIN_F8 -to rdl_u2
-set_location_assignment PIN_E12 -to sclk_filt_u1
-set_location_assignment PIN_J7 -to sclk_filt_u2
-set_location_assignment PIN_D12 -to sclk_u1
-set_location_assignment PIN_E9 -to sdi_filt_u1
-set_location_assignment PIN_K7 -to sdi_filt_u2
-set_location_assignment PIN_D9 -to sdo_filt_u1
-set_location_assignment PIN_K8 -to sdo_filt_u2
-set_location_assignment PIN_D11 -to sdo_u1
-set_location_assignment PIN_H8 -to sdo_u2
-set_location_assignment PIN_B6 -to sync_u1
-set_location_assignment PIN_J10 -to sync_u2
-set_location_assignment PIN_H7 -to sclk_u2
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to pre_u1
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to pre_u2
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to rdl_filt_u1
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to rdl_filt_u2
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to rdl_u1
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to rdl_u2
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sclk_filt_u1
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sclk_filt_u2
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sclk_u1
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sclk_u2
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sdi_filt_u1
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sdi_filt_u2
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sdo_filt_u1
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sdo_filt_u2
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sdo_u1
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sdo_u2
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sync_u1
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sync_u2
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to drdyl_u1
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to drdyl_u2
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to mclk_u1
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to mclk_u2
-set_location_assignment PIN_G13 -to ltc6954_sync
-set_location_assignment PIN_C9 -to ltc6954_cs
-set_location_assignment PIN_C10 -to ltc6954_sck
-set_location_assignment PIN_H13 -to ltc6954_sdi
-set_location_assignment PIN_H12 -to ltc6954_sdo
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to ltc6954_cs
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to ltc6954_sck
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to ltc6954_sdi
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to ltc6954_sdo
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to ltc6954_sync
-set_location_assignment PIN_F14 -to gpo0
-set_location_assignment PIN_F15 -to gpo1
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to gpo0
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to gpo1
-set_instance_assignment -name D5_DELAY 4 -to fpga_memory_mem_dqs[0] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name D6_DELAY 0 -to fpga_memory_mem_dqs[0] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name D5_DELAY 4 -to fpga_memory_mem_dqs[1] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name D6_DELAY 0 -to fpga_memory_mem_dqs[1] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name D5_DELAY 4 -to fpga_memory_mem_dqs[2] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name D6_DELAY 0 -to fpga_memory_mem_dqs[2] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name D5_DELAY 4 -to fpga_memory_mem_dqs[3] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name D6_DELAY 0 -to fpga_memory_mem_dqs[3] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name D5_DELAY 4 -to fpga_memory_mem_dqs_n[0] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name D6_DELAY 0 -to fpga_memory_mem_dqs_n[0] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name D5_DELAY 4 -to fpga_memory_mem_dqs_n[1] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name D6_DELAY 0 -to fpga_memory_mem_dqs_n[1] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name D5_DELAY 4 -to fpga_memory_mem_dqs_n[2] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name D6_DELAY 0 -to fpga_memory_mem_dqs_n[2] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name D5_DELAY 4 -to fpga_memory_mem_dqs_n[3] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name D6_DELAY 0 -to fpga_memory_mem_dqs_n[3] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[0].read_capture_clk_buffer -tag __LTQsys_blob3_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[1].read_capture_clk_buffer -tag __LTQsys_blob3_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[2].read_capture_clk_buffer -tag __LTQsys_blob3_mem_if_ddr3_emif_0_p0
-set_instance_assignment -name GLOBAL_SIGNAL OFF -to u0|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[3].read_capture_clk_buffer -tag __LTQsys_blob3_mem_if_ddr3_emif_0_p0
-set_global_assignment -name VERILOG_FILE ../../LT_Modules/LTscope_trigger_block/trigger_block.v
-set_global_assignment -name QIP_FILE upcount_mem_addr/upcount_mem_addr.qip
-set_global_assignment -name QIP_FILE nco_iq_14_1/nco_iq_14_1/synthesis/nco_iq_14_1.qip
-set_global_assignment -name QIP_FILE mux_4to1_32stream/mux_4to1_32stream.qip
-set_global_assignment -name QIP_FILE ../../Altera_LT_IP/LTQsys_blob2/LTQsys_blob2/synthesis/LTQsys_blob2.qip
-set_global_assignment -name QIP_FILE ../../Altera_LT_IP/LTscope_reader/sub.qip
-set_global_assignment -name QIP_FILE ../../Altera_LT_IP/LTscope_ring_buffer/upcounter.qip
-set_global_assignment -name VERILOG_FILE ../../Altera_LT_IP/LTscope_ring_buffer/ring_buffer_addr.v
-set_global_assignment -name VERILOG_FILE ../../Altera_LT_IP/LTscope_reader/latency_aware_read_master.v
-set_global_assignment -name VERILOG_FILE ../../Altera_LT_IP/LTscope_reader/reader.v
-set_global_assignment -name VERILOG_FILE ../../Altera_LT_IP/LTscope_ring_buffer/ring_buffer.v
-set_global_assignment -name QIP_FILE ADC_fifo/ADC_fifo.qip
-set_global_assignment -name VERILOG_FILE ../../Verilog/LTC2500_controller/LTC2500_controller.v
-set_global_assignment -name VERILOG_FILE DC2390_multi_application.v
-set_global_assignment -name SDC_FILE fos_demo_top.sdc
-set_global_assignment -name VERILOG_FILE ../../Verilog/dac_controller/dac_controller.v
-set_global_assignment -name VERILOG_FILE ../../Verilog/pid_controller_v2/pid.v
-set_global_assignment -name VERILOG_FILE ../../Verilog/pulse_gen/pulse_gen.v
-set_global_assignment -name QIP_FILE ram_lut/ram_lut.qip
-set_global_assignment -name MIF_FILE ram_lut/lut_initialization.mif
-set_global_assignment -name QIP_FILE updown_count16/updown_count16.qip
-set_global_assignment -name QIP_FILE mux_4to1_16/mux_4to1_16.qip
-set_global_assignment -name QIP_FILE mux_8to1_32stream/mux_8to1_32stream.qip
-set_location_assignment PIN_AD11 -to KEY[3]
-set_location_assignment PIN_AD9 -to KEY[2]
-set_location_assignment PIN_AE12 -to KEY[1]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to busy_u2
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to busy_u1
+set_instance_assignment -name GLOBAL_SIGNAL "GLOBAL CLOCK" -to LTQsys_blob2_inst|mem_if_ddr3_emif_0|pll0|pll_afi_clk -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL "DUAL-REGIONAL CLOCK" -to LTQsys_blob2_inst|mem_if_ddr3_emif_0|pll0|pll_addr_cmd_clk -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL "DUAL-REGIONAL CLOCK" -to LTQsys_blob2_inst|mem_if_ddr3_emif_0|pll0|pll_avl_clk -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL "DUAL-REGIONAL CLOCK" -to LTQsys_blob2_inst|mem_if_ddr3_emif_0|pll0|pll_config_clk -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL OFF -to LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|ureset|phy_reset_mem_stable_n -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL OFF -to LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|ureset|phy_reset_n -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL OFF -to LTQsys_blob2_inst|mem_if_ddr3_emif_0|s0|sequencer_rw_mgr_inst|rw_mgr_inst|rw_mgr_core_inst|rw_soft_reset_n -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL OFF -to LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|reset_n_fifo_write_side[0] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL OFF -to LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|reset_n_fifo_wraddress[0] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL OFF -to LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|reset_n_fifo_write_side[1] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL OFF -to LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|reset_n_fifo_wraddress[1] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL OFF -to LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|reset_n_fifo_write_side[2] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL OFF -to LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|reset_n_fifo_wraddress[2] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL OFF -to LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|reset_n_fifo_write_side[3] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name GLOBAL_SIGNAL OFF -to LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|reset_n_fifo_wraddress[3] -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name ENABLE_BENEFICIAL_SKEW_OPTIMIZATION_FOR_NON_GLOBAL_CLOCKS ON -to LTQsys_blob2_inst|mem_if_ddr3_emif_0 -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_instance_assignment -name PLL_COMPENSATION_MODE DIRECT -to LTQsys_blob2_inst|mem_if_ddr3_emif_0|pll0|fbout -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
