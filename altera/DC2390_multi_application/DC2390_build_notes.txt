@@ -1,0 +1,26 @@
+DC2390 build notes:
+
+Built using Quartus version 14.1!!!
+
+1) Open project, then open QSys
+2) Open LTQsysblob2.qsys
+3) Add IP search paths:
+Altera_LT_IP/mem_master
+Altera_LT_IP/LTscope_ring_buffer
+Altera_LT_IP/LTscope_reader
+Altera_LT_IP/LTscope_controller
+
+4) Generate HDL
+
+5) open nco_iq_14_1.qsys (from the main project directory, nco_iq_14_1 subdirectory)
+6) Generate HDL
+
+You shouldn't have to add files, but apparently you might!!!
+
+7) Analysis / synthesis
+
+8) VERY IMPORTANT - tools -> TCL scripts, run this puppy:
+
+../../Altera_LT_IP/LTQsys_blob2/LTQsys_blob2/synthesis/submodules/LTQsys_blob2_mem_if_ddr3_emif_0_p0_pin_assignments.tcl
+
+9) Click purple arrow! (That's Start Compilation for chromatically challenged individuals...)
