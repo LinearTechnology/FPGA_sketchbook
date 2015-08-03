@@ -264,12 +264,12 @@ module LTC2500_controller
     genvar i;
     generate 
         for ( i = 31; i >= 0 ; i = i - 1)
-        begin
-        if(TRUNK_VALUE - (32-i) >= 0)
-            assign data_nyq[i] = nyq_data_shift_reg[TRUNK_VALUE - (32 - i)];
-        else
-            assign data_nyq[i] = 1'b0;
-        end
+            begin : assign_nyq
+                if(TRUNK_VALUE - (32-i) >= 0)
+                    assign data_nyq[i] = nyq_data_shift_reg[TRUNK_VALUE - (32 - i)];
+                else
+                    assign data_nyq[i] = 1'b0;
+            end
     endgenerate
 
     // The sample counter input mux
