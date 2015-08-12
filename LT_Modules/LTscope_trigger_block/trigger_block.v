@@ -61,7 +61,7 @@ module trigger_block
     input       [31:0]  pre_trig_counter;       // Minimum number of samples to capture prior to trigger
     output reg  [31:0]  pre_trig_counter_value; // The pre-triggered counter value at triggered event
     input       [31:0]  post_trig_counter;      // The number of samples to capture after trigger
-    input               en_trig;                // Drive high to set, low to operate (ready for trigger)
+    input               en_trig;                // Drive high to operate
     output              delayed_trig;           // The delayed trigger signal based on the pre and post counters
                                                 // AND with downstream data valid signal
     // Signal declaration
@@ -160,5 +160,5 @@ module trigger_block
                 pre_trig_counter_value <= pre_trig_count;
         end
     
-    assign delayed_trig =~((post_trig_count == 32'd0)& (!trig_go) | (!reset_n));
+    assign delayed_trig =~((post_trig_count == 32'd0)& (!trig_go) | (!reset_n) | (!en_trig));
 endmodule
