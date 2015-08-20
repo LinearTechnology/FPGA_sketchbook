@@ -5,7 +5,6 @@
 // tuning the control loop's parameters.
 
 
-
 module DC2390_multi_application
 (
     input           clk,                    // Input OSC_50_B3B, // Original name...
@@ -14,22 +13,22 @@ module DC2390_multi_application
     output  [3:0]   LED,                    // HIGH to turn ON
 
     // ///////// DDR3 /////////
-    output  [14:0]  fpga_memory_mem_a,      // fpga_memory.mem_a
-    output  [2:0]   fpga_memory_mem_ba,     //            .mem_ba
-    output          fpga_memory_mem_ck,     //            .mem_ck
-    output          fpga_memory_mem_ck_n,        //            .mem_ck_n
-    output          fpga_memory_mem_cke,         //            .mem_cke
-    output          fpga_memory_mem_cs_n,        //            .mem_cs_n
-    output  [3:0]   fpga_memory_mem_dm,    //            .mem_dm
-    output          fpga_memory_mem_ras_n,       //            .mem_ras_n
-    output          fpga_memory_mem_cas_n,       //            .mem_cas_n
-    output          fpga_memory_mem_we_n,        //            .mem_we_n
-    output          fpga_memory_mem_reset_n,     //            .mem_reset_n
-    inout   [31:0]  fpga_memory_mem_dq,    //            .mem_dq
-    inout   [3:0]   fpga_memory_mem_dqs,    //            .mem_dqs
-    inout   [3:0]   fpga_memory_mem_dqs_n,  //            .mem_dqs_n
-    output          fpga_memory_mem_odt,         //            .mem_odt
-    input           oct_rzqin,                    //         oct.rzqin
+    output  [14:0]  fpga_memory_mem_a,          // fpga_memory.mem_a
+    output  [2:0]   fpga_memory_mem_ba,         //            .mem_ba
+    output          fpga_memory_mem_ck,         //            .mem_ck
+    output          fpga_memory_mem_ck_n,       //            .mem_ck_n
+    output          fpga_memory_mem_cke,        //            .mem_cke
+    output          fpga_memory_mem_cs_n,       //            .mem_cs_n
+    output  [3:0]   fpga_memory_mem_dm,         //            .mem_dm
+    output          fpga_memory_mem_ras_n,      //            .mem_ras_n
+    output          fpga_memory_mem_cas_n,      //            .mem_cas_n
+    output          fpga_memory_mem_we_n,       //            .mem_we_n
+    output          fpga_memory_mem_reset_n,    //            .mem_reset_n
+    inout   [31:0]  fpga_memory_mem_dq,         //            .mem_dq
+    inout   [3:0]   fpga_memory_mem_dqs,        //            .mem_dqs
+    inout   [3:0]   fpga_memory_mem_dqs_n,      //            .mem_dqs_n
+    output          fpga_memory_mem_odt,        //            .mem_odt
+    input           oct_rzqin,                  //         oct.rzqin
 
     // ///////// HPS /////////
     output  [14:0]  hps_memory_mem_a,
@@ -93,8 +92,13 @@ module DC2390_multi_application
     output          gpo1  // HSMC LVDS RX_p14 (FPGA pin H14)
 );
 
+    // *********************************************************
+    // Parameters
     parameter       FPGA_TYPE = 16'hABCD; // FPGA project type identification. Accessible from register map.
     parameter       FPGA_REV = 16'h1238;  // FPGA revision (also accessible from register.)
+
+    // *********************************************************
+    // Internal Signal Declaration
 
     wire            reset;
     wire    [31:0]  mem_ctrl_addr;
@@ -116,56 +120,94 @@ module DC2390_multi_application
     wire    [31:0]  stop_address;
     wire    [31:0]  datapath_control;
 
-
     wire            start;
     wire            data_ready;
     wire            mem_adcA_nadcB;
     wire    [31:0]  adcA_data;
     wire    [31:0]  adcB_data;
-
     wire    [3:0]   LEDwire;
-
     wire    [13:0]  n;  // For LTC2378-24, number of samples to average
     wire    [19:0]  control_sys_output;
     wire            adcA_done;
     wire            adc_B_done;
     reg             adc_go; // Trigger to ADC controller
-
-    assign LED[3:0] = LEDwire[3:0];
-    assign fos_clocks_per_sample = 24'd4; // Hard coded, used to be controllable by register.
-    assign reset = !KEY[0];
-
     wire    [1:0]   dac_a_select;
     wire    [1:0]   dac_b_select;
     wire    [1:0]   lut_addr_select;
-
-    // Assign LEDwire[3] = data_ready;
-    assign LEDwire[3] = start;
-    assign LEDwire[2] = ~delayed_trig;
-
     wire            en_trig;
     wire            delayed_trig;
     wire            lut_run_once;
     wire            lut_write_enable;
-
     wire    [15:0]  lut_output;         // Output of DAC lookup table
     wire    [15:0]  lut_addr_counter;   // Coutnter for sequencing through LUT memory
     wire    [15:0]  lut_addr;           // Input to lookup table address
-
     wire    [15:0]  lut_wraddress;
     wire    [15:0]  lut_wrdata;
-
     wire    [15:0]  nco_sin_out;
     wire    [15:0]  nco_cos_out;
-
     wire    [15:0]  dac_a_data_signed;
     wire    [15:0]  dac_b_data_signed;
     reg     [15:0]  dac_a_data_straight;
     reg     [15:0]  dac_b_data_straight;
+    reg             old_trig;
+    wire            trig_pulse;
+    wire    [19:0]  setpoint;
+    wire    [15:0]  pid_output;
+    wire            pid_done;
+    wire            adc_done;
+    wire            reset_n;
+    wire    [53:0]  filt_data_u1;
+    wire    [53:0]  filt_data_u2;
+    wire            valid_filt_u1;
+    wire            valid_filt_u2;
+    wire            overflow_error;
+    wire            wrfull;
+    wire            wrreq;
+    wire            rdempty;
+    wire            rdreq;
+    wire    [31:0]  formatter_output;
+    wire    [511:0] formatter_input;
+    wire            formatter_valid;
+    wire    [63:0]  nyquist_data;
+    wire            wrfull_nyq;
+    wire            wrreq_nyq;
+    wire    [31:0]  formatter_nyq_output;
+    wire            formatter_nyq_valid;
+    reg             old_start;
+    wire            start_pulse;
+    reg     [29:0]  num_calculated;
+    wire    [15:0]  countup;
+    wire    [15:0]  countdown;
+    wire    [2:0]   fifo_data_select; // Multiplexer control signal
+    wire            mem_ctrl_go_muxout;
+    wire            adc_fifo_valid;
+    wire            adc_fifo_rdreq;
+    wire            adc_fifo_wrreq;
+    wire            adc_fifo_ready;
+    wire            adc_fifo_empty;
+    wire            adc_fifo_full;
+    wire    [31:0]  adc_fifo_data;
+    wire            data_valid;
+    wire    [9:0]   cfg;
+    reg     [23:0]  counter;
+    wire            force_trig_nosync;
+    reg             force_trig, ft1, ft2;
+
+    // *********************************************************
+    assign LED[3:0] = LEDwire[3:0];
+    assign fos_clocks_per_sample = 24'd4; // Hard coded, used to be controllable by register.
+    assign reset = !KEY[0];
+    assign reset_n = ~reset;
+    assign overflow_error = wrfull | wrfull_nyq;
+
+    // Assign LEDwire[3] = data_ready;
+    assign LEDwire[3] = overflow_error;
+    assign LEDwire[2] = ~delayed_trig;
 
     assign DAC_A = dac_a_data_straight;
     assign DAC_B = dac_b_data_straight;
 
+    // *********************************************************
     // DAC data signals and control
     always @ (posedge adc_clk)
         begin
@@ -175,9 +217,11 @@ module DC2390_multi_application
             dac_b_data_straight <= {~dac_b_data_signed[15], dac_b_data_signed[14:0]};
         end
 
+    // *********************************************************
+    // DAC input MUX
     mux_4to1_16 mux_4to1_16_DAC_A_ins
     (
-        .clock  (adc_clk ),
+        .clock  (adc_clk),
         .data0x (nco_sin_out),
         .data1x (pid_output),
         .data2x (16'h4000),
@@ -196,22 +240,17 @@ module DC2390_multi_application
         .sel    (dac_b_select),
         .result (dac_b_data_signed)
     );
-    
-//wire lut_count_carry;
-//wire lut_count_enable;
-//assign  lut_count_enable = ~lut_count_carry | ~lut_run_once | start_pulse;
 
-
-
+    // *********************************************************
     // Create single trigger pulse from force_trig's posedge
-    reg         old_trig;
-    wire        trig_pulse;
+    // Essentially an edge detector
     assign trig_pulse = force_trig & ~old_trig;
     always @ (posedge adc_clk)
         begin
             old_trig <= force_trig;
         end
 
+    // *********************************************************
     // Counter to sequence through LUT. Consider regenerating with a reset.
     upcount_mem_addr  upcount_mem_addr_lut_addr_inst
     (
@@ -222,6 +261,7 @@ module DC2390_multi_application
         .q      (lut_addr_counter)
     );
 
+    // *********************************************************
     // lookup table address mux
     mux_4to1_16 mux_4to1_16_lut_addr_inst
     (
@@ -234,6 +274,7 @@ module DC2390_multi_application
         .result (lut_addr)
     );
 
+    // *********************************************************
     // Lookup table (16x16)
     ram_lut ram_lut_inst
     (
@@ -246,8 +287,8 @@ module DC2390_multi_application
         .q          (lut_output)
     );
 
-    //step generator
-    wire [19:0] setpoint;
+    // *********************************************************
+    // Step generator
     pulse_gen #
     (
         .OUTPUT_WIDTH(20)
@@ -263,6 +304,7 @@ module DC2390_multi_application
         .out(setpoint)
     );
 
+    // *********************************************************
     // NCO set up with data width of 18 to try to trick it into overkill ;)
     nco_iq_14_1 nco_iq_14_1_inst
     (
@@ -275,11 +317,8 @@ module DC2390_multi_application
         .out_valid  (1'bz)                          //    .out_valid
     );
 
-    //PID controller
-//    wire [19:0] feedback;
-    wire [15:0] pid_output;
-    wire pid_done;
-    wire adc_done;
+    // *********************************************************
+    // PID controller
     pid #
     (
         .INPUT_WIDTH            (20),
@@ -304,73 +343,8 @@ module DC2390_multi_application
         .done       (pid_done)      //signals new valid data on output (1 clock pulse)
     );
 
-/*     LTC2500_controller LTC2500_u1
-    (
-        .clk            (adc_clk),
-        .reset          (reset),
-        // client <-> controller
-        .go             (adc_go),       // initiate conversion (single clock pulse)
-        .sync_request   (1'b0),         // Used to force a hard sync, for multiple devices.
-        .cfg_word       (12'b0),        // Filter configuration
-        .n              (16'd8),        // Number of samples to average minus 1 **** Variable SINC mode only
-        .pre_in         (1'b0),
-        .done           (adcA_done),    // signal end of conversion and valid output data (single clock pulse)
-        .data           (adcA_data),    // converted data
-        .done_filt      (),
-        .data_filt      (),
-        .error          (),
-        // controller <-> adc
-        .pre            (pre_u1),
-        .mclk           (mclk_u1),
-        .sync           (sync_u1),
-        .busy           (busy_u1),
-        .drdyl          (drdyl_u1),
-        .rdl            (rdl_u1),
-        .sclk           (sclk_u1),      // For the time being, let's grab data on both inputs
-        .sdo            (sdo_u1),       // (need to update model with both ports)
-        .rdl_filt       (rdl_filt_u1),
-        .sclk_filt      (sclk_filt_u1),
-        .sdo_filt       (sdo_filt_u1),
-        .sdi_filt       (sdi_filt_u1)
-    );
-
-    LTC2500_controller LTC2500_u2
-    (
-        .clk            (adc_clk),
-        .reset          (reset),
-        // client <-> controller
-        .go             (adc_go),       // initiate conversion (single clock pulse)
-        .sync_request   (1'b0),         // Used to force a hard sync, for multiple devices.
-        .cfg_word       (12'b0),        // Filter configuration
-        .n              (16'd8),        // Number of samples to average minus 1 **** Variable SINC mode only
-        .pre_in         (1'b0),
-        .done           (adcB_done),    //signal end of conversion and valid output data (single clock pulse)
-        .data           (adcB_data),    //converted data
-        .done_filt      (),
-        .data_filt      (),
-        .error          (),
-        // controller <-> adc
-        .pre            (pre_u2),
-        .mclk           (mclk_u2),
-        .sync           (sync_u2),
-        .busy           (busy_u2),
-        .drdyl          (drdyl_u2),
-        .rdl            (rdl_u2),
-        .sclk           (sclk_u2),      // For the time being, let's grab data on both inputs
-        .sdo            (sdo_u2),       // (need to update model with both ports)
-        .rdl_filt       (rdl_filt_u2),
-        .sclk_filt      (sclk_filt_u2),
-        .sdo_filt       (sdo_filt_u2),
-        .sdi_filt       (sdi_filt_u2)
-    ); */
-
-    wire reset_n;
-    assign reset_n = ~reset;
-    wire [53:0] filt_data_u1;
-    wire [53:0] filt_data_u2;
-    wire valid_filt_u1;
-    wire valid_filt_u2;
-
+    // *********************************************************
+    // Controller for ADC A
     LTC2500_controller #
         (.DFF_CYCLE_COMP (1'b0))
     LTC2500_u1
@@ -410,6 +384,7 @@ module DC2390_multi_application
         .error          ()              // The filtered data is valid
     );
 
+    // ADC controller for ADC B
     LTC2500_controller #
         (.DFF_CYCLE_COMP (1'b0))
     LTC2500_u2
@@ -449,62 +424,120 @@ module DC2390_multi_application
         .error          ()              // The filtered data is valid
     );
 
-    // create single clock pulse from start's posedge
-    reg old_start;
-    wire start_pulse;
+    // *********************************************************
+    // Formatted Data formatter
+
+    // Converts the streaming control signals to the FIFO control signals
+    LT_st_dcfifo_cntr steam_to_fifo_adapter
+    (
+        // Streaming interface
+        .valid  (valid_filt_u1 & delayed_trig),    // Nominally, all valid signals should be the same
+                                                    // Picked the first one for conviniance 
+        // DC FIFO interface
+        .wrfull (wrfull),
+        .wrreq  (wrreq)
+    );
+
+    // A DC FIFO is used as a width adapter
+    // 512 bits to 32 bits
+    assign  formatter_input =  {filt_data_u1, 10'b0, adcA_data, 32'hDEAD_BEEF, 32'h8BAD_F00D, 32'hB105_F00D, 32'hDEAD_C0DE,
+                                data_filt_u2, 10'b0, adcB_data, 32'hDEAD_BEEF, 32'h8BAD_F00D, 32'hB105_F00D, 32'hDEAD_C0DE};
+    formatter adc_formatter
+    (
+        .aclr       (reset),
+        .data       (formatter_input),
+        .rdclk      (adc_clk),
+        .rdreq      (rdreq),
+        .wrclk      (adc_clk),
+        .wrreq      (wrreq),
+        .q          (formatter_output),
+        .rdempty    (rdempty),
+        .wrfull     (wrfull)
+    );
+
+    // Converts the FIFO control signals to streaming control signals
+    LT_dcfifo_st_cntr  fifo_to_stream
+    (
+        // DC FIFO interface
+        .rdempty    (rdempty),
+        .rdreq      (rdreq),
+        // Streaming interface
+        .valid      (formatter_valid),
+        .ready      (1'b1),
+    );
+
+    // *********************************************************
+    // Nyquist data formatter
+
+    // Converts the streaming control signals to the FIFO control signals
+    LT_st_dcfifo_cntr steam_to_fifo_adapter_nyq
+    (
+        // Streaming interface
+        .valid  (adcA_done & delayed_trig), // Nominally, all valid signals should be the same
+                                            // Picked the first one for conviniance 
+        // DC FIFO interface
+        .wrfull (wrfull_nyq),
+        .wrreq  (wrreq_nyq)
+    );
+
+    // A DC FIFO is used as a width adapter
+    // 64 bits to 32 bits
+    assign nyquist_data = {adcA_data, adcB_data};
+    nyq_formatter nyquist_formatter
+    (
+        .aclr       (reset),
+        .data       (nyquist_data),
+        .rdclk      (adc_clk),
+        .rdreq      (rdreq_nyq),
+        .wrclk      (adc_clk),
+        .wrreq      (wrreq_nyq),
+        .q          (formatter_nyq_output),
+        .rdempty    (rdempty_nyq),
+        .wrfull     (wrfull_nyq)
+    );
+
+    // Converts the FIFO control signals to streaming control signals
+    LT_dcfifo_st_cntr fifo_to_stream_nyq
+    (
+        // DC FIFO interface
+        .rdempty    (rdempty_nyq),
+        .rdreq      (rdreq_nyq),
+        // Streaming interface
+        .valid      (formatter_nyq_valid),
+        .ready      (1'b1),
+    );
+
+    // *********************************************************
+    // Create single clock pulse from start's posedge
+    // Essentially an edge detector
     assign start_pulse = start & ~old_start;
     always @ (posedge adc_clk) begin
         old_start <= start;
     end
 
-    //generate inhibit signal to run only once
-    reg inhibit;
-//    assign data_ready = inhibit; // IMPORTANT!! Commented out, connected signal to Noe's controller
-    reg [29:0] num_calculated;
-//    assign sample_num = num_calculated;
-    assign mem_ctrl_addr[31:2] = num_calculated;
+    // *********************************************************
+    // 
     always @ (posedge adc_clk) 
         begin
             if (reset)
-                begin
-                    inhibit <= 1'b1;
                     num_calculated <= 30'd0;
-                end
             else 
                 begin
                     if (start_pulse)
-                        begin
-                            inhibit <= 1'b0;
                             num_calculated <= 30'd0;
-                        end 
                     else if (num_calculated == num_samples)
-                        begin
-                            inhibit <= 1'b1;
                             num_calculated <= num_calculated;
-                        end
-                    else if (inhibit)
-                        begin
-                            inhibit <= 1'b1;
-                            num_calculated <= num_calculated;
-                        end 
                     else if (adcA_done)
-                        begin
-                            inhibit <= 1'b0;
                             num_calculated <= num_calculated + 30'd1;
-                        end
                     else
-                        begin
-                            inhibit <= 1'b0;
                             num_calculated <= num_calculated;
-                        end
                 end
         end
 
-    //trigger the step pulse
-//    assign pulse_trig = start_pulse;
+    assign mem_ctrl_addr[31:2] = num_calculated;
 
-// Sample rate generator, move to separate module...
-    reg[23:0] counter;
+    // *********************************************************
+    // Sample rate generator, move to separate module...
     always @ (posedge adc_clk or posedge reset)
         begin
             if (reset)
@@ -527,9 +560,10 @@ module DC2390_multi_application
                 end
         end
 
-    wire [15:0] countup;
-    wire [15:0] countdown;
+    // *********************************************************
+    // Generic counters for creating known data
 
+    // 16 bit up counter
     updown_count16  updown_count16_inst1
     (
         .clock  (adc_clk),
@@ -538,6 +572,7 @@ module DC2390_multi_application
         .q      (countdown)
     );
 
+    // 16 bit down counter
     updown_count16  updown_count16_inst2
     (
         .clock  (adc_clk),
@@ -546,48 +581,31 @@ module DC2390_multi_application
         .q      (countup)
     );
 
+    // *********************************************************
     // This multiplexer is right in front of the clock-crossing FIFO.
     // Data inputs consist of the 32 bit data concatenated with the Valid
     // signal. KEEP VALID AT THE LSB SIDE SO IT IS CONSIDERED FIRST!!!
-    wire [2:0] fifo_data_select; // Multiplexer control signal
-    wire mem_ctrl_go_muxout;
-
     mux_8to1_32stream mux_8to1_32stream_inst
     (
         .clock  (adc_clk),
-        .data0x ({adcA_data, adcA_done}),      // Holy smokes!!! Get things into 32 bit land
-        .data1x ({adcB_data, adcB_done}),      // ASAP!!!
-        .data2x ({filt_data_u1[53:22], valid_filt_u1}),
-        .data3x ({filt_data_u2[53:22], valid_filt_u2}) ,
-        .data4x ({countup[15:0], countdown[15:0], adc_go}), // Super simple test pattern                   
-        .data5x ({32'hDEADBEEF, adc_go}),      // Future expansion!!
-        .data6x ({32'h44444444, adc_go}),
-        .data7x ({32'h55555555, adc_go}),
+        .data0x ({adcA_data, adcA_done & delayed_trig}),               // Holy smokes!!! Get things into 32 bit land
+        .data1x ({adcB_data, adcB_done & delayed_trig}),               // ASAP!!!
+        .data2x ({filt_data_u1[53:22], valid_filt_u1 & delayed_trig}),
+        .data3x ({filt_data_u2[53:22], valid_filt_u2 & delayed_trig}),
+        .data4x ({countup[15:0], countdown[15:0], adc_go & delayed_trig}),
+        .data5x ({formatter_output, formatter_valid}),
+        .data6x ({formatter_nyq_output, formatter_nyq_valid}),
+        .data7x ({32'hDEAD_BEEF, adc_go}),              // Super simple test pattern
         .sel    (fifo_data_select),
         .result ({mem_ctrl_data, mem_ctrl_go_muxout})
     );
 
-    assign mem_ctrl_go = mem_ctrl_go_muxout & delayed_trig;
-
-    reg adc_fifo_valid;
-    wire adc_fifo_rdreq;
-    wire adc_fifo_wrreq;
-    wire adc_fifo_ready;
-    wire adc_fifo_empty;
-    wire adc_fifo_full;
-    wire [31:0] adc_fifo_data;
-
     assign adc_fifo_rdreq = (!adc_fifo_empty & adc_fifo_ready) ? 1'b1 : 1'b0;
-    assign adc_fifo_wrreq = mem_ctrl_go & (!adc_fifo_full); // Faucet triggering!
+    assign adc_fifo_wrreq =  mem_ctrl_go_muxout & (!adc_fifo_full);
+    assign adc_fifo_valid = adc_fifo_rdreq;
 
-    always @ (posedge clk)
-        begin
-            if(adc_fifo_rdreq)
-                adc_fifo_valid <= 1'b1;
-            else
-                adc_fifo_valid <= 1'b0;
-        end
-
+    // *********************************************************
+    // DC FIFO for going from ADC clock domain to systems 50MHz clock domain
     // Note: show ahead mode
     ADC_fifo adc_fifo
     (
@@ -602,9 +620,8 @@ module DC2390_multi_application
         .wrfull     (adc_fifo_full)     // If this ever asserts, something went wrong!
     );
 
-// Synchronize trigger pulse
-    wire force_trig_nosync;
-    reg force_trig, ft1, ft2;
+    // *********************************************************
+    // Synchronizer for trigger pulse
     always @ (posedge adc_clk)
         begin
             ft1<= force_trig_nosync;
@@ -612,12 +629,30 @@ module DC2390_multi_application
             force_trig <= ft2;
         end
 
+    // *********************************************************
+    // Used to switch data_valid_signals
+    mux_8_to_1  data_valid_mux
+    (
+        .data0  (adcA_done),
+        .data1  (adcB_done),
+        .data2  (valid_filt_u1),
+        .data3  (valid_filt_u2),
+        .data4  (adc_go),
+        .data5  (valid_filt_u1),
+        .data6  (adcA_done),
+        .data7  (adc_go),
+        .sel    (fifo_data_select),
+        .result (data_valid)
+    );
+
+    // *********************************************************
+    // The trigger block ensures a complete read
     trigger_block trigger_block_inst
     (
         .clk                    (adc_clk),
         .reset_n                (~reset),
 
-        .data_valid             (mem_ctrl_go),
+        .data_valid             (data_valid),
         .trig_in                (~KEY[1]),
         .force_trig             (force_trig), // Pushbutton trigger
 
@@ -629,17 +664,10 @@ module DC2390_multi_application
         .delayed_trig           (delayed_trig)
     );
 
-//wire ltc6954_sync_wire , gpo1_wire, gpo0_wire;
-//assign ltc6954_sync = ltc6954_sync_wire;
-//assign gpo0 = gpo0_wire;
-//assign gpo1 = gpo1_wire;
-
-
-// initialize qsys generated system
-//assign std_ctrl_wire = {26'b0, lut_write_enable, ltc6954_sync , gpo1, gpo0, en_trig, start };
-//assign datapath_control = {16'b0, lut_run_once, 1'b0, lut_addr_select[1:0], 2'b0, dac_a_select[1:0], 2'b0, dac_b_select[1:0],  1'b0, fifo_data_select[2:0]};
-wire [9:0] cfg;
-
+    // *********************************************************
+    // Initialize qsys generated system
+    //assign std_ctrl_wire = {26'b0, lut_write_enable, ltc6954_sync , gpo1, gpo0, en_trig, start };
+    //assign datapath_control = {16'b0, lut_run_once, 1'b0, lut_addr_select[1:0], 2'b0, dac_a_select[1:0], 2'b0, dac_b_select[1:0],  1'b0, fifo_data_select[2:0]};
     LTQsys_blob2 LTQsys_blob2_inst
     (
         .clk_clk                (clk),                               //         clk.clk
@@ -678,7 +706,7 @@ wire [9:0] cfg;
         .oct_rzqin              (oct_rzqin),                         //         oct.rzqin
         .mem_pll_pll_locked     (pll_locked),                        //            .pll_locked
         // User registers  .output_std_ctrl_export
-        .rev_type_id_export                ({FPGA_REV, FPGA_TYPE}),                //              rev_type_id.export
+        .rev_type_id_export     ({FPGA_REV, FPGA_TYPE}),             // rev_type_id.export
 //        .output_std_ctrl_export            ({26'b0, lut_write_enable, ltc6954_sync_wire , gpo1_wire, gpo0_wire, en_trig, start }),            //          output_std_ctrl.export
         .output_std_ctrl_export            ({26'b0, lut_write_enable, ltc6954_sync , gpo1, gpo0, force_trig_nosync, start }),            //          output_std_ctrl.export
         .input_std_stat_export             ({31'b0, delayed_trig}),             //           input_std_stat.export
@@ -722,46 +750,3 @@ wire [9:0] cfg;
           );
 
 endmodule
-
-//     assign DAC_A = dac_data; //16'h5555; // UNSIGNED!!
-//     assign DAC_B = nco_sin_out ^ 16'h8000;
-
-//   assign DAC_CLK_A = ~adc_clk; //50M, for now...
-//   assign DAC_CLK_B = ~adc_clk;
-
-//    assign clk = OSC_50_B3B;
-
-//wire [31:0] start_wire;
-//wire [31:0] data_ready_wire;
-//assign start = start_wire[0];
-//assign data_ready_wire = {31'b0, data_ready};
-
-// wire pulse_trig;
-// wire [31:0] low_period = 32'd200;
-// wire [31:0] high_period = 32'd3000;
-// wire [19:0] value = 20'd10000;
-
-    // nco i_nco (
-    // .out_valid(),
-    // .fsin_o(nco_sin_out),
-    // .phi_inc_i(tuning_word),
-    // .reset_n(1'b1),
-    // .clken(1'b1),
-    // .clk(adc_clk)
-    // );
-
-
-/*     //controller for DAC
-    wire dac_clk;
-    dac_controller dac_ctrl (
-        .clk(adc_clk),
-        .reset(reset),
-        .data_in(pid_output),
-        .data_out(sys_in),
-        .dac_clk(dac_clk)
-    ); */
-
-//This logic replaced with mux in front of FIFO!!
-//assign mem_ctrl_data = (mem_adcA_nadcB) ? feedback  : adcB_data;
-//assign mem_ctrl_go   = (mem_adcA_nadcB) ? adcA_done : adcB_done;
-     //assign mem_ctrl_go = adc_done;
