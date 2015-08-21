@@ -1,9 +1,45 @@
-`timescale 1ns/1ns
+`timescale 1ns / 10ps   // Each unit time is 1ns and the time precision is 10ps
 
-// This is the top level module which instantiates the fos_control demo
-// which will interface with linux and allow the user to experiment with
-// tuning the control loop's parameters.
+/*
+    Created by: Mark Thoren
+                Noe Quintero
+    E-mail:     mthoren@linear.com
+                nquintero@linear.com
 
+    Copyright (c) 2015, Linear Technology Corp.(LTC)
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
+       and/or other materials provided with the distribution.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+    ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+    ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+    (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+    ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+    The views and conclusions contained in the software and documentation are those
+    of the authors and should not be interpreted as representing official policies,
+    either expressed or implied, of Linear Technology Corp.
+
+
+    Description:
+        The purpose of this module is to interface with the DC2390. This is the top 
+        level module which instantiates the fos_control demo which will interface
+        with linux and allow the user to experiment with tuning the control loop's
+        parameters.
+*/
 
 module DC2390_multi_application
 (
@@ -113,8 +149,7 @@ module DC2390_multi_application
     wire    [19:0]  pulse_val;
     wire    [15:0]  fos_tau, fos_gain;
 
-    // Wire [23:0] fos_clocks_per_sample;
-    wire    [23:0]  system_clocks_per_sample;
+    wire    [15:0]  system_clocks_per_sample;
     wire    [29:0]  num_samples;
     wire    [31:0]  tuning_word;
     wire    [31:0]  stop_address;
@@ -130,7 +165,7 @@ module DC2390_multi_application
     wire    [19:0]  control_sys_output;
     wire            adcA_done;
     wire            adc_B_done;
-    reg             adc_go; // Trigger to ADC controller
+    wire            adc_go; // Trigger to ADC controller
     wire    [1:0]   dac_a_select;
     wire    [1:0]   dac_b_select;
     wire    [1:0]   lut_addr_select;
@@ -173,8 +208,6 @@ module DC2390_multi_application
     wire            wrreq_nyq;
     wire    [31:0]  formatter_nyq_output;
     wire            formatter_nyq_valid;
-    reg             old_start;
-    wire            start_pulse;
     reg     [29:0]  num_calculated;
     wire    [15:0]  countup;
     wire    [15:0]  countdown;
@@ -192,10 +225,13 @@ module DC2390_multi_application
     reg     [23:0]  counter;
     wire            force_trig_nosync;
     reg             force_trig, ft1, ft2;
+    wire            lut_count_carry;
+    wire            adcB_done;
+    wire            rdreq_nyq;
+    wire            rdempty_nyq;
 
     // *********************************************************
     assign LED[3:0] = LEDwire[3:0];
-    assign fos_clocks_per_sample = 24'd4; // Hard coded, used to be controllable by register.
     assign reset = !KEY[0];
     assign reset_n = ~reset;
     assign overflow_error = wrfull | wrfull_nyq;
@@ -419,7 +455,7 @@ module DC2390_multi_application
         .data_nyq       (adcB_data),    // Parallel Nyquist data out
         .valid_nyq      (adcB_done),    // The Nyquist data is valid
 
-        .data_filt      (data_filt_u2), // Parallel filtered data out
+        .data_filt      (filt_data_u2), // Parallel filtered data out
         .valid_filt     (valid_filt_u2),// Parallel common mode filtered data out
         .error          ()              // The filtered data is valid
     );
@@ -441,7 +477,7 @@ module DC2390_multi_application
     // A DC FIFO is used as a width adapter
     // 512 bits to 32 bits
     assign  formatter_input =  {filt_data_u1, 10'b0, adcA_data, 32'hDEAD_BEEF, 32'h8BAD_F00D, 32'hB105_F00D, 32'hDEAD_C0DE,
-                                data_filt_u2, 10'b0, adcB_data, 32'hDEAD_BEEF, 32'h8BAD_F00D, 32'hB105_F00D, 32'hDEAD_C0DE};
+                                filt_data_u2, 10'b0, adcB_data, 32'hDEAD_BEEF, 32'h8BAD_F00D, 32'hB105_F00D, 32'hDEAD_C0DE};
     formatter adc_formatter
     (
         .aclr       (reset),
@@ -463,7 +499,7 @@ module DC2390_multi_application
         .rdreq      (rdreq),
         // Streaming interface
         .valid      (formatter_valid),
-        .ready      (1'b1),
+        .ready      (1'b1)
     );
 
     // *********************************************************
@@ -504,61 +540,19 @@ module DC2390_multi_application
         .rdreq      (rdreq_nyq),
         // Streaming interface
         .valid      (formatter_nyq_valid),
-        .ready      (1'b1),
+        .ready      (1'b1)
     );
 
     // *********************************************************
-    // Create single clock pulse from start's posedge
-    // Essentially an edge detector
-    assign start_pulse = start & ~old_start;
-    always @ (posedge adc_clk) begin
-        old_start <= start;
-    end
-
-    // *********************************************************
-    // 
-    always @ (posedge adc_clk) 
-        begin
-            if (reset)
-                    num_calculated <= 30'd0;
-            else 
-                begin
-                    if (start_pulse)
-                            num_calculated <= 30'd0;
-                    else if (num_calculated == num_samples)
-                            num_calculated <= num_calculated;
-                    else if (adcA_done)
-                            num_calculated <= num_calculated + 30'd1;
-                    else
-                            num_calculated <= num_calculated;
-                end
-        end
-
-    assign mem_ctrl_addr[31:2] = num_calculated;
-
-    // *********************************************************
-    // Sample rate generator, move to separate module...
-    always @ (posedge adc_clk or posedge reset)
-        begin
-            if (reset)
-                begin
-                    counter <= system_clocks_per_sample;
-                    adc_go <= 1'b0;
-                end
-            else 
-                begin
-                    if (counter == 24'b0)
-                        begin
-                            counter <= system_clocks_per_sample;
-                            adc_go <= 1'b1;
-                        end 
-                    else
-                        begin
-                            counter <= counter - 24'b1;
-                            adc_go <= 1'b0;
-                        end
-                end
-        end
+    // Sample rate generator
+    sample_rate_controller sample_rate_controller_inst
+    (
+        .clk            (adc_clk),
+        .reset_n        (reset_n),
+        .en             (1'b1),
+        .sample_rate    (system_clocks_per_sample),
+        .go             (adc_go)
+    );
 
     // *********************************************************
     // Generic counters for creating known data
@@ -610,7 +604,7 @@ module DC2390_multi_application
     ADC_fifo adc_fifo
     (
         .aclr       (reset),
-        .data       ({mem_ctrl_data}),
+        .data       (mem_ctrl_data),
         .rdclk      (clk),
         .rdreq      (adc_fifo_rdreq),
         .wrclk      (adc_clk),
@@ -650,7 +644,7 @@ module DC2390_multi_application
     trigger_block trigger_block_inst
     (
         .clk                    (adc_clk),
-        .reset_n                (~reset),
+        .reset_n                (reset_n),
 
         .data_valid             (data_valid),
         .trig_in                (~KEY[1]),
@@ -704,7 +698,7 @@ module DC2390_multi_application
         .fpga_memory_mem_dqs_n  (fpga_memory_mem_dqs_n),             //            .mem_dqs_n
         .fpga_memory_mem_odt    (fpga_memory_mem_odt),               //            .mem_odt
         .oct_rzqin              (oct_rzqin),                         //         oct.rzqin
-        .mem_pll_pll_locked     (pll_locked),                        //            .pll_locked
+        .mem_pll_pll_locked     (),                                  //            .pll_locked
         // User registers  .output_std_ctrl_export
         .rev_type_id_export     ({FPGA_REV, FPGA_TYPE}),             // rev_type_id.export
 //        .output_std_ctrl_export            ({26'b0, lut_write_enable, ltc6954_sync_wire , gpo1_wire, gpo0_wire, en_trig, start }),            //          output_std_ctrl.export
@@ -718,18 +712,11 @@ module DC2390_multi_application
         .output_0x90_export                (pulse_low),                //              output_0x90.export
         .output_0xa0_export                (pulse_high),                //              output_0xa0.export
         .output_0xb0_export                (pulse_val),                //              output_0xb0.export
-        .output_0xc0_export                (system_clocks_per_sample),                //              output_0xc0.export
+        .output_0xc0_export                ({16'bz,system_clocks_per_sample}),                //              output_0xc0.export
         .output_0xd0_export                ({16'b0, lut_run_once, 1'b0, lut_addr_select[1:0], 2'b0, dac_a_select[1:0], 2'b0, dac_b_select[1:0],  1'b0, fifo_data_select[2:0]}), // First Order System model parameters
         .output_0xe0_export                ({lut_wraddress, lut_wrdata}),
         .output_0xf0_export                (tuning_word),  // DAC sinewave tuning word
         .input_0x100_export                ({2'b0, stop_address[29:0]}), // After capture, this is where to start reading
-        // A simple pipe to write data into memory.
-        // Tying off after including Noe's controlller!
-        .mem_master_1_conduit_end_1_1_addr     (32'b0),//(mem_ctrl_addr),     // mem_master_1_conduit_end.addr
-        .mem_master_1_conduit_end_1_1_go       (1'b0),//(mem_ctrl_go),       //                         .go
-        .mem_master_1_conduit_end_1_1_ready    (),//(mem_ctrl_ready),    //                         .ready
-        .mem_master_1_conduit_end_1_1_data     (32'b0),//({mem_ctrl_data, 12'b0}),      //                         .data, LEFT justified!!
-
         // SPI port for configuring various things
         .spi_0_external_MISO               (ltc6954_sdo),               //           spi_0_external.MISO
         .spi_0_external_MOSI               (ltc6954_sdi),               //                         .MOSI
