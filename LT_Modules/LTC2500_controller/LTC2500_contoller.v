@@ -125,7 +125,7 @@ module LTC2500_controller
     wire                        set_dsf_avg_count;
     wire                        en_dsf_avg_count;
     reg                         en_filt_sck;
-    wire    [3:0]               power_shift;
+//    wire    [3:0]               power_shift;
     reg     [14:0]              dsf_avg_sample_num;
 
     // One Hot FSM
@@ -325,7 +325,7 @@ module LTC2500_controller
         end
 
     // Generate a sync signal after a busy
-    assign sync = (state == GET_DATA_WITH_SYNC || (dsf_avg_count == 14'b0 && state == GET_DATA)) ? 1'b1 : 1'b0;
+    assign sync = state == GET_DATA_WITH_SYNC || (dsf_avg_count == 14'b0 && state == GET_DATA);
 
     // Keep track of samples into the controller
     always @ (posedge sys_clk or negedge reset_n)
@@ -341,9 +341,11 @@ module LTC2500_controller
     assign set_dsf_avg_count = state == GET_DATA_WITH_SYNC;
 
     // Send error if DSF is not correct
-    always @ (sys_clk)
+    always @ (posedge sys_clk or negedge reset_n)
         begin
-            if ((dsf_avg_count != 0) && drdy_n)
+            if(!reset_n)
+                error <= 1'b0;
+            else if ((dsf_avg_count != 0) && drdy_n)
                 error <= 1'b1;
             else if ((dsf_avg_count == 0) && !drdy_n && state == WAIT_4_BUSY && busy)
                 error <= 1'b1;
@@ -363,7 +365,7 @@ module LTC2500_controller
         end
 
     // The rdl filtered signal should be active low when obtaining data
-    assign rdl_filt = (rd_filt_flag) ? 1'b0 : 1'b1;
+    assign rdl_filt = !rd_filt_flag;
 
     // Generated the gated clock for filtered data
     always @ (negedge sys_clk or negedge reset_n)
@@ -375,26 +377,26 @@ module LTC2500_controller
             else
                 en_filt_sck <= 1'b0;
          end
-    assign sck_filt = (en_filt_sck & !rdl_filt) ? sys_clk : 1'b0;
+    assign sck_filt = en_filt_sck & rd_filt_flag & sys_clk;
 
     // Count for filtered data
     always @ (posedge sys_clk or negedge reset_n)
         begin
             if (!reset_n)
                 filt_data_count <= 6'b0;
-            else if (rdl_filt)
+            else if (!rd_filt_flag)
                 filt_data_count <= 6'b0;
             else if (en_filt_count)
                 filt_data_count <= filt_data_count + 1'b1;
         end
-    assign en_filt_count = (state != IDLE) && (!rdl_filt && busy_count == 0);
+    assign en_filt_count = (state != IDLE) && (rd_filt_flag && busy_count == 0);
 
     // Filtered data shift in register
     always @ (posedge sck_filt or negedge reset_n)
         begin
             if(!reset_n)
                 filt_data_shift_reg <= 54'b0;
-            else if (!rdl_filt)
+            else if (filt_data_count <= 6'd54 && busy_count == 0)
                 filt_data_shift_reg <= {filt_data_shift_reg[52:0], sdo_filt};
         end
 
@@ -421,7 +423,7 @@ module LTC2500_controller
         end
 
     // Generate the sdi filt signal
-    always @ *
+    always @ (posedge sys_clk or negedge reset_n)
         begin
             if (!reset_n)
                 sdi_filt = 1'b0;
