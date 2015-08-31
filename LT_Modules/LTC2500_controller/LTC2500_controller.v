@@ -389,7 +389,7 @@ module LTC2500_controller
             else if (en_filt_count)
                 filt_data_count <= filt_data_count + 1'b1;
         end
-    assign en_filt_count = (state != IDLE) && (rd_filt_flag && busy_count == 0);
+    assign en_filt_count = rd_filt_flag && busy_count == 0;
 
     // Filtered data shift in register
     always @ (posedge sck_filt or negedge reset_n)
