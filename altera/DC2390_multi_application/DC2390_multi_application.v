@@ -164,7 +164,6 @@ module DC2390_multi_application
     wire    [13:0]  n;  // For LTC2378-24, number of samples to average
     wire    [19:0]  control_sys_output;
     wire            adcA_done;
-    wire            adc_B_done;
     wire            adc_go; // Trigger to ADC controller
     wire    [1:0]   dac_a_select;
     wire    [1:0]   dac_b_select;
@@ -229,6 +228,8 @@ module DC2390_multi_application
     wire            adcB_done;
     wire            rdreq_nyq;
     wire            rdempty_nyq;
+    wire            adc_error_u1;
+    wire            adc_error_u2;
 
     // *********************************************************
     assign LED[3:0] = LEDwire[3:0];
@@ -238,7 +239,7 @@ module DC2390_multi_application
 
     // Assign LEDwire[3] = data_ready;
     assign LEDwire[3] = overflow_error;
-    assign LEDwire[2] = ~delayed_trig;
+    assign LEDwire[2] = adc_error_u1 | adc_error_u2;
 
     assign DAC_A = dac_a_data_straight;
     assign DAC_B = dac_b_data_straight;
@@ -417,7 +418,7 @@ module DC2390_multi_application
 
         .data_filt      (filt_data_u1), // Parallel filtered data out
         .valid_filt     (valid_filt_u1),// Parallel common mode filtered data out
-        .error          ()              // The filtered data is valid
+        .error          (adc_error_u1)  // The filtered data is valid
     );
 
     // ADC controller for ADC B
@@ -457,7 +458,7 @@ module DC2390_multi_application
 
         .data_filt      (filt_data_u2), // Parallel filtered data out
         .valid_filt     (valid_filt_u2),// Parallel common mode filtered data out
-        .error          ()              // The filtered data is valid
+        .error          (adc_error_u2)  // The filtered data is valid
     );
 
     // *********************************************************
@@ -476,8 +477,8 @@ module DC2390_multi_application
 
     // A DC FIFO is used as a width adapter
     // 512 bits to 32 bits
-    assign  formatter_input =  {filt_data_u1, 10'b0, adcA_data, 32'hDEAD_BEEF, 32'h8BAD_F00D, 32'hB105_F00D, 32'hDEAD_C0DE,
-                                filt_data_u2, 10'b0, adcB_data, 32'hDEAD_BEEF, 32'h8BAD_F00D, 32'hB105_F00D, 32'hDEAD_C0DE};
+    assign  formatter_input =  {filt_data_u1, 10'b0, adcA_data, 32'hDEAD_BEEF, 32'h8BAD_F00D, 32'hB105_F00D, 32'hDEAD_C0DE, 32'hD006_F00D,
+                                filt_data_u2, 10'b0, adcB_data, 32'hDEAD_BEEF, 32'h8BAD_F00D, 32'hB105_F00D, 32'hDEAD_C0DE, 32'hD006_F00D};
     formatter adc_formatter
     (
         .aclr       (reset),
