@@ -1,4 +1,4 @@
-`timescale 1ns / 10ps   // Each unit time is 1ns and the time precision is 10ps
+`timescale 1ns / 100ps   // Each unit time is 1ns and the time precision is 10ps
 
 /*
     Created by: Noe Quintero
@@ -87,7 +87,7 @@ module LTC2500_controller
     input               pre_mode;
     output              rdl_filt;
     output              sck_filt;
-    output  reg         sdi_filt;
+    output              sdi_filt;
     input               sdo_filt;
     output              rdl_nyq;
     output              sck_nyq;
@@ -108,7 +108,7 @@ module LTC2500_controller
     wire                        r;
     wire                        s;
     wire                        en_busy_count;
-    reg     [4:0]               state;
+    reg     [3:0]               state;
     reg                         sync_flag;
     reg     [9:0]               config_buff;
     reg     [15:0]              n_buff;
@@ -129,11 +129,10 @@ module LTC2500_controller
     reg     [14:0]              dsf_avg_sample_num;
 
     // One Hot FSM
-    localparam IDLE                 = 5'b00001;
-    localparam WAIT_4_BUSY          = 5'b00010;
-    localparam SEND_ERROR           = 5'b00100;
-    localparam GET_DATA             = 5'b01000;
-    localparam GET_DATA_WITH_SYNC   = 5'b10000;
+    localparam IDLE                 = 4'b0001;
+    localparam WAIT_4_BUSY          = 4'b0010;
+    localparam GET_DATA             = 4'b0100;
+    localparam GET_DATA_WITH_SYNC   = 4'b1000;
 
     always @ (posedge sys_clk or negedge reset_n)
         begin
@@ -148,14 +147,12 @@ module LTC2500_controller
                         WAIT_4_BUSY:
                             begin
                                 if ((busy_count == 16'b0) && busy)  // Busy should be low by now
-                                    state <= SEND_ERROR;
+                                    state <= IDLE;
                                 else if ((busy_count == 16'b0) && sync_flag)
                                     state <= GET_DATA_WITH_SYNC;
-                                else if ((busy_count == 16'b0) && !sync_flag)
+                                else if ((busy_count == 16'b0) && (!sync_flag))
                                     state <= GET_DATA;
                             end
-                        SEND_ERROR:
-                            state <= IDLE;
                         GET_DATA:
                             if (nyq_data_count == TRUNK_VALUE - 2)
                                 state <= IDLE;
@@ -203,7 +200,6 @@ module LTC2500_controller
     assign s = go & (state == IDLE);
     assign r = ((state == GET_DATA)             ||
                 (state == GET_DATA_WITH_SYNC)   ||
-                (state == SEND_ERROR)           ||
                 !reset_n) ? 1'b1 : 1'b0;
 
     // Counter for busy signal timing
@@ -300,26 +296,26 @@ module LTC2500_controller
     endgenerate
 
     // The sample counter input mux
-    always @ *
+    always @ (posedge sys_clk or negedge reset_n)
         begin
             if(!reset_n)
-                dsf_avg_sample_num = 14'd63;
+                dsf_avg_sample_num <= 14'd63;
             else
                 begin
                     if (pre_mode)
                         begin
-                            if(!sdi_filt)
-                                dsf_avg_sample_num = n;
+                            if(!cfg[9])
+                                dsf_avg_sample_num <= n;
                             else
-                                dsf_avg_sample_num = 14'd63;
+                                dsf_avg_sample_num <= 14'd63;
                         end
                     else
                         begin
-                            if (config_buff[3:0] == 4'b0111)
-                                dsf_avg_sample_num = n;
+                            if (cfg[3:0] == 4'b0111)
+                                dsf_avg_sample_num <= n;
                             else
                                 // Convert the DSF code for the counter
-                                dsf_avg_sample_num = (15'b1 << config_buff[7:4]);
+                                dsf_avg_sample_num <= (15'b1 << cfg[7:4]);
                         end
                 end
         end
@@ -349,12 +345,12 @@ module LTC2500_controller
                 error <= 1'b1;
             else if ((dsf_avg_count == 0) && !drdy_n && state == WAIT_4_BUSY && busy)
                 error <= 1'b1;
-            else
+            else if(state == IDLE)
                 error <= 1'b0;
         end
 
     // Flag for reading the filtered data over multiple reads
-    always @ (negedge sys_clk or negedge reset_n)
+    always @ (posedge sys_clk or negedge reset_n)
         begin
             if (!reset_n)
                 rd_filt_flag <= 1'b0;
@@ -377,7 +373,7 @@ module LTC2500_controller
             else
                 en_filt_sck <= 1'b0;
          end
-    assign sck_filt = en_filt_sck & rd_filt_flag & sys_clk;
+    assign sck_filt  =  (en_filt_sck || state == GET_DATA_WITH_SYNC) ? sys_clk : 1'b0;
 
     // Count for filtered data
     always @ (posedge sys_clk or negedge reset_n)
@@ -386,17 +382,17 @@ module LTC2500_controller
                 filt_data_count <= 6'b0;
             else if (!rd_filt_flag)
                 filt_data_count <= 6'b0;
-            else if (en_filt_count)
+            else if (rd_filt_flag && (busy_count == 16'b0 || state != WAIT_4_BUSY))
                 filt_data_count <= filt_data_count + 1'b1;
         end
-    assign en_filt_count = rd_filt_flag && busy_count == 0;
+    assign en_filt_count = rd_filt_flag && (state != WAIT_4_BUSY);
 
     // Filtered data shift in register
     always @ (posedge sck_filt or negedge reset_n)
         begin
             if(!reset_n)
                 filt_data_shift_reg <= 54'b0;
-            else if (filt_data_count <= 6'd54 && busy_count == 0)
+            else if (rd_filt_flag && (busy_count == 16'b0 || state != WAIT_4_BUSY))//(filt_data_count <= 6'd54 && state != WAIT_4_BUSY)
                 filt_data_shift_reg <= {filt_data_shift_reg[52:0], sdo_filt};
         end
 
@@ -422,30 +418,63 @@ module LTC2500_controller
                 valid_filt <= 1'b0;
         end
 
-    // Generate the sdi filt signal
+//    // Generate the sdi filt signal
+//    always @ (posedge sck_filt or negedge reset_n)
+//        begin
+//            if (!reset_n)
+//                sdi_filt <= 1'b0;
+//            else
+//                begin
+//                    if (pre_mode)
+//                        sdi_filt <= config_buff[9];
+//                    else
+//                        begin
+//                            if(state == GET_DATA_WITH_SYNC || sync_flag)
+//                                begin
+//                                    if (filt_data_count == 6'd0)
+//                                        sdi_filt <= 1'b1;
+//                                    else if (filt_data_count == 6'd1)
+//                                        sdi_filt <= 1'b0;
+//                                    else if (filt_data_count < 6'd12)
+//                                        sdi_filt <= config_buff[11-filt_data_count];
+//                                    else
+//                                        sdi_filt <= 1'b0;
+//                                end
+//                        end
+//                end
+//        end
+    // Edge dedge detector for sync_flag
+    reg sync_flag_d1;
+    wire rise_edge_sync_flag;
     always @ (posedge sys_clk or negedge reset_n)
         begin
-            if (!reset_n)
-                sdi_filt = 1'b0;
+            if(!reset_n)
+                sync_flag_d1 <= 1'b0;
             else
-                begin
-                    if (pre_mode)
-                        sdi_filt = config_buff[9];
-                    else
-                        begin
-                            if(state == GET_DATA_WITH_SYNC || sync_flag)
-                                begin
-                                    if (filt_data_count == 6'd0)
-                                        sdi_filt = 1'b1;
-                                    else if (filt_data_count == 6'd1)
-                                        sdi_filt = 1'b0;
-                                    else if (filt_data_count < 6'd11)
-                                        sdi_filt = config_buff[11-filt_data_count];
-                                    else
-                                        sdi_filt = 1'b0;
-                                end
-                        end
-                end
+                sync_flag_d1 <= sync_flag;
         end
+    assign rise_edge_sync_flag = sync_flag & (!sync_flag_d1);
 
+    reg [11:0] mosi;
+    always @ (posedge sck_filt or posedge rise_edge_sync_flag)
+        begin
+            if (rise_edge_sync_flag)
+                mosi <= {2'b10,cfg};
+            else
+                mosi <= {mosi[10:0],1'b0};
+        end
+    
+    //assign sdi_filt = (pre_mode) ? cfg[9] : mosi[11];
+    
+    wire buff[7:0]  /* synthesis keep */;
+    
+    assign buff[0] = mosi[11];
+    assign buff[1] = buff[0];
+    assign buff[2] = buff[1];
+    assign buff[3] = buff[2];
+    assign buff[4] = buff[3];
+    assign buff[5] = buff[4];
+    assign buff[6] = buff[5];
+    assign buff[7] = buff[6];
+    assign sdi_filt = buff[7];
 endmodule
