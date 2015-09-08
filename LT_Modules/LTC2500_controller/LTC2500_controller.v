@@ -388,7 +388,7 @@ module LTC2500_controller
     assign en_filt_count = rd_filt_flag && (state != WAIT_4_BUSY);
 
     // Filtered data shift in register
-    always @ (posedge sck_filt or negedge reset_n)
+    always @ (posedge sys_clk or negedge reset_n)
         begin
             if(!reset_n)
                 filt_data_shift_reg <= 54'b0;
@@ -456,11 +456,13 @@ module LTC2500_controller
     assign rise_edge_sync_flag = sync_flag & (!sync_flag_d1);
 
     reg [11:0] mosi;
-    always @ (posedge sck_filt or posedge rise_edge_sync_flag)
+    always @ (posedge sck_filt or negedge reset_n or posedge rise_edge_sync_flag)
         begin
-            if (rise_edge_sync_flag)
+            if(!reset_n)
+                mosi <= 12'b0;
+            else if (rise_edge_sync_flag)
                 mosi <= {2'b10,cfg};
-            else
+            else if (rd_filt_flag && (busy_count == 16'b0 || state != WAIT_4_BUSY))
                 mosi <= {mosi[10:0],1'b0};
         end
     
