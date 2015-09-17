@@ -44,9 +44,12 @@
 module DC2390_multi_application
 (
     input           clk,                    // Input OSC_50_B3B, // Original name...
-    input           adc_clk,
+    input           adc_clk_in,
     input   [3:0]   KEY ,                   // Keys are normally high, low when pressed
     output  [3:0]   LED,                    // HIGH to turn ON
+    output          adc_clk_out,            // Raw ADC out
+    output          adc_clk_nshift_out,     // PLL clock out 0 deg shift
+    output          adc_clk_shift_out,      // PLL clock out -90 deg shift
 
     // ///////// DDR3 /////////
     output  [14:0]  fpga_memory_mem_a,          // fpga_memory.mem_a
@@ -230,6 +233,9 @@ module DC2390_multi_application
     wire            rdempty_nyq;
     wire            adc_error_u1;
     wire            adc_error_u2;
+    wire            adc_clk;
+    wire            adc_clk_shift;
+    wire            pll_lock;
 
     // *********************************************************
     assign LED[3:0] = LEDwire[3:0];
@@ -237,12 +243,28 @@ module DC2390_multi_application
     assign reset_n = ~reset;
     assign overflow_error = wrfull | wrfull_nyq;
 
+    assign adc_clk_out = adc_clk_in;
+    assign adc_clk_nshift_out = adc_clk;
+    assign adc_clk_shift_out = adc_clk_shift;
     // Assign LEDwire[3] = data_ready;
-    assign LEDwire[3] = overflow_error;
+//    assign LEDwire[3] = overflow_error;
+    assign LEDwire[3] = pll_lock;
     assign LEDwire[2] = adc_error_u1 | adc_error_u2;
 
     assign DAC_A = dac_a_data_straight;
     assign DAC_B = dac_b_data_straight;
+
+
+    // ********************************************************
+    // PLL for the LTC2500 controller
+    DC2390_pll DC2390_pll_inst
+    (
+        .refclk     (adc_clk_in),       // refclk.clk
+        .rst        (reset),            // reset.reset
+        .outclk_0   (adc_clk),          // outclk0.clk
+        .outclk_1   (adc_clk_shift),    // outclk1.clk
+        .locked     (pll_lock),         // locked.export
+    );
 
     // *********************************************************
     // DAC data signals and control
@@ -383,11 +405,15 @@ module DC2390_multi_application
     // *********************************************************
     // Controller for ADC A
     LTC2500_controller #
-        (.DFF_CYCLE_COMP (1'b0))
+    (
+        .DFF_CYCLE_COMP     (1'b0),
+        .NUM_OF_CLK_PER_BSY (34)
+    )
     LTC2500_u1
     (
         // Control 
         .sys_clk        (adc_clk),      // The digital clock
+        .sck_in         (adc_clk_shift),// The serial clock from PLL to be gated for the sck of the LTC2500
         .reset_n        (reset_n),      // Reset active low
         .go             (adc_go),       // Start a ADC read
         .sync_req_recfg (1'b0),         // Request a synchronisation or reconfigure ADC
@@ -423,11 +449,15 @@ module DC2390_multi_application
 
     // ADC controller for ADC B
     LTC2500_controller #
-        (.DFF_CYCLE_COMP (1'b0))
+    (
+        .DFF_CYCLE_COMP     (1'b0),
+        .NUM_OF_CLK_PER_BSY (34)
+    )
     LTC2500_u2
     (
         // Control 
         .sys_clk        (adc_clk),      // The digital clock
+        .sck_in         (adc_clk_shift),// The serial clock from PLL to be gated for the sck of the LTC2500
         .reset_n        (reset_n),      // Reset active low
         .go             (adc_go),       // Start a ADC read
         .sync_req_recfg (1'b0),         // Request a synchronisation or reconfigure ADC
