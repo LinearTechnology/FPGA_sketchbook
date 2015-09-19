@@ -36,9 +36,8 @@
 
     Description:
         The purpose of this module is to interface with the DC2390. This is the top 
-        level module which instantiates the fos_control demo which will interface
-        with linux and allow the user to experiment with tuning the control loop's
-        parameters.
+        level module which instantiates the fos control demo which will interface
+        with linux and allow the user to run different experiment.
 */
 
 module DC2390_multi_application
@@ -127,12 +126,18 @@ module DC2390_multi_application
     output          ltc6954_sdi,
     input           ltc6954_sdo,
 
+    output          linduino_cs,
+    output          linduino_sck,
+    output          linduino_mosi,
+    input           linduino_miso,
+
     output          gpo0, // HSMC LVDS RX_p15 (FPGA pin F13)
     output          gpo1  // HSMC LVDS RX_p14 (FPGA pin H14)
 );
 
     // *********************************************************
     // Parameters
+
     parameter       FPGA_TYPE = 16'hABCD; // FPGA project type identification. Accessible from register map.
     parameter       FPGA_REV = 16'h1238;  // FPGA revision (also accessible from register.)
 
@@ -236,6 +241,11 @@ module DC2390_multi_application
     wire            adc_clk;
     wire            adc_clk_shift;
     wire            pll_lock;
+    wire            lut_addr_div_cout;
+    wire            spi_miso;
+    wire            spi_mosi;
+    wire            spi_sck;
+    wire    [15:0]  lut_addr_div;
 
     // *********************************************************
     assign LED[3:0] = LEDwire[3:0];
@@ -246,8 +256,7 @@ module DC2390_multi_application
     assign adc_clk_out = adc_clk_in;
     assign adc_clk_nshift_out = adc_clk;
     assign adc_clk_shift_out = adc_clk_shift;
-    // Assign LEDwire[3] = data_ready;
-//    assign LEDwire[3] = overflow_error;
+
     assign LEDwire[3] = pll_lock;
     assign LEDwire[2] = adc_error_u1 | adc_error_u2;
 
@@ -270,8 +279,6 @@ module DC2390_multi_application
     // DAC data signals and control
     always @ (posedge adc_clk)
         begin
-            //dac_data= pid_output [15:0] ^ 16'h8000;
-            //dac_data= sys_in [15:0] ^ 16'h8000;
             dac_a_data_straight <= {~dac_a_data_signed[15], dac_a_data_signed[14:0]};
             dac_b_data_straight <= {~dac_b_data_signed[15], dac_b_data_signed[14:0]};
         end
@@ -310,14 +317,26 @@ module DC2390_multi_application
         end
 
     // *********************************************************
-    // Counter to sequence through LUT. Consider regenerating with a reset.
+    // Counter to sequence through LUT.
     upcount_mem_addr  upcount_mem_addr_lut_addr_inst
     (
         .clock  (adc_clk), // Run once on start pulse, override with lut_run_once = 0 (default)
-        .cnt_en (~lut_count_carry | ~lut_run_once | trig_pulse ),
-        .sclr   (1'b0),
+        .cnt_en ((~lut_run_once)| (lut_addr_div_cout & (~lut_count_carry))),
+        .sclr   (trig_pulse),
         .cout   (lut_count_carry),
         .q      (lut_addr_counter)
+    );
+
+    // Divide the LUT adderssor
+    up_count_with_load up_count_with_load_inst
+    (
+        .clock  (adc_clk),
+        .sclr   (reset),
+        .cnt_en (1'b1),
+        .data   (lut_addr_div),
+        .sload  (lut_addr_div_cout | trig_pulse),
+        .cout   (lut_addr_div_cout),
+        .q      ()
     );
 
     // *********************************************************
@@ -367,13 +386,13 @@ module DC2390_multi_application
     // NCO set up with data width of 18 to try to trick it into overkill ;)
     nco_iq_14_1 nco_iq_14_1_inst
     (
-        .clk        (adc_clk),                      // clk.clk
-        .reset_n    (1'b1),                         // rst.reset_n
-        .clken      (1'b1),                         //  in.clken
-        .phi_inc_i  (tuning_word),                  //    .phi_inc_i
-        .fsin_o     ({nco_sin_out[15:0], 2'bzz}),   // Snag 16 MS bits...
+        .clk        (adc_clk),                                                      // clk.clk
+        .reset_n    (1'b1),                                                         // rst.reset_n
+        .clken      (lut_count_carry),    // in.clken
+        .phi_inc_i  (tuning_word),                                                  // phi_inc_i
+        .fsin_o     ({nco_sin_out[15:0], 2'bzz}),                                   // Snag 16 MS bits...
         .fcos_o     ({nco_cos_out[15:0], 2'bzz}),
-        .out_valid  (1'bz)                          //    .out_valid
+        .out_valid  (1'bz)                                                          // out valid
     );
 
     // *********************************************************
@@ -383,8 +402,8 @@ module DC2390_multi_application
         .INPUT_WIDTH            (20),
         .OUTPUT_WIDTH           (16),
         .PID_PARAM_WIDTH        (16),
-        .PID_PARAM_FP_PRECISION (8),    //fixed point decimal places (must be <= PID_PARAM_WIDTH-1)
-        .MAX_OVF_SUM            (4)     //overflow bits for err_sum
+        .PID_PARAM_FP_PRECISION (8),    // fixed point decimal places (must be <= PID_PARAM_WIDTH-1)
+        .MAX_OVF_SUM            (4)     // overflow bits for err_sum
     )
     ctrl
     (
@@ -690,9 +709,15 @@ module DC2390_multi_application
     );
 
     // *********************************************************
+    // SPI logic
+    assign spi_miso = (ltc6954_sdo & (~ltc6954_cs)) | (linduino_miso & (~linduino_cs));
+    assign ltc6954_sdi = spi_mosi;
+    assign linduino_mosi = spi_mosi;
+    assign ltc6954_sck = spi_sck;
+    assign linduino_sck = spi_sck;
+
+    // *********************************************************
     // Initialize qsys generated system
-    //assign std_ctrl_wire = {26'b0, lut_write_enable, ltc6954_sync , gpo1, gpo0, en_trig, start };
-    //assign datapath_control = {16'b0, lut_run_once, 1'b0, lut_addr_select[1:0], 2'b0, dac_a_select[1:0], 2'b0, dac_b_select[1:0],  1'b0, fifo_data_select[2:0]};
     LTQsys_blob2 LTQsys_blob2_inst
     (
         .clk_clk                (clk),                               //         clk.clk
@@ -732,7 +757,6 @@ module DC2390_multi_application
         .mem_pll_pll_locked     (),                                  //            .pll_locked
         // User registers  .output_std_ctrl_export
         .rev_type_id_export     ({FPGA_REV, FPGA_TYPE}),             // rev_type_id.export
-//        .output_std_ctrl_export            ({26'b0, lut_write_enable, ltc6954_sync_wire , gpo1_wire, gpo0_wire, en_trig, start }),            //          output_std_ctrl.export
         .output_std_ctrl_export            ({26'b0, lut_write_enable, ltc6954_sync , gpo1, gpo0, force_trig_nosync, start }),            //          output_std_ctrl.export
         .input_std_stat_export             ({31'b0, delayed_trig}),             //           input_std_stat.export
         .output_0x40_export                ({2'b0, n, cfg, 4'b0, LEDwire[1:0]}),                //              output_0x40.export
@@ -743,16 +767,16 @@ module DC2390_multi_application
         .output_0x90_export                (pulse_low),                //              output_0x90.export
         .output_0xa0_export                (pulse_high),                //              output_0xa0.export
         .output_0xb0_export                (pulse_val),                //              output_0xb0.export
-        .output_0xc0_export                ({16'bz,system_clocks_per_sample}),                //              output_0xc0.export
+        .output_0xc0_export                ({lut_addr_div,system_clocks_per_sample}),                //              output_0xc0.export
         .output_0xd0_export                ({16'b0, lut_run_once, 1'b0, lut_addr_select[1:0], 2'b0, dac_a_select[1:0], 2'b0, dac_b_select[1:0],  1'b0, fifo_data_select[2:0]}), // First Order System model parameters
         .output_0xe0_export                ({lut_wraddress, lut_wrdata}),
         .output_0xf0_export                (tuning_word),  // DAC sinewave tuning word
         .input_0x100_export                ({2'b0, stop_address[29:0]}), // After capture, this is where to start reading
         // SPI port for configuring various things
-        .spi_0_external_MISO               (ltc6954_sdo),               //           spi_0_external.MISO
-        .spi_0_external_MOSI               (ltc6954_sdi),               //                         .MOSI
-        .spi_0_external_SCLK               (ltc6954_sck),               //                         .SCLK
-        .spi_0_external_SS_n               ({7'bz, ltc6954_cs}),                //                         .SS_n
+        .spi_0_external_MISO               (spi_miso),               //           spi_0_external.MISO
+        .spi_0_external_MOSI               (spi_mosi),               //                         .MOSI
+        .spi_0_external_SCLK               (spi_sck),               //                         .SCLK
+        .spi_0_external_SS_n               ({6'bz, linduino_cs, ltc6954_cs}),                //                         .SS_n
         .tie_me_off_data                    (8'bz),                    //                   tie_me_off.data
         .tie_me_off_valid                   (1'bz),                   //                             .valid
         .tie_me_off_ready                   (1'b0),                   //                             .ready
