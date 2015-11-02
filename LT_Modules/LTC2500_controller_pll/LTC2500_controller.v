@@ -49,27 +49,27 @@ module LTC2500_controller
 
     // LTC2500 Signals
     // Port A
-    rdl_filt,       // Read data low for the filtered data port
-    sck_filt,       // Gated clock for filtered data port
-    sdi_filt,       // Serial data in for the ADC's filtered port
-    sdo_filt,       // Serial data out for the ADC's filtered port
+    rdl_filt,           // Read data low for the filtered data port
+    sck_filt,           // Gated clock for filtered data port
+    sdi_filt,           // Serial data in for the ADC's filtered port
+    sdo_filt,           // Serial data out for the ADC's filtered port
     // Port B
-    rdl_nyq,        // Read data low for the Nyquist data port
-    sck_nyq,        // Gated clock for Nyquist data port
-    sdo_nyq,        // Serial data out for the ADC's Nyquist port
+    rdl_nyq,            // Read data low for the Nyquist data port
+    sck_nyq,            // Gated clock for Nyquist data port
+    sdo_nyq,            // Serial data out for the ADC's Nyquist port
 
-    busy,           // The ADC is busy with a conversion
-    drdy_n,         // The ADC is not ready for filtered data
-    mclk,           // The conversion clock
-    sync,           // The synchronizing signal for the ADC
-    pre,            // The pre signal is used to configure the filtered data
-                    // into two settings, depending on SDI logic level.
+    busy,               // The ADC is busy with a conversion
+    drdy_n,             // The ADC is not ready for filtered data
+    mclk,               // The conversion clock
+    sync,               // The synchronizing signal for the ADC
+    pre,                // The pre signal is used to configure the filtered data
+                        // into two settings, depending on SDI logic level.
     // Streaming output
-    data_nyq,       // Parallel Nyquist data out
-    valid_nyq,      // The Nyquist data is valid
+    data_nyq,           // Parallel Nyquist data out
+    valid_nyq,          // The Nyquist data is valid
 
-    data_filt,      // Parallel filtered data out
-    valid_filt,     // Parallel common mode filtered data out
+    data_filt,          // Parallel filtered data out
+    valid_filt,         // Parallel common mode filtered data out
     error           // The filtered data is valid
 );
 
@@ -420,31 +420,8 @@ module LTC2500_controller
                 valid_filt <= 1'b0;
         end
 
-//    // Generate the sdi filt signal
-//    always @ (posedge sck_filt or negedge reset_n)
-//        begin
-//            if (!reset_n)
-//                sdi_filt <= 1'b0;
-//            else
-//                begin
-//                    if (pre_mode)
-//                        sdi_filt <= config_buff[9];
-//                    else
-//                        begin
-//                            if(state == GET_DATA_WITH_SYNC || sync_flag)
-//                                begin
-//                                    if (filt_data_count == 6'd0)
-//                                        sdi_filt <= 1'b1;
-//                                    else if (filt_data_count == 6'd1)
-//                                        sdi_filt <= 1'b0;
-//                                    else if (filt_data_count < 6'd12)
-//                                        sdi_filt <= config_buff[11-filt_data_count];
-//                                    else
-//                                        sdi_filt <= 1'b0;
-//                                end
-//                        end
-//                end
-//        end
+    // Generate the sdi filt signal
+
     // Edge dedge detector for sync_flag
     reg sync_flag_d1;
     wire rise_edge_sync_flag;
@@ -470,9 +447,15 @@ module LTC2500_controller
     
     //assign sdi_filt = (pre_mode) ? cfg[9] : mosi[11];
     
-    wire buff[1:0]  /* synthesis keep */;
+    wire [7:0] buff  /* synthesis keep */;
     
     assign buff[0] = mosi[11];
     assign buff[1] = buff[0];
-    assign sdi_filt = buff[1];
+    assign buff[2] = buff[1];
+    assign buff[3] = buff[2];
+    assign buff[4] = buff[3];
+    assign buff[5] = buff[4];
+    assign buff[6] = buff[5];
+    assign buff[7] = buff[6];
+    assign sdi_filt = buff[7];
 endmodule
