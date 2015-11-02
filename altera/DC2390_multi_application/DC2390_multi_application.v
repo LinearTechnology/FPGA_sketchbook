@@ -321,7 +321,7 @@ module DC2390_multi_application
     upcount_mem_addr  upcount_mem_addr_lut_addr_inst
     (
         .clock  (adc_clk), // Run once on start pulse, override with lut_run_once = 0 (default)
-        .cnt_en ((~lut_run_once)| (lut_addr_div_cout & (~lut_count_carry))),
+        .cnt_en ((lut_addr_div_cout & (~(lut_count_carry & lut_run_once)))),
         .sclr   (trig_pulse),
         .cout   (lut_count_carry),
         .q      (lut_addr_counter)
@@ -388,7 +388,7 @@ module DC2390_multi_application
     (
         .clk        (adc_clk),                                                      // clk.clk
         .reset_n    (1'b1),                                                         // rst.reset_n
-        .clken      (lut_count_carry),    // in.clken
+        .clken      (lut_addr_div_cout),    // in.clken
         .phi_inc_i  (tuning_word),                                                  // phi_inc_i
         .fsin_o     ({nco_sin_out[15:0], 2'bzz}),                                   // Snag 16 MS bits...
         .fcos_o     ({nco_cos_out[15:0], 2'bzz}),
