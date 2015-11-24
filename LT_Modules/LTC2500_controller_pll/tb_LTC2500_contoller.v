@@ -159,7 +159,6 @@ module tb_LTC2500_controller();
         .sync_req_recfg (sync_req_recfg),   // Request a synchronisation
         .cfg            (cfg),              // The configuration word 
         .n              (n),                // The averaging ratio
-        .pre_mode       (1'b0),             // The preset mode
 
         // LTC2500 Signals
         // Port A

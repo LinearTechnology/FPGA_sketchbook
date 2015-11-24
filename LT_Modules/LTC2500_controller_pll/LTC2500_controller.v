@@ -45,7 +45,6 @@ module LTC2500_controller
     sync_req_recfg,     // Request a synchronisation or reconfigure ADC
     cfg,                // The configuration word 
     n,                  // The averaging ratio
-    pre_mode,           // The preset mode
 
     // LTC2500 Signals
     // Port A
@@ -86,7 +85,6 @@ module LTC2500_controller
     input               sync_req_recfg;
     input   [9:0]       cfg;
     input   [13:0]      n;
-    input               pre_mode;
     output              rdl_filt;
     output              sck_filt;
     output              sdi_filt;
@@ -127,8 +125,8 @@ module LTC2500_controller
     wire                        set_dsf_avg_count;
     wire                        en_dsf_avg_count;
     reg                         en_filt_sck;
-//    wire    [3:0]               power_shift;
     reg     [14:0]              dsf_avg_sample_num;
+    reg     [11:0]              mosi;
 
     // One Hot FSM
     localparam IDLE                 = 4'b0001;
@@ -253,8 +251,8 @@ module LTC2500_controller
          end
     assign sck_nyq = (en_nyq_sck) ? sck_in : 1'b0;
 
-    // Send the pre mode signal directly to the ADC
-    assign pre = pre_mode;
+    // Disable pre mode signal
+    assign pre = 1'b0;
 
     // The rdl Nyquist signal can be continuously be active low
     assign rdl_nyq = 1'b0;
@@ -264,7 +262,7 @@ module LTC2500_controller
         begin
             if(!reset_n)
                 valid_nyq <= 1'b0;
-            else if((nyq_data_count == TRUNK_VALUE - 1))
+            else if((nyq_data_count == TRUNK_VALUE))
                 valid_nyq <= 1'b1;
             else
                 valid_nyq <= 1'b0;
@@ -304,21 +302,11 @@ module LTC2500_controller
                 dsf_avg_sample_num <= 14'd63;
             else
                 begin
-                    if (pre_mode)
-                        begin
-                            if(!cfg[9])
-                                dsf_avg_sample_num <= n;
-                            else
-                                dsf_avg_sample_num <= 14'd63;
-                        end
+                    if (cfg[3:0] == 4'b0111)
+                        dsf_avg_sample_num <= n;
                     else
-                        begin
-                            if (cfg[3:0] == 4'b0111)
-                                dsf_avg_sample_num <= n;
-                            else
-                                // Convert the DSF code for the counter
-                                dsf_avg_sample_num <= (15'b1 << cfg[7:4]);
-                        end
+                        // Convert the DSF code for the counter
+                        dsf_avg_sample_num <= (15'b1 << cfg[7:4]);
                 end
         end
 
@@ -342,6 +330,8 @@ module LTC2500_controller
     always @ (posedge sys_clk or negedge reset_n)
         begin
             if(!reset_n)
+                error <= 1'b0;
+            else if(sync_flag)
                 error <= 1'b0;
             else if ((dsf_avg_count != 0) && drdy_n)
                 error <= 1'b1;
@@ -390,11 +380,11 @@ module LTC2500_controller
     assign en_filt_count = rd_filt_flag && (state != WAIT_4_BUSY);
 
     // Filtered data shift in register
-    always @ (posedge sys_clk or negedge reset_n)
+    always @ (posedge sck_in or negedge reset_n)
         begin
             if(!reset_n)
                 filt_data_shift_reg <= 54'b0;
-            else if (rd_filt_flag && filt_data_count <= 6'd54 && state != WAIT_4_BUSY)//(filt_data_count <= 6'd54 && state != WAIT_4_BUSY)
+            else if (rd_filt_flag && filt_data_count <= 6'd54 && state != WAIT_4_BUSY)
                 filt_data_shift_reg <= {filt_data_shift_reg[52:0], sdo_filt};
         end
 
@@ -425,7 +415,7 @@ module LTC2500_controller
     // Edge dedge detector for sync_flag
     reg sync_flag_d1;
     wire rise_edge_sync_flag;
-    always @ (posedge sys_clk or negedge reset_n)
+    always @ (posedge sck_in or negedge reset_n)
         begin
             if(!reset_n)
                 sync_flag_d1 <= 1'b0;
@@ -434,28 +424,15 @@ module LTC2500_controller
         end
     assign rise_edge_sync_flag = sync_flag & (!sync_flag_d1);
 
-    reg [11:0] mosi;
-    always @ (posedge sck_filt or negedge reset_n or posedge rise_edge_sync_flag)
+    // Send sdo 
+    always @ (posedge sck_in or negedge reset_n)
         begin
             if(!reset_n)
                 mosi <= 12'b0;
             else if (rise_edge_sync_flag)
                 mosi <= {2'b10,cfg};
-            else if (rd_filt_flag && (busy_count == 16'b0 || state != WAIT_4_BUSY))
+            else if (en_filt_sck)
                 mosi <= {mosi[10:0],1'b0};
         end
-    
-    //assign sdi_filt = (pre_mode) ? cfg[9] : mosi[11];
-    
-    wire [7:0] buff  /* synthesis keep */;
-    
-    assign buff[0] = mosi[11];
-    assign buff[1] = buff[0];
-    assign buff[2] = buff[1];
-    assign buff[3] = buff[2];
-    assign buff[4] = buff[3];
-    assign buff[5] = buff[4];
-    assign buff[6] = buff[5];
-    assign buff[7] = buff[6];
-    assign sdi_filt = buff[7];
+    assign sdi_filt = mosi[11];
 endmodule

@@ -98,16 +98,15 @@ module LTC2500_model
     assign df_buf = cfig_word_buf[7:4];
     assign ft_buf = cfig_word_buf[3:0];
 
-    
     // SDOA count
-    always @ (posedge scka or negedge reset_n or rdla)
+    always @ (posedge scka or negedge reset_n or drdy_n)
         begin
-            if(!reset_n || rdla)
-                count_flt <= 6'b0;
-            else if(!rdla && busy)
-                count_flt <= 6'b1;
-            else if((!busy && count_flt == 6'b0) || !busy & scka)
-                count_flt <= count_flt + 1'b1;
+            if(!reset_n)
+                count_flt = 6'b0;
+            else if(drdy_n)
+                count_flt = 6'b0;
+            else
+                count_flt = count_flt + 1'b1;
         end
 
     // Input shift register
@@ -115,7 +114,7 @@ module LTC2500_model
         begin
             if(!reset_n)
                 sdi_buf <= 12'b0;
-            else if(!rdla && count_flt <= 4'd12)
+            else if(!rdla && count_flt <= 4'd13)
                 sdi_buf <= {sdi_buf[10:0],sdi};
         end
 
@@ -144,8 +143,6 @@ module LTC2500_model
                         end
                     else if (df_buf == 4'b0000 || df_buf == 4'b0001 || df_buf == 4'b1111)
                         dsf = dsf;
-                    else if (df_buf == 4'b0111)
-                        dsf = 0;
                     else
                         dsf = 2**df_buf - 1;
                 end
@@ -154,10 +151,12 @@ module LTC2500_model
     // Counter used to keep track of conversions to mimic the downsample factor
     always @ (posedge mclk or negedge reset_n or posedge sync)
         begin
-            if((!reset_n) || count_dsf >= dsf || sync )
-                count_dsf <= 15'b0;
+            if(!reset_n)
+                count_dsf = -1;
+            else if(count_dsf >= dsf || sync )
+                count_dsf = 15'b0;
             else if (count_dsf < dsf)
-                count_dsf <= count_dsf + 1'b1;
+                count_dsf = count_dsf + 1'b1;
         end
 
     // Generate the drdy_n signal
@@ -169,32 +168,21 @@ module LTC2500_model
                 drdy_n = busy;
         end
 
-    // Generate the sdoa signal
+        // Generate the sdoa signal
     always @ *
         begin
-            if(rdla)
-                begin
-                    #8 sdoa <= 1'bz;
-                end
-            else 
-                begin
-                    if (count_flt <= 32)
-                        begin
-                            #8 sdoa <= filtered_data[32 - count_flt];
-                        end
-                    else if (count_flt <= 40)
-                        begin
-                            #8 sdoa <= cfig_word_buf[40 - count_flt];
-                        end
-                    else if (count_flt <= 54)
-                        begin
-                            #8 sdoa <= n[54-count_flt];
-                        end
-                    // else if (count_flt == 55)
-                        // begin
-                            // #8 sdoa <= 1'b0;
-                        // end
-                end
+            if((!reset_n) || (count_flt == 6'd0))
+                #8 sdoa = 1'bz;
+            else if(count_flt == 1)
+                #5 sdoa = filtered_data[31];
+            else if (count_flt <= 32)
+                #8 sdoa = filtered_data[32 - count_flt];
+            else if (count_flt <= 40)
+                #8 sdoa = cfig_word_buf[40 - count_flt];
+            else if (count_flt <= 54)
+                #8 sdoa = n[54-count_flt];
+            else
+                #8 sdoa = 1'b0;
         end
 
     // Port B logic
@@ -209,9 +197,11 @@ module LTC2500_model
         end
 
     // Counter for keeping track of Nyquist data out
-    always @ (posedge sckb or negedge reset_n or rdlb)
+    always @ (posedge sckb or busy or negedge reset_n)
         begin
-            if((!reset_n) || rdlb)
+            if(!reset_n)
+                count_nyq = 6'b0;
+            else if (rdlb || busy)
                 count_nyq = 6'b0;
             else
                 count_nyq = count_nyq + 1'b1;
@@ -246,6 +236,8 @@ module LTC2500_model
                 #8 sdob = 1'bx;
             else if((!reset_n) || (count_nyq == 6'd0))
                 #8 sdob = 1'bz;
+            else if (count_nyq == 6'd1)
+                #5 sdob = nyq_buff[31];
             else if(count_nyq < 6'd33)
                 #8 sdob = nyq_buff [32 - count_nyq];
             else
