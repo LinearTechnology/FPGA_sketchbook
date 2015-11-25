@@ -139,7 +139,7 @@ module DC2390_multi_application
     // Parameters
 
     parameter       FPGA_TYPE = 16'hABCD; // FPGA project type identification. Accessible from register map.
-    parameter       FPGA_REV = 16'h1238;  // FPGA revision (also accessible from register.)
+    parameter       FPGA_REV = 16'h123A;  // FPGA revision (also accessible from register.)
 
     // *********************************************************
     // Internal Signal Declaration
@@ -340,7 +340,7 @@ module DC2390_multi_application
     );
 
     // *********************************************************
-    // lookup table address mux
+    // Lookup table address mux
     mux_4to1_16 mux_4to1_16_lut_addr_inst
     (
         .clock  (adc_clk),
@@ -386,13 +386,13 @@ module DC2390_multi_application
     // NCO set up with data width of 18 to try to trick it into overkill ;)
     nco_iq_14_1 nco_iq_14_1_inst
     (
-        .clk        (adc_clk),                                                      // clk.clk
-        .reset_n    (1'b1),                                                         // rst.reset_n
-        .clken      (lut_addr_div_cout),    // in.clken
-        .phi_inc_i  (tuning_word),                                                  // phi_inc_i
-        .fsin_o     ({nco_sin_out[15:0], 2'bzz}),                                   // Snag 16 MS bits...
+        .clk        (adc_clk),                      // clk.clk
+        .reset_n    (1'b1),                         // rst.reset_n
+        .clken      (lut_addr_div_cout),            // in.clken
+        .phi_inc_i  (tuning_word),                  // phi_inc_i
+        .fsin_o     ({nco_sin_out[15:0], 2'bzz}),   // Snag 16 MS bits...
         .fcos_o     ({nco_cos_out[15:0], 2'bzz}),
-        .out_valid  (1'bz)                                                          // out valid
+        .out_valid  (1'bz)                          // out valid
     );
 
     // *********************************************************
@@ -438,7 +438,6 @@ module DC2390_multi_application
         .sync_req_recfg (1'b0),         // Request a synchronisation or reconfigure ADC
         .cfg            (cfg),          // The configuration word 
         .n              (n),            // The averaging ratio
-        .pre_mode       (1'b0),         // The preset mode
 
         // LTC2500 Signals
         // Port A
@@ -482,7 +481,6 @@ module DC2390_multi_application
         .sync_req_recfg (1'b0),         // Request a synchronisation or reconfigure ADC
         .cfg            (cfg),          // The configuration word 
         .n              (n),            // The averaging ratio
-        .pre_mode       (1'b0),         // The preset mode
 
         // LTC2500 Signals
         // Port A
