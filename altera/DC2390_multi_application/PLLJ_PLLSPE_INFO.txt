@@ -1,4 +1,14 @@
-PLL_Name	LTQsys_blob2:LTQsys_blob2_inst|LTQsys_blob2_mem_if_ddr3_emif_0:mem_if_ddr3_emif_0|LTQsys_blob2_mem_if_ddr3_emif_0_pll0:pll0|pll1_phy~PLL_OUTPUT_COUNTER
+PLL_Name	DC2390_pll:DC2390_pll_inst|DC2390_pll_0002:dc2390_pll_inst|altera_pll:altera_pll_i|general[0].gpll~FRACTIONAL_PLL
+PLLJITTER	27
+PLLSPEmax	100
+PLLSPEmin	-100
+
+PLL_Name	DC2390_pll:DC2390_pll_inst|DC2390_pll_0002:dc2390_pll_inst|altera_pll:altera_pll_i|general[0].gpll~PLL_OUTPUT_COUNTER
+PLLJITTER	NA
+PLLSPEmax	NA
+PLLSPEmin	NA
+
+PLL_Name	DC2390_pll:DC2390_pll_inst|DC2390_pll_0002:dc2390_pll_inst|altera_pll:altera_pll_i|general[1].gpll~PLL_OUTPUT_COUNTER
 PLLJITTER	NA
 PLLSPEmax	NA
 PLLSPEmin	NA
@@ -23,7 +33,7 @@ PLLJITTER	NA
 PLLSPEmax	NA
 PLLSPEmin	NA
 
-PLL_Name	LTQsys_blob2:LTQsys_blob2_inst|LTQsys_blob2_mem_if_ddr3_emif_0:mem_if_ddr3_emif_0|LTQsys_blob2_mem_if_ddr3_emif_0_pll0:pll0|pll4~PLL_OUTPUT_COUNTER
+PLL_Name	LTQsys_blob2:LTQsys_blob2_inst|LTQsys_blob2_mem_if_ddr3_emif_0:mem_if_ddr3_emif_0|LTQsys_blob2_mem_if_ddr3_emif_0_pll0:pll0|pll6_phy~PLL_OUTPUT_COUNTER
 PLLJITTER	NA
 PLLSPEmax	NA
 PLLSPEmin	NA
