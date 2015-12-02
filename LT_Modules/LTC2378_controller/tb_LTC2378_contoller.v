@@ -66,6 +66,8 @@ module tb_LTC2378_controller();
     parameter GO_SIG_IN_CYCLES      = 100;
     parameter END_SIM_DELAY         = 100000;
 
+    // Change the following to test for different inputs
+    assign data_in     = 20'hC0DE1;     // Dummy data for Nyquist port
     //*************************************************************************
 
     // Generate the clock

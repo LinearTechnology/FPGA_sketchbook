@@ -159,12 +159,12 @@ module LTC2378_controller
                 data_count <= 5'd19;
             else if (state == IDLE)
                 data_count <= 5'd19;
-            else if (en_count)
+            else if (en_count && (data_count > 5'b0))
                 data_count <= data_count - 1'b1;
         end
 
     // Generate the enable count
-    assign en_count = ((state == GET_DATA) && (data_count > 5'b0));
+    assign en_count = state == GET_DATA;
 
     //*************************************************************************
 
@@ -212,7 +212,7 @@ module LTC2378_controller
         begin
             if (!reset_n)
                 data <= 20'b0;
-            else if (data_count == 5'b0)
+            else if ((data_count == 5'b0) && (state == IDLE))
                 data <= data_shift_reg;
         end
 
@@ -223,7 +223,7 @@ module LTC2378_controller
         begin
             if(!reset_n)
                 valid <= 1'b0;
-            else if((data_count == 5'b0))
+            else if((data_count == 5'b0) && (state == IDLE))
                 valid <= 1'b1;
             else
                 valid <= 1'b0;
@@ -238,7 +238,7 @@ module LTC2378_controller
                 error <= 1'b0;
             else if (state == IDLE)
                 error <= 1'b0;
-            else if ((busy_count == 16'b0) & LTC2378_busy)
+            else if ((state != WAIT_4_BUSY) & LTC2378_busy)
                 error <= 1'b1;
         end
 endmodule
