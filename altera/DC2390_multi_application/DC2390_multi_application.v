@@ -139,7 +139,8 @@ module DC2390_multi_application
     // Parameters
 
     parameter       FPGA_TYPE = 16'hABCD; // FPGA project type identification. Accessible from register map.
-    parameter       FPGA_REV = 16'h123A;  // FPGA revision (also accessible from register.)
+    parameter       FPGA_REV = 16'h123B;  // FPGA revision (also accessible from register.)
+    // 123B: PLL lock status, alternate sources for PID setpoint.
 
     // *********************************************************
     // Internal Signal Declaration
@@ -290,8 +291,8 @@ module DC2390_multi_application
         .clock  (adc_clk),
         .data0x (nco_sin_out),
         .data1x (pid_output),
-        .data2x (16'h4000),
-        .data3x (16'hC000),
+        .data2x (pulse_val_trigd[15:0]),
+        .data3x (pulse_val[15:0]),
         .sel    (dac_a_select),
         .result (dac_a_data_signed)
     );
@@ -379,7 +380,7 @@ module DC2390_multi_application
         .low_period(pulse_low),
         .high_period(pulse_high),
         .value(pulse_val),
-        .out(setpoint)
+        .out(pulse_out)
     );
 
     // *********************************************************
@@ -395,6 +396,30 @@ module DC2390_multi_application
         .out_valid  (1'bz)                          // out valid
     );
 
+	 // Make version of pulse_val that updates when trig_pulse asserts
+    always @ (posedge adc_clk) 
+        begin
+				if (trig_pulse) begin
+					pulse_val_trigd <= pulse_val;
+				end
+				else begin
+					pulse_val_trigd <= pulse_val_trigd;
+				end
+        end
+	 
+mux_4_to_1_20bit	mux_4_to_1_20bit_inst (
+	.clock ( adc_clk ),
+	.data0x ( pulse_out ), // Direct output from fancy pulse generator
+	.data1x ( pulse_val_trigd ), // Pulse value, but updated at start of capture
+	.data2x ( pulse_val ), // Pulse value, straight from blob register
+	.data3x ( 20'b0 ), // Zero.
+	.sel ( setpoint_source_select ),
+	.result ( setpoint ) // Setpoint output to PID controller
+	);
+wire [1:0] setpoint_source_select;
+wire [19:0] pulse_out;
+reg [19:0] pulse_val_trigd; // Pulse value changes state on start of data capture.
+	 
     // *********************************************************
     // PID controller
     pid #
@@ -756,7 +781,7 @@ module DC2390_multi_application
         // User registers  .output_std_ctrl_export
         .rev_type_id_export     ({FPGA_REV, FPGA_TYPE}),             // rev_type_id.export
         .output_std_ctrl_export            ({26'b0, lut_write_enable, ltc6954_sync , gpo1, gpo0, force_trig_nosync, start }),            //          output_std_ctrl.export
-        .input_std_stat_export             ({31'b0, delayed_trig}),             //           input_std_stat.export
+        .input_std_stat_export             ({30'b0, pll_lock, delayed_trig}),             //           input_std_stat.export
         .output_0x40_export                ({2'b0, n, cfg, 4'b0, LEDwire[1:0]}),                //              output_0x40.export
         .output_0x50_export                (num_samples),                //              output_0x50.export
         .output_0x60_export                ({16'b0, pid_kp}),                //              output_0x60.export
@@ -766,7 +791,7 @@ module DC2390_multi_application
         .output_0xa0_export                (pulse_high),                //              output_0xa0.export
         .output_0xb0_export                (pulse_val),                //              output_0xb0.export
         .output_0xc0_export                ({lut_addr_div,system_clocks_per_sample}),                //              output_0xc0.export
-        .output_0xd0_export                ({16'b0, lut_run_once, 1'b0, lut_addr_select[1:0], 2'b0, dac_a_select[1:0], 2'b0, dac_b_select[1:0],  1'b0, fifo_data_select[2:0]}), // First Order System model parameters
+        .output_0xd0_export                ({14'b0, setpoint_source_select,  lut_run_once, 1'b0, lut_addr_select[1:0], 2'b0, dac_a_select[1:0], 2'b0, dac_b_select[1:0],  1'b0, fifo_data_select[2:0]}), // First Order System model parameters
         .output_0xe0_export                ({lut_wraddress, lut_wrdata}),
         .output_0xf0_export                (tuning_word),  // DAC sinewave tuning word
         .input_0x100_export                ({2'b0, stop_address[29:0]}), // After capture, this is where to start reading
