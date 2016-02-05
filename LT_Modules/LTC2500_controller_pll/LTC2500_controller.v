@@ -61,7 +61,6 @@ module LTC2500_controller
     drdy_n,             // The ADC is not ready for filtered data
     mclk,               // The conversion clock
     sync,               // The synchronizing signal for the ADC
-    pre,                // The pre signal is used to configure the filtered data
                         // into two settings, depending on SDI logic level.
     // Streaming output
     data_nyq,           // Parallel Nyquist data out
@@ -96,7 +95,6 @@ module LTC2500_controller
     input               drdy_n;
     output              mclk;
     output              sync;
-    output              pre;
     output  reg [31:0]  data_nyq;
     output  reg         valid_nyq;
     output  reg [53:0]  data_filt;
@@ -250,9 +248,6 @@ module LTC2500_controller
                 en_nyq_sck <= 1'b0;
          end
     assign sck_nyq = (en_nyq_sck) ? sck_in : 1'b0;
-
-    // Disable pre mode signal
-    assign pre = 1'b0;
 
     // The rdl Nyquist signal can be continuously be active low
     assign rdl_nyq = 1'b0;
