@@ -50,7 +50,7 @@ module DC2390_multi_application
     output          adc_clk_nshift_out,     // PLL clock out 0 deg shift
     output          adc_clk_shift_out,      // PLL clock out -90 deg shift
 
-    // ///////// DDR3 /////////
+    //////////// DDR3 /////////
     output  [14:0]  fpga_memory_mem_a,          // fpga_memory.mem_a
     output  [2:0]   fpga_memory_mem_ba,         //            .mem_ba
     output          fpga_memory_mem_ck,         //            .mem_ck
@@ -68,7 +68,7 @@ module DC2390_multi_application
     output          fpga_memory_mem_odt,        //            .mem_odt
     input           oct_rzqin,                  //         oct.rzqin
 
-    // ///////// HPS /////////
+    //////////// HPS /////////
     output  [14:0]  hps_memory_mem_a,
     output  [2:0]   hps_memory_mem_ba,
     output          hps_memory_mem_ck,
@@ -93,7 +93,6 @@ module DC2390_multi_application
     /////// ADCs //////////
 
     // LTC2500 ADCs
-    output          pre_u1,
     output          mclk_u1,
     output          sync_u1,
     input           busy_u1,
@@ -106,7 +105,6 @@ module DC2390_multi_application
     input           sdo_filt_u1,
     output          sdi_filt_u1,
 
-    output          pre_u2,
     output          mclk_u2,
     output          sync_u2,
     input           busy_u2,
@@ -135,10 +133,23 @@ module DC2390_multi_application
     output          gpo1  // HSMC LVDS RX_p14 (FPGA pin H14)
 );
 
+    `define  LTC2512_DEMO 1
+
     // *********************************************************
     // Parameters
 
-    parameter       FPGA_TYPE = 16'hABCD; // FPGA project type identification. Accessible from register map.
+    `ifdef LTC2512_DEMO
+        parameter   FPGA_TYPE = 16'hABCE;
+        parameter   NYQ_TRUNK_VALUE = 8;
+        parameter   FILT_TRUNK_VALUE = 32;
+        parameter   NUM_OF_CLK_PER_BSY = 24;
+    `else
+        parameter   FPGA_TYPE = 16'hABCD; // FPGA project type identification. Accessible from register map.
+        parameter   NYQ_TRUNK_VALUE = 32;
+        parameter   FILT_TRUNK_VALUE = 54;
+        parameter   NUM_OF_CLK_PER_BSY = 34;
+    `endif
+
     parameter       FPGA_REV = 16'h123B;  // FPGA revision (also accessible from register.)
     // 123B: PLL lock status, alternate sources for PID setpoint.
 
@@ -170,10 +181,10 @@ module DC2390_multi_application
     wire    [31:0]  adcA_data;
     wire    [31:0]  adcB_data;
     wire    [3:0]   LEDwire;
-    wire    [13:0]  n;  // For LTC2378-24, number of samples to average
+    wire    [13:0]  n;                  // For LTC2378-24, number of samples to average
     wire    [19:0]  control_sys_output;
     wire            adcA_done;
-    wire            adc_go; // Trigger to ADC controller
+    wire            adc_go;             // Trigger to ADC controller
     wire    [1:0]   dac_a_select;
     wire    [1:0]   dac_b_select;
     wire    [1:0]   lut_addr_select;
@@ -247,6 +258,9 @@ module DC2390_multi_application
     wire            spi_mosi;
     wire            spi_sck;
     wire    [15:0]  lut_addr_div;
+    wire    [1:0]   setpoint_source_select;
+    wire    [19:0]  pulse_out;
+    reg     [19:0]  pulse_val_trigd; // Pulse value changes state on start of data capture.
 
     // *********************************************************
     assign LED[3:0] = LEDwire[3:0];
@@ -396,30 +410,28 @@ module DC2390_multi_application
         .out_valid  (1'bz)                          // out valid
     );
 
-	 // Make version of pulse_val that updates when trig_pulse asserts
+    // Make version of pulse_val that updates when trig_pulse asserts
     always @ (posedge adc_clk) 
         begin
-				if (trig_pulse) begin
-					pulse_val_trigd <= pulse_val;
-				end
-				else begin
-					pulse_val_trigd <= pulse_val_trigd;
-				end
+            if (trig_pulse) begin
+                pulse_val_trigd <= pulse_val;
+            end
+            else begin
+                pulse_val_trigd <= pulse_val_trigd;
+            end
         end
-	 
-mux_4_to_1_20bit	mux_4_to_1_20bit_inst (
-	.clock ( adc_clk ),
-	.data0x ( pulse_out ), // Direct output from fancy pulse generator
-	.data1x ( pulse_val_trigd ), // Pulse value, but updated at start of capture
-	.data2x ( pulse_val ), // Pulse value, straight from blob register
-	.data3x ( 20'b0 ), // Zero.
-	.sel ( setpoint_source_select ),
-	.result ( setpoint ) // Setpoint output to PID controller
-	);
-wire [1:0] setpoint_source_select;
-wire [19:0] pulse_out;
-reg [19:0] pulse_val_trigd; // Pulse value changes state on start of data capture.
-	 
+
+    mux_4_to_1_20bit mux_4_to_1_20bit_inst 
+    (
+        .clock  ( adc_clk ),
+        .data0x ( pulse_out ),          // Direct output from fancy pulse generator
+        .data1x ( pulse_val_trigd ),    // Pulse value, but updated at start of capture
+        .data2x ( pulse_val ),          // Pulse value, straight from blob register
+        .data3x ( 20'b0 ),              // Zero.
+        .sel    ( setpoint_source_select ),
+        .result ( setpoint )            // Setpoint output to PID controller
+    );
+
     // *********************************************************
     // PID controller
     pid #
@@ -451,7 +463,9 @@ reg [19:0] pulse_val_trigd; // Pulse value changes state on start of data captur
     LTC2500_controller #
     (
         .DFF_CYCLE_COMP     (1'b0),
-        .NUM_OF_CLK_PER_BSY (34)
+        .NUM_OF_CLK_PER_BSY (NUM_OF_CLK_PER_BSY),
+        .NYQ_TRUNK_VALUE    (NYQ_TRUNK_VALUE),
+        .FILT_TRUNK_VALUE   (FILT_TRUNK_VALUE)
     )
     LTC2500_u1
     (
@@ -479,8 +493,7 @@ reg [19:0] pulse_val_trigd; // Pulse value changes state on start of data captur
         .drdy_n         (drdyl_u1),     // The ADC is not ready for filtered data
         .mclk           (mclk_u1),      // The conversion clock
         .sync           (sync_u1),      // The synchronizing signal for the ADC
-        .pre            (pre_u1),       // The pre signal is used to configure the filtered data
-                                        // into two settings, depending on SDI logic level.
+
         // Streaming output
         .data_nyq       (adcA_data),    // Parallel Nyquist data out
         .valid_nyq      (adcA_done),    // The Nyquist data is valid
@@ -494,7 +507,9 @@ reg [19:0] pulse_val_trigd; // Pulse value changes state on start of data captur
     LTC2500_controller #
     (
         .DFF_CYCLE_COMP     (1'b0),
-        .NUM_OF_CLK_PER_BSY (34)
+        .NUM_OF_CLK_PER_BSY (NUM_OF_CLK_PER_BSY),
+        .NYQ_TRUNK_VALUE    (NYQ_TRUNK_VALUE),
+        .FILT_TRUNK_VALUE   (FILT_TRUNK_VALUE)
     )
     LTC2500_u2
     (
@@ -522,8 +537,7 @@ reg [19:0] pulse_val_trigd; // Pulse value changes state on start of data captur
         .drdy_n         (drdyl_u2),     // The ADC is not ready for filtered data
         .mclk           (mclk_u2),      // The conversion clock
         .sync           (sync_u2),      // The synchronizing signal for the ADC
-        .pre            (pre_u2),       // The pre signal is used to configure the filtered data
-                                        // into two settings, depending on SDI logic level.
+
         // Streaming output
         .data_nyq       (adcB_data),    // Parallel Nyquist data out
         .valid_nyq      (adcB_done),    // The Nyquist data is valid
@@ -534,7 +548,7 @@ reg [19:0] pulse_val_trigd; // Pulse value changes state on start of data captur
     );
 
     // *********************************************************
-    // Formatted Data formatter
+    // Formatted data formatter
 
     // Converts the streaming control signals to the FIFO control signals
     LT_st_dcfifo_cntr steam_to_fifo_adapter
@@ -812,6 +826,6 @@ reg [19:0] pulse_val_trigd; // Pulse value changes state on start of data captur
         .ltscope_controller_read_start_addr (32'b0), //                             .read_start_addr
         .ltscope_controller_read_length     (32'b0),     //                             .read_length
         .ltscope_controller_read_done       (1'bz)        //                             .read_done
-          );
+    );
 
 endmodule
