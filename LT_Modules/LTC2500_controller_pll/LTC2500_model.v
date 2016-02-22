@@ -215,7 +215,7 @@ module LTC2500_model
             else
                 begin
                     #13 busy = 1'b1;
-                    #675 busy = 1'b0;
+                    #380 busy = 1'b0;
                 end
         end
 

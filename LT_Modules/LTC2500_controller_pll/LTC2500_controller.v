@@ -74,7 +74,8 @@ module LTC2500_controller
     parameter DFF_CYCLE_COMP        = 1;    // If using flip flop a delay in cycle is needed
     parameter NUM_OF_CLK_PER_BSY    = 67;   // Number of sys_clk cycles to make 675ns
                                             // 675ns / (1/100 Mhz) ~ 68 cycles (rounded up) then -1
-    parameter TRUNK_VALUE           = 32;   // Truncated data count value per mclk
+    parameter NYQ_TRUNK_VALUE       = 32;   // Truncated data count value per mclk for nyquist data
+    parameter FILT_TRUNK_VALUE      = 54;   // Truncated data count value for filtered data
 
     // Port declaration
     input               sys_clk;
@@ -102,29 +103,29 @@ module LTC2500_controller
     output  reg         error;
 
     // Internal signals
-    wire                        q_n;
-    wire                        r;
-    wire                        s;
-    wire                        en_busy_count;
-    reg     [3:0]               state;
-    reg                         sync_flag;
-    reg     [9:0]               config_buff;
-    reg     [15:0]              n_buff;
-    reg     [5:0]               nyq_data_count;
-    reg     [TRUNK_VALUE-1:0]   nyq_data_shift_reg;
-    reg     [15:0]              busy_count;
-    wire                        en_nyq_count;
-    reg                         en_nyq_sck;
-    reg     [5:0]               filt_data_count;
-    reg     [14:0]              dsf_avg_count;
-    wire                        en_filt_count;
-    reg                         rd_filt_flag;
-    reg     [53:0]              filt_data_shift_reg;
-    wire                        set_dsf_avg_count;
-    wire                        en_dsf_avg_count;
-    reg                         en_filt_sck;
-    reg     [14:0]              dsf_avg_sample_num;
-    reg     [11:0]              mosi;
+    wire                            q_n;
+    wire                            r;
+    wire                            s;
+    wire                            en_busy_count;
+    reg     [3:0]                   state;
+    reg                             sync_flag;
+    reg     [9:0]                   config_buff;
+    reg     [15:0]                  n_buff;
+    reg     [5:0]                   nyq_data_count;
+    reg     [NYQ_TRUNK_VALUE-1:0]   nyq_data_shift_reg;
+    reg     [15:0]                  busy_count;
+    wire                            en_nyq_count;
+    reg                             en_nyq_sck;
+    reg     [5:0]                   filt_data_count;
+    reg     [14:0]                  dsf_avg_count;
+    wire                            en_filt_count;
+    reg                             rd_filt_flag;
+    reg     [FILT_TRUNK_VALUE-1:0]  filt_data_shift_reg;
+    wire                            set_dsf_avg_count;
+    wire                            en_dsf_avg_count;
+    reg                             en_filt_sck;
+    reg     [14:0]                  dsf_avg_sample_num;
+    reg     [11:0]                  mosi;
 
     // One Hot FSM
     localparam IDLE                 = 4'b0001;
@@ -152,10 +153,10 @@ module LTC2500_controller
                                     state <= GET_DATA;
                             end
                         GET_DATA:
-                            if (nyq_data_count == TRUNK_VALUE - 1)
+                            if (nyq_data_count == NYQ_TRUNK_VALUE - 1)
                                 state <= IDLE;
                         GET_DATA_WITH_SYNC:
-                           if (nyq_data_count == TRUNK_VALUE - 1)
+                           if (nyq_data_count == NYQ_TRUNK_VALUE - 1)
                                 state <= IDLE;
                         default:
                             state <= IDLE;
@@ -215,7 +216,7 @@ module LTC2500_controller
     assign en_busy_count = ((state == WAIT_4_BUSY) && (busy_count != 16'b0)) ? 1'b1 : 1'b0;
 
     // Generate the enable Nyquist count
-    assign en_nyq_count = ((state == GET_DATA) || (state == GET_DATA_WITH_SYNC)) && (nyq_data_count < TRUNK_VALUE);
+    assign en_nyq_count = ((state == GET_DATA) || (state == GET_DATA_WITH_SYNC)) && (nyq_data_count < NYQ_TRUNK_VALUE);
 
     // Count Nyquist data in
     always @ (posedge sys_clk or negedge reset_n)
@@ -234,7 +235,7 @@ module LTC2500_controller
             if(!reset_n)
                 nyq_data_shift_reg <= 0;
             else if(en_nyq_count)
-                nyq_data_shift_reg <= {nyq_data_shift_reg[TRUNK_VALUE-2:0], sdo_nyq};
+                nyq_data_shift_reg <= {nyq_data_shift_reg[NYQ_TRUNK_VALUE-2:0], sdo_nyq};
         end
 
     // Generated the gated clock for Nyquist data
@@ -257,7 +258,7 @@ module LTC2500_controller
         begin
             if(!reset_n)
                 valid_nyq <= 1'b0;
-            else if((nyq_data_count == TRUNK_VALUE))
+            else if((nyq_data_count == NYQ_TRUNK_VALUE))
                 valid_nyq <= 1'b1;
             else
                 valid_nyq <= 1'b0;
@@ -270,19 +271,24 @@ module LTC2500_controller
     generate
         for ( i = 31; i >= 0 ; i = i - 1)
             begin : assign_nyq
-                if(TRUNK_VALUE - (32-i) >= 0)
+                if(NYQ_TRUNK_VALUE - (32-i) >= 0)
                     begin
-                        always @ (posedge sys_clk)
+                        always @ (posedge sys_clk or negedge reset_n)
                             begin
-                                if((nyq_data_count == TRUNK_VALUE ))
-                                    data_nyq[i] <= nyq_data_shift_reg[TRUNK_VALUE - (32 - i)];
+                                if(!reset_n)
+                                    data_nyq[i] <= 1'b0;
                                 else
-                                    data_nyq[i] <= data_nyq[i];
+                                    begin
+                                        if((nyq_data_count == NYQ_TRUNK_VALUE ))
+                                            data_nyq[i] <= nyq_data_shift_reg[NYQ_TRUNK_VALUE - (32 - i)];
+                                        else
+                                            data_nyq[i] <= data_nyq[i];
+                                    end
                             end
                     end
                 else
                     begin
-                        always @ (posedge sys_clk)
+                        always @ (posedge sys_clk or negedge reset_n)
                             begin
                                 data_nyq[i] <= 1'b0;
                             end
@@ -341,7 +347,7 @@ module LTC2500_controller
         begin
             if (!reset_n)
                 rd_filt_flag <= 1'b0;
-            else if (filt_data_count == 6'd53)
+            else if (filt_data_count == FILT_TRUNK_VALUE-1)
                 rd_filt_flag <= 1'b0;
             else if (sync_flag)
                 rd_filt_flag <= 1'b1;
@@ -360,7 +366,7 @@ module LTC2500_controller
             else
                 en_filt_sck <= 1'b0;
          end
-    assign sck_filt  =  (en_filt_sck) ? sck_in : 1'b0;
+    assign sck_filt  =  (en_filt_sck&(!mclk)) ? sck_in : 1'b0;
 
     // Count for filtered data
     always @ (posedge sys_clk or negedge reset_n)
@@ -369,37 +375,58 @@ module LTC2500_controller
                 filt_data_count <= 6'b0;
             else if (!rd_filt_flag)
                 filt_data_count <= 6'b0;
-            else if (rd_filt_flag && state != WAIT_4_BUSY)
+            else if (rd_filt_flag && (state != WAIT_4_BUSY) & (!mclk))
                 filt_data_count <= filt_data_count + 1'b1;
         end
-    assign en_filt_count = rd_filt_flag && (state != WAIT_4_BUSY);
+    assign en_filt_count = rd_filt_flag && (state != WAIT_4_BUSY) && (!mclk);
 
     // Filtered data shift in register
     always @ (posedge sck_in or negedge reset_n)
         begin
             if(!reset_n)
-                filt_data_shift_reg <= 54'b0;
-            else if (rd_filt_flag && filt_data_count <= 6'd54 && state != WAIT_4_BUSY)
-                filt_data_shift_reg <= {filt_data_shift_reg[52:0], sdo_filt};
+                filt_data_shift_reg <= 0;
+            else if (rd_filt_flag && filt_data_count < FILT_TRUNK_VALUE && (state != WAIT_4_BUSY) && !mclk)
+                filt_data_shift_reg <= {filt_data_shift_reg[FILT_TRUNK_VALUE-2:0], sdo_filt};
         end
 
-    // Filtered data out gated
-    always @ (posedge sys_clk or negedge reset_n)
-        begin
-            if(!reset_n)
-                data_filt <= 54'b0;
-            else if(filt_data_count == 6'd54)
-                data_filt <= filt_data_shift_reg;
-            else
-                data_filt <= data_filt;
-        end
+    // Connects the shift register to the data filtered out
+    // This keeps the msb of data in to the msb data out with
+    // different width sift registers
+    genvar j;
+    generate
+        for ( j = 53; j >= 0 ; j = j - 1)
+            begin : assign_filt
+                if(FILT_TRUNK_VALUE - (54-j) >= 0)
+                    begin
+                        always @ (posedge sys_clk or negedge reset_n)
+                            begin
+                                if(!reset_n)
+                                    data_filt[j] <= 1'b0;
+                                else
+                                    begin
+                                        if((filt_data_count == FILT_TRUNK_VALUE))
+                                            data_filt[j] <= filt_data_shift_reg[FILT_TRUNK_VALUE - (54 - j)];
+                                        else
+                                            data_filt[j] <= data_filt[j];
+                                    end
+                            end
+                    end
+                else
+                    begin
+                        always @ (posedge sys_clk)
+                            begin
+                                data_filt[j] <= 1'b0;
+                            end
+                    end
+            end
+    endgenerate
 
     // Generate the valid filtered data signal
     always @ (posedge sys_clk or negedge reset_n)
         begin
             if(!reset_n)
                 valid_filt <= 1'b0;
-            else if(filt_data_count == 6'd54)
+            else if(filt_data_count == FILT_TRUNK_VALUE)
                 valid_filt <= 1'b1;
             else
                 valid_filt <= 1'b0;

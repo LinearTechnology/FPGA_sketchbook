@@ -56,7 +56,6 @@ module tb_LTC2500_controller();
     wire            drdy_n;
     wire            mclk;
     wire            sync;
-    wire            pre;
     wire    [31:0]  data_nyq;
     wire            valid_nyq;
     wire    [53:0]  data_filt;
@@ -69,7 +68,7 @@ module tb_LTC2500_controller();
     // Change the parameters to modify the test
     parameter CLK_HALF_PERIOD       = 10;   // 50Mhz
     parameter RST_DEASSERT_DELAY    = 100;
-    parameter GO_SIG_IN_CYCLES      = 100;
+    parameter GO_SIG_IN_CYCLES      = 11;
     parameter END_SIM_DELAY         = 1000000;
 
     // Change the following to test for different input and configurations
@@ -145,9 +144,10 @@ module tb_LTC2500_controller();
     // The device under test
     LTC2500_controller #
     (
-        .NUM_OF_CLK_PER_BSY(33), // Number of sys_clk cycles to make 675ns
+        .NUM_OF_CLK_PER_BSY(19), // Number of sys_clk cycles to make 675ns
                                  // 675ns / (1/50 Mhz) ~ 34 cycles (rounded up) then -1
-        .TRUNK_VALUE (32)        // Truncated data count value per mclk
+        .NYQ_TRUNK_VALUE (7),    // Truncated data count value per mclk
+        .FILT_TRUNK_VALUE(32)    // 
     )
     dut
     (
@@ -175,8 +175,7 @@ module tb_LTC2500_controller();
         .drdy_n         (drdy_n),         // The ADC is not ready for filtered data
         .mclk           (mclk),           // The conversion clock
         .sync           (sync),           // The synchronizing signal for the ADC
-        .pre            (pre),            // The pre signal is used to configure the filtered data
-                                          // into two settings, depending on SDI logic level.
+
         // Streaming output
         .data_nyq       (data_nyq),       // Parallel Nyquist data out
         .valid_nyq      (valid_nyq),      // The Nyquist data is valid
