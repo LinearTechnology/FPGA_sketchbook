@@ -1,0 +1,12 @@
+	component spi_avalon_pio is
+		port (
+			clk_clk                                                    : in    std_logic                     := 'X'; -- clk
+			pio_data_export                                            : out   std_logic_vector(31 downto 0);        -- export
+			reset_reset_n                                              : in    std_logic                     := 'X'; -- reset_n
+			spi_bridge_mosi_to_the_spislave_inst_for_spichain          : in    std_logic                     := 'X'; -- mosi_to_the_spislave_inst_for_spichain
+			spi_bridge_nss_to_the_spislave_inst_for_spichain           : in    std_logic                     := 'X'; -- nss_to_the_spislave_inst_for_spichain
+			spi_bridge_miso_to_and_from_the_spislave_inst_for_spichain : inout std_logic                     := 'X'; -- miso_to_and_from_the_spislave_inst_for_spichain
+			spi_bridge_sclk_to_the_spislave_inst_for_spichain          : in    std_logic                     := 'X'  -- sclk_to_the_spislave_inst_for_spichain
+		);
+	end component spi_avalon_pio;
+

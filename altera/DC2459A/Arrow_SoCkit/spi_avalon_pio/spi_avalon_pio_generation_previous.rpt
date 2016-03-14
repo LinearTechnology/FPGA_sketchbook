@@ -1,0 +1,49 @@
+Info: Starting: Create block symbol file (.bsf)
+Info: ip-generate --project-directory=C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit --output-directory=C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit\spi_avalon_pio --report-file=bsf:C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit\spi_avalon_pio\spi_avalon_pio.bsf --system-info=DEVICE_FAMILY="Cyclone V" --system-info=DEVICE=5CSXFC6D6F31C6 --system-info=DEVICE_SPEEDGRADE=6_H6 --component-file=C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit\spi_avalon_pio.qsys --remove-qsys-generate-warning
+Progress: Loading Arrow_SoCkit/spi_avalon_pio.qsys
+Progress: Reading input file
+Progress: Adding pio_0 [altera_avalon_pio 14.1]
+Progress: Parameterizing module pio_0
+Progress: Adding spi_to_avalon_mm_bridge [spi_slave_to_avalon_mm_master_bridge 14.1]
+Progress: Parameterizing module spi_to_avalon_mm_bridge
+Progress: Adding sys_clk [clock_source 14.1]
+Progress: Parameterizing module sys_clk
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+Info: ip-generate succeeded.
+Info: Finished: Create block symbol file (.bsf)
+Info: 
+Info: Starting: Create HDL design files for synthesis
+Info: ip-generate --project-directory=C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit --output-directory=C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit\spi_avalon_pio\synthesis --file-set=QUARTUS_SYNTH --report-file=html:C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit\spi_avalon_pio\spi_avalon_pio.html --report-file=sopcinfo:C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit\spi_avalon_pio.sopcinfo --report-file=cmp:C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit\spi_avalon_pio\spi_avalon_pio.cmp --report-file=qip:C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit\spi_avalon_pio\synthesis\spi_avalon_pio.qip --report-file=svd:C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit\spi_avalon_pio\synthesis\spi_avalon_pio.svd --report-file=regmap:C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit\spi_avalon_pio\synthesis\spi_avalon_pio.regmap --report-file=xml:C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit\spi_avalon_pio\spi_avalon_pio.xml --report-file=debuginfo:C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit\spi_avalon_pio\synthesis\spi_avalon_pio.debuginfo --system-info=DEVICE_FAMILY="Cyclone V" --system-info=DEVICE=5CSXFC6D6F31C6 --system-info=DEVICE_SPEEDGRADE=6_H6 --component-file=C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit\spi_avalon_pio.qsys --remove-qsys-generate-warning --language=VERILOG
+Progress: Loading Arrow_SoCkit/spi_avalon_pio.qsys
+Progress: Reading input file
+Progress: Adding pio_0 [altera_avalon_pio 14.1]
+Progress: Parameterizing module pio_0
+Progress: Adding spi_to_avalon_mm_bridge [spi_slave_to_avalon_mm_master_bridge 14.1]
+Progress: Parameterizing module spi_to_avalon_mm_bridge
+Progress: Adding sys_clk [clock_source 14.1]
+Progress: Parameterizing module sys_clk
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+Info: spi_avalon_pio: Generating spi_avalon_pio "spi_avalon_pio" for QUARTUS_SYNTH
+Info: Interconnect is inserted between master spi_to_avalon_mm_bridge.avalon_master and slave pio_0.s1 because the master has address signal 32 bit wide, but the slave is 2 bit wide.
+Info: Interconnect is inserted between master spi_to_avalon_mm_bridge.avalon_master and slave pio_0.s1 because the master has byteenable signal 4 bit wide, but the slave is 0 bit wide.
+Info: Interconnect is inserted between master spi_to_avalon_mm_bridge.avalon_master and slave pio_0.s1 because the master has read signal 1 bit wide, but the slave is 0 bit wide.
+Info: Interconnect is inserted between master spi_to_avalon_mm_bridge.avalon_master and slave pio_0.s1 because the master has readdatavalid signal 1 bit wide, but the slave is 0 bit wide.
+Info: Interconnect is inserted between master spi_to_avalon_mm_bridge.avalon_master and slave pio_0.s1 because the master has waitrequest signal 1 bit wide, but the slave is 0 bit wide.
+Info: pio_0: Starting RTL generation for module 'spi_avalon_pio_pio_0'
+Info: pio_0:   Generation command is [exec C:/altera/14.1/quartus/bin64/perl/bin/perl.exe -I C:/altera/14.1/quartus/bin64/perl/lib -I C:/altera/14.1/quartus/sopc_builder/bin/europa -I C:/altera/14.1/quartus/sopc_builder/bin/perl_lib -I C:/altera/14.1/quartus/sopc_builder/bin -I C:/altera/14.1/quartus/../ip/altera/sopc_builder_ip/common -I C:/altera/14.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio -- C:/altera/14.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio/generate_rtl.pl --name=spi_avalon_pio_pio_0 --dir=C:/Users/noe_q/AppData/Local/Temp/alt6716_9089545154999319776.dir/0003_pio_0_gen/ --quartus_dir=C:/altera/14.1/quartus --verilog --config=C:/Users/noe_q/AppData/Local/Temp/alt6716_9089545154999319776.dir/0003_pio_0_gen//spi_avalon_pio_pio_0_component_configuration.pl  --do_build_sim=0  ]
+Info: pio_0: Done RTL generation for module 'spi_avalon_pio_pio_0'
+Info: pio_0: "spi_avalon_pio" instantiated altera_avalon_pio "pio_0"
+Info: spi_to_avalon_mm_bridge: "spi_avalon_pio" instantiated spi_slave_to_avalon_mm_master_bridge "spi_to_avalon_mm_bridge"
+Info: mm_interconnect_0: "spi_avalon_pio" instantiated altera_mm_interconnect "mm_interconnect_0"
+Info: rst_controller: "spi_avalon_pio" instantiated altera_reset_controller "rst_controller"
+Info: spi_to_avalon_mm_bridge_avalon_master_translator: "mm_interconnect_0" instantiated altera_merlin_master_translator "spi_to_avalon_mm_bridge_avalon_master_translator"
+Info: pio_0_s1_translator: "mm_interconnect_0" instantiated altera_merlin_slave_translator "pio_0_s1_translator"
+Info: spi_avalon_pio: Done "spi_avalon_pio" with 7 modules, 20 files
+Info: ip-generate succeeded.
+Info: Finished: Create HDL design files for synthesis

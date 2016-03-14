@@ -1,0 +1,28 @@
+Info: Starting: Create block symbol file (.bsf)
+Info: ip-generate --project-directory=C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit --output-directory=C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit\nco_signal_gen --report-file=bsf:C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit\nco_signal_gen\nco_signal_gen.bsf --system-info=DEVICE_FAMILY="Cyclone V" --system-info=DEVICE=5CSXFC6D6F31C6 --system-info=DEVICE_SPEEDGRADE=6_H6 --component-file=C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit\nco_signal_gen.qsys --remove-qsys-generate-warning
+Progress: Loading Arrow_SoCkit/nco_signal_gen.qsys
+Progress: Reading input file
+Progress: Adding nco_ii_0 [altera_nco_ii 14.1]
+Progress: Parameterizing module nco_ii_0
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+Info: ip-generate succeeded.
+Info: Finished: Create block symbol file (.bsf)
+Info: 
+Info: Starting: Create HDL design files for synthesis
+Info: ip-generate --project-directory=C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit --output-directory=C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit\nco_signal_gen\synthesis --file-set=QUARTUS_SYNTH --report-file=html:C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit\nco_signal_gen\nco_signal_gen.html --report-file=sopcinfo:C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit\nco_signal_gen.sopcinfo --report-file=cmp:C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit\nco_signal_gen\nco_signal_gen.cmp --report-file=qip:C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit\nco_signal_gen\synthesis\nco_signal_gen.qip --report-file=svd:C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit\nco_signal_gen\synthesis\nco_signal_gen.svd --report-file=regmap:C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit\nco_signal_gen\synthesis\nco_signal_gen.regmap --report-file=xml:C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit\nco_signal_gen\nco_signal_gen.xml --report-file=debuginfo:C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit\nco_signal_gen\synthesis\nco_signal_gen.debuginfo --system-info=DEVICE_FAMILY="Cyclone V" --system-info=DEVICE=5CSXFC6D6F31C6 --system-info=DEVICE_SPEEDGRADE=6_H6 --component-file=C:\Projects\FPGA_scketchbook\altera\DC2459A\Arrow_SoCkit\nco_signal_gen.qsys --remove-qsys-generate-warning --language=VERILOG
+Progress: Loading Arrow_SoCkit/nco_signal_gen.qsys
+Progress: Reading input file
+Progress: Adding nco_ii_0 [altera_nco_ii 14.1]
+Progress: Parameterizing module nco_ii_0
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+Info: nco_signal_gen: Generating nco_signal_gen "nco_signal_gen" for QUARTUS_SYNTH
+Info: nco_ii_0: "nco_signal_gen" instantiated altera_nco_ii "nco_ii_0"
+Info: nco_signal_gen: Done "nco_signal_gen" with 2 modules, 19 files
+Info: ip-generate succeeded.
+Info: Finished: Create HDL design files for synthesis

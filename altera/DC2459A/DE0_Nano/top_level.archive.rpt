@@ -1,0 +1,108 @@
+Archive Project report for top_level
+Mon Mar 14 15:19:25 2016
+Quartus II 64-Bit Version 14.1.0 Build 186 12/03/2014 SJ Full Version
+
+
+---------------------
+; Table of Contents ;
+---------------------
+  1. Legal Notice
+  2. Archive Project Summary
+  3. Archive Project Messages
+  4. Files Archived
+
+
+
+----------------
+; Legal Notice ;
+----------------
+Copyright (C) 1991-2014 Altera Corporation. All rights reserved.
+Your use of Altera Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Altera Program License 
+Subscription Agreement, the Altera Quartus II License Agreement,
+the Altera MegaCore Function License Agreement, or other 
+applicable license agreement, including, without limitation, 
+that your use is for the sole purpose of programming logic 
+devices manufactured by Altera and sold by Altera or its 
+authorized distributors.  Please refer to the applicable 
+agreement for further details.
+
+
+
++----------------------------------------------------------------+
+; Archive Project Summary                                        ;
++------------------------+---------------------------------------+
+; Archive Project Status ; Successful - Mon Mar 14 15:19:25 2016 ;
+; Revision Name          ; top_level                             ;
+; Top-level Entity Name  ; top_level                             ;
+; Family                 ; Cyclone IV E                          ;
++------------------------+---------------------------------------+
+
+
++--------------------------+
+; Archive Project Messages ;
++--------------------------+
+Info: File Set 'Source control' contains:
+    Info: Project source and settings files
+    Info: Automatically detected source files
+Info: Archive will store files relative to the closest common parent directory
+Info (13213): Using common directory C:/Projects/FPGA_scketchbook/altera/DC2459A/DE0_Nano/
+Info: ----------------------------------------------------------
+Info: ----------------------------------------------------------
+Info: Generated archive 'C:/Projects/FPGA_scketchbook/altera/DC2459A/DE0_Nano/DC2459A.qar'
+Info: ----------------------------------------------------------
+Info: ----------------------------------------------------------
+Info: Generated report 'top_level.archive.rpt'
+Info (23030): Evaluation of Tcl script c:/altera/14.1/quartus/common/tcl/apps/qpm/qar.tcl was successful
+Info: Quartus II 64-Bit Shell was successful. 0 errors, 0 warnings
+    Info: Peak virtual memory: 492 megabytes
+    Info: Processing ended: Mon Mar 14 15:19:25 2016
+    Info: Elapsed time: 00:00:26
+    Info: Total CPU time (on all processors): 00:00:52
+
+
++---------------------------------------------------------------+
+; Files Archived                                                ;
++---------------------------------------------------------------+
+; File Name                                                     ;
++---------------------------------------------------------------+
+; c:/altera/14.1/quartus/bin64/assignment_defaults.qdf          ;
+; DC2459A.qpf                                                   ;
+; nco_signal_gen.qsys                                           ;
+; nco_signal_gen/nco_signal_gen.bsf                             ;
+; nco_signal_gen/nco_signal_gen.cmp                             ;
+; nco_signal_gen/nco_signal_gen.html                            ;
+; nco_signal_gen/nco_signal_gen.xml                             ;
+; nco_signal_gen/nco_signal_gen_generation.rpt                  ;
+; nco_signal_gen/synthesis/nco_signal_gen.debuginfo             ;
+; nco_signal_gen/synthesis/nco_signal_gen.qip                   ;
+; nco_signal_gen/synthesis/nco_signal_gen.v                     ;
+; nco_signal_gen/synthesis/submodules/asj_altq.ocp              ;
+; nco_signal_gen/synthesis/submodules/asj_altqmcash.ocp         ;
+; nco_signal_gen/synthesis/submodules/asj_altqmcpipe.ocp        ;
+; nco_signal_gen/synthesis/submodules/asj_altqmcpipe.v          ;
+; nco_signal_gen/synthesis/submodules/asj_crs_par.v             ;
+; nco_signal_gen/synthesis/submodules/asj_dxx.v                 ;
+; nco_signal_gen/synthesis/submodules/asj_dxx_g.v               ;
+; nco_signal_gen/synthesis/submodules/asj_nco_apr_dxx.v         ;
+; nco_signal_gen/synthesis/submodules/asj_nco_isdr.v            ;
+; nco_signal_gen/synthesis/submodules/cord_2c.v                 ;
+; nco_signal_gen/synthesis/submodules/cord_fs.v                 ;
+; nco_signal_gen/synthesis/submodules/cord_init.v               ;
+; nco_signal_gen/synthesis/submodules/cord_seg_sel.v            ;
+; nco_signal_gen/synthesis/submodules/cordic_axor_1p_lpm.v      ;
+; nco_signal_gen/synthesis/submodules/cordic_sxor_1p_lpm.v      ;
+; nco_signal_gen/synthesis/submodules/cordic_zxor_1p_lpm.v      ;
+; nco_signal_gen/synthesis/submodules/nco_signal_gen_nco_ii_0.v ;
+; nco_signal_gen/synthesis/submodules/sop_reg.v                 ;
+; stp1.stp                                                      ;
+; top_level.out.sdc                                             ;
+; top_level.qsf                                                 ;
+; top_level.v                                                   ;
++---------------------------------------------------------------+
+
+

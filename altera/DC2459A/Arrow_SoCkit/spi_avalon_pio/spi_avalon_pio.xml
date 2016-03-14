@@ -1,0 +1,681 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deploy
+ date="2015.12.08.13:44:33"
+ outputDirectory="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/">
+ <perimeter>
+  <parameter
+     name="AUTO_GENERATION_ID"
+     type="Integer"
+     defaultValue="0"
+     onHdl="0"
+     affectsHdl="1" />
+  <parameter
+     name="AUTO_UNIQUE_ID"
+     type="String"
+     defaultValue=""
+     onHdl="0"
+     affectsHdl="1" />
+  <parameter
+     name="AUTO_DEVICE_FAMILY"
+     type="String"
+     defaultValue="Cyclone V"
+     onHdl="0"
+     affectsHdl="1" />
+  <parameter
+     name="AUTO_DEVICE"
+     type="String"
+     defaultValue="5CSXFC6D6F31C6"
+     onHdl="0"
+     affectsHdl="1" />
+  <parameter
+     name="AUTO_DEVICE_SPEEDGRADE"
+     type="String"
+     defaultValue="6_H6"
+     onHdl="0"
+     affectsHdl="1" />
+  <parameter
+     name="AUTO_CLK_CLOCK_RATE"
+     type="Long"
+     defaultValue="-1"
+     onHdl="0"
+     affectsHdl="1" />
+  <parameter
+     name="AUTO_CLK_CLOCK_DOMAIN"
+     type="Integer"
+     defaultValue="-1"
+     onHdl="0"
+     affectsHdl="1" />
+  <parameter
+     name="AUTO_CLK_RESET_DOMAIN"
+     type="Integer"
+     defaultValue="-1"
+     onHdl="0"
+     affectsHdl="1" />
+  <interface name="clk" kind="clock" start="0">
+   <property name="clockRate" value="50000000" />
+   <property name="externallyDriven" value="false" />
+   <property name="ptfSchematicName" value="" />
+   <port name="clk_clk" direction="input" role="clk" width="1" />
+  </interface>
+  <interface name="pio_data" kind="conduit" start="0">
+   <property name="associatedClock" value="" />
+   <property name="associatedReset" value="" />
+   <port name="pio_data_export" direction="output" role="export" width="32" />
+  </interface>
+  <interface name="reset" kind="reset" start="0">
+   <property name="associatedClock" value="" />
+   <property name="synchronousEdges" value="NONE" />
+   <port name="reset_reset_n" direction="input" role="reset_n" width="1" />
+  </interface>
+  <interface name="spi_bridge" kind="conduit" start="0">
+   <property name="associatedClock" value="" />
+   <property name="associatedReset" value="" />
+   <port
+       name="spi_bridge_mosi_to_the_spislave_inst_for_spichain"
+       direction="input"
+       role="mosi_to_the_spislave_inst_for_spichain"
+       width="1" />
+   <port
+       name="spi_bridge_nss_to_the_spislave_inst_for_spichain"
+       direction="input"
+       role="nss_to_the_spislave_inst_for_spichain"
+       width="1" />
+   <port
+       name="spi_bridge_miso_to_and_from_the_spislave_inst_for_spichain"
+       direction="bidir"
+       role="miso_to_and_from_the_spislave_inst_for_spichain"
+       width="1" />
+   <port
+       name="spi_bridge_sclk_to_the_spislave_inst_for_spichain"
+       direction="input"
+       role="sclk_to_the_spislave_inst_for_spichain"
+       width="1" />
+  </interface>
+ </perimeter>
+ <entity
+   path=""
+   parameterizationKey="spi_avalon_pio:1.0:AUTO_CLK_CLOCK_DOMAIN=-1,AUTO_CLK_CLOCK_RATE=-1,AUTO_CLK_RESET_DOMAIN=-1,AUTO_DEVICE=5CSXFC6D6F31C6,AUTO_DEVICE_FAMILY=Cyclone V,AUTO_DEVICE_SPEEDGRADE=6_H6,AUTO_GENERATION_ID=1449611068,AUTO_UNIQUE_ID=(altera_avalon_pio:14.1:bitClearingEdgeCapReg=false,bitModifyingOutReg=false,captureEdge=false,clockRate=50000000,derived_capture=false,derived_do_test_bench_wiring=false,derived_edge_type=NONE,derived_has_in=false,derived_has_irq=false,derived_has_out=true,derived_has_tri=false,derived_irq_type=NONE,direction=Output,edgeType=RISING,generateIRQ=false,irqType=LEVEL,resetValue=858993,simDoTestBenchWiring=false,simDrivenValue=0,width=32)(spi_slave_to_avalon_mm_master_bridge:14.1:AUTO_CLK_CLOCK_RATE=50000000,AUTO_DEVICE_FAMILY=Cyclone V,SYNC_DEPTH=2)(clock_source:14.1:clockFrequency=50000000,clockFrequencyKnown=true,inputClockFrequency=0,resetSynchronousEdges=NONE)(avalon:14.1:arbitrationPriority=1,baseAddress=0x0000,defaultConnection=false)(clock:14.1:)(clock:14.1:)(reset:14.1:)(reset:14.1:)"
+   instancePathKey="spi_avalon_pio"
+   kind="spi_avalon_pio"
+   version="1.0"
+   name="spi_avalon_pio">
+  <parameter name="AUTO_CLK_CLOCK_RATE" value="-1" />
+  <parameter name="AUTO_GENERATION_ID" value="1449611068" />
+  <parameter name="AUTO_DEVICE" value="5CSXFC6D6F31C6" />
+  <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone V" />
+  <parameter name="AUTO_CLK_RESET_DOMAIN" value="-1" />
+  <parameter name="AUTO_CLK_CLOCK_DOMAIN" value="-1" />
+  <parameter name="AUTO_UNIQUE_ID" value="" />
+  <parameter name="AUTO_DEVICE_SPEEDGRADE" value="6_H6" />
+  <generatedFiles>
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/spi_avalon_pio.v"
+       type="VERILOG" />
+  </generatedFiles>
+  <childGeneratedFiles>
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/spi_avalon_pio_pio_0.v"
+       type="VERILOG"
+       attributes="" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/spiphyslave.sdc"
+       type="SDC" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/SPISlaveToAvalonMasterBridge.v"
+       type="VERILOG" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/altera_avalon_packets_to_master_inst_for_spichain.v"
+       type="VERILOG" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/altera_avalon_st_bytes_to_packets_inst_for_spichain.v"
+       type="VERILOG" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/altera_avalon_st_packets_to_bytes_inst_for_spichain.v"
+       type="VERILOG" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/channel_adapter_btop_for_spichain.v"
+       type="VERILOG" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/channel_adapter_ptob_for_spichain.v"
+       type="VERILOG" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/spislave_inst_for_spichain.v"
+       type="VERILOG" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/altera_avalon_packets_to_master.v"
+       type="VERILOG" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/altera_avalon_st_bytes_to_packets.v"
+       type="VERILOG" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/altera_avalon_st_packets_to_bytes.v"
+       type="VERILOG" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/spiphyslave.v"
+       type="VERILOG" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/spi_avalon_pio_mm_interconnect_0.v"
+       type="VERILOG" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/altera_merlin_master_translator.sv"
+       type="SYSTEM_VERILOG"
+       attributes="" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/altera_merlin_slave_translator.sv"
+       type="SYSTEM_VERILOG"
+       attributes="" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/altera_reset_controller.v"
+       type="VERILOG"
+       attributes="" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/altera_reset_synchronizer.v"
+       type="VERILOG"
+       attributes="" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/altera_reset_controller.sdc"
+       type="SDC"
+       attributes="" />
+  </childGeneratedFiles>
+  <sourceFiles>
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio.qsys" />
+  </sourceFiles>
+  <childSourceFiles>
+   <file
+       path="C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_pio/altera_avalon_pio_hw.tcl" />
+   <file
+       path="C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_spislave_to_avalonmm_bridge/SPISlaveToAvalonMasterBridge_hw.tcl" />
+   <file
+       path="C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_spi_phy_slave/spiphyslave.sdc" />
+   <file
+       path="C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_spislave_to_avalonmm_bridge/SPISlaveToAvalonMasterBridge.v" />
+   <file
+       path="C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_spislave_to_avalonmm_bridge/altera_avalon_packets_to_master_inst_for_spichain.v" />
+   <file
+       path="C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_spislave_to_avalonmm_bridge/altera_avalon_st_bytes_to_packets_inst_for_spichain.v" />
+   <file
+       path="C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_spislave_to_avalonmm_bridge/altera_avalon_st_packets_to_bytes_inst_for_spichain.v" />
+   <file
+       path="C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_spislave_to_avalonmm_bridge/channel_adapter_btop_for_spichain.v" />
+   <file
+       path="C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_spislave_to_avalonmm_bridge/channel_adapter_ptob_for_spichain.v" />
+   <file
+       path="C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_spislave_to_avalonmm_bridge/spislave_inst_for_spichain.v" />
+   <file
+       path="C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_packets_to_master/altera_avalon_packets_to_master.v" />
+   <file
+       path="C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_st_bytes_to_packets/altera_avalon_st_bytes_to_packets.v" />
+   <file
+       path="C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_st_packets_to_bytes/altera_avalon_st_packets_to_bytes.v" />
+   <file
+       path="C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_spi_phy_slave/spiphyslave.v" />
+   <file
+       path="C:/altera/14.1/ip/altera/merlin/altera_mm_interconnect/altera_mm_interconnect_hw.tcl" />
+   <file
+       path="C:/altera/14.1/ip/altera/merlin/altera_merlin_master_translator/altera_merlin_master_translator_hw.tcl" />
+   <file
+       path="C:/altera/14.1/ip/altera/merlin/altera_merlin_slave_translator/altera_merlin_slave_translator_hw.tcl" />
+   <file
+       path="C:/altera/14.1/ip/altera/merlin/altera_reset_controller/altera_reset_controller_hw.tcl" />
+  </childSourceFiles>
+  <messages>
+   <message level="Debug" culprit="spi_avalon_pio">queue size: 0 starting:spi_avalon_pio "spi_avalon_pio"</message>
+   <message level="Progress" culprit="min"></message>
+   <message level="Progress" culprit="max"></message>
+   <message level="Progress" culprit="current"></message>
+   <message level="Debug">Transform: CustomInstructionTransform</message>
+   <message level="Debug">No custom instruction connections, skipping transform </message>
+   <message level="Debug" culprit="merlin_custom_instruction_transform"><![CDATA[After transform: <b>3</b> modules, <b>5</b> connections]]></message>
+   <message level="Debug">Transform: MMTransform</message>
+   <message level="Debug">Transform: InitialInterconnectTransform</message>
+   <message level="Info">Interconnect is inserted between master spi_to_avalon_mm_bridge.avalon_master and slave pio_0.s1 because the master has address signal 32 bit wide, but the slave is 2 bit wide.</message>
+   <message level="Info">Interconnect is inserted between master spi_to_avalon_mm_bridge.avalon_master and slave pio_0.s1 because the master has byteenable signal 4 bit wide, but the slave is 0 bit wide.</message>
+   <message level="Info">Interconnect is inserted between master spi_to_avalon_mm_bridge.avalon_master and slave pio_0.s1 because the master has read signal 1 bit wide, but the slave is 0 bit wide.</message>
+   <message level="Info">Interconnect is inserted between master spi_to_avalon_mm_bridge.avalon_master and slave pio_0.s1 because the master has readdatavalid signal 1 bit wide, but the slave is 0 bit wide.</message>
+   <message level="Info">Interconnect is inserted between master spi_to_avalon_mm_bridge.avalon_master and slave pio_0.s1 because the master has waitrequest signal 1 bit wide, but the slave is 0 bit wide.</message>
+   <message level="Debug" culprit="merlin_initial_interconnect_transform"><![CDATA[After transform: <b>3</b> modules, <b>5</b> connections]]></message>
+   <message level="Debug">Transform: TerminalIdAssignmentUpdateTransform</message>
+   <message level="Debug">Transform: DefaultSlaveTransform</message>
+   <message level="Debug">Transform: TranslatorTransform</message>
+   <message level="Progress" culprit="min"></message>
+   <message level="Progress" culprit="max"></message>
+   <message level="Progress" culprit="current"></message>
+   <message level="Progress" culprit="min"></message>
+   <message level="Progress" culprit="max"></message>
+   <message level="Progress" culprit="current"></message>
+   <message level="Debug" culprit="merlin_translator_transform"><![CDATA[After transform: <b>5</b> modules, <b>11</b> connections]]></message>
+   <message level="Debug">Transform: IDPadTransform</message>
+   <message level="Debug">Transform: DomainTransform</message>
+   <message level="Debug">Transform merlin_domain_transform not run on matched interfaces spi_to_avalon_mm_bridge.avalon_master and spi_to_avalon_mm_bridge_avalon_master_translator.avalon_anti_master_0</message>
+   <message level="Debug">Transform merlin_domain_transform not run on matched interfaces spi_to_avalon_mm_bridge_avalon_master_translator.avalon_universal_master_0 and pio_0_s1_translator.avalon_universal_slave_0</message>
+   <message level="Debug">Transform merlin_domain_transform not run on matched interfaces pio_0_s1_translator.avalon_anti_slave_0 and pio_0.s1</message>
+   <message level="Debug">Transform: RouterTransform</message>
+   <message level="Debug">Transform: TrafficLimiterTransform</message>
+   <message level="Debug">Transform: BurstTransform</message>
+   <message level="Debug">Transform: TreeTransform</message>
+   <message level="Debug">Transform: NetworkToSwitchTransform</message>
+   <message level="Debug">Transform: WidthTransform</message>
+   <message level="Debug">Transform: RouterTableTransform</message>
+   <message level="Debug">Transform: ThreadIDMappingTableTransform</message>
+   <message level="Debug">Transform: ClockCrossingTransform</message>
+   <message level="Debug">Transform: PipelineTransform</message>
+   <message level="Debug">Transform: SpotPipelineTransform</message>
+   <message level="Debug">Transform: PerformanceMonitorTransform</message>
+   <message level="Debug">Transform: TrafficLimiterUpdateTransform</message>
+   <message level="Debug">Transform: InsertClockAndResetBridgesTransform</message>
+   <message level="Progress" culprit="min"></message>
+   <message level="Progress" culprit="max"></message>
+   <message level="Progress" culprit="current"></message>
+   <message level="Progress" culprit="min"></message>
+   <message level="Progress" culprit="max"></message>
+   <message level="Progress" culprit="current"></message>
+   <message level="Debug" culprit="merlin_clock_and_reset_bridge_transform"><![CDATA[After transform: <b>7</b> modules, <b>17</b> connections]]></message>
+   <message level="Debug">Transform: InterconnectConnectionsTagger</message>
+   <message level="Debug">Transform: HierarchyTransform</message>
+   <message level="Progress" culprit="min"></message>
+   <message level="Progress" culprit="max"></message>
+   <message level="Progress" culprit="current"></message>
+   <message level="Debug" culprit="merlin_hierarchy_transform"><![CDATA[After transform: <b>4</b> modules, <b>8</b> connections]]></message>
+   <message level="Debug" culprit="merlin_mm_transform"><![CDATA[After transform: <b>4</b> modules, <b>8</b> connections]]></message>
+   <message level="Debug">Transform: InterruptMapperTransform</message>
+   <message level="Debug">Transform: InterruptSyncTransform</message>
+   <message level="Debug">Transform: InterruptFanoutTransform</message>
+   <message level="Debug">Transform: AvalonStreamingTransform</message>
+   <message level="Debug">Transform: ResetAdaptation</message>
+   <message level="Progress" culprit="min"></message>
+   <message level="Progress" culprit="max"></message>
+   <message level="Progress" culprit="current"></message>
+   <message level="Debug" culprit="reset_adaptation_transform"><![CDATA[After transform: <b>5</b> modules, <b>10</b> connections]]></message>
+   <message level="Debug" culprit="spi_avalon_pio"><![CDATA["<b>spi_avalon_pio</b>" reuses <b>altera_avalon_pio</b> "<b>submodules/spi_avalon_pio_pio_0</b>"]]></message>
+   <message level="Debug" culprit="spi_avalon_pio"><![CDATA["<b>spi_avalon_pio</b>" reuses <b>spi_slave_to_avalon_mm_master_bridge</b> "<b>submodules/SPISlaveToAvalonMasterBridge</b>"]]></message>
+   <message level="Debug" culprit="spi_avalon_pio"><![CDATA["<b>spi_avalon_pio</b>" reuses <b>altera_mm_interconnect</b> "<b>submodules/spi_avalon_pio_mm_interconnect_0</b>"]]></message>
+   <message level="Debug" culprit="spi_avalon_pio"><![CDATA["<b>spi_avalon_pio</b>" reuses <b>altera_reset_controller</b> "<b>submodules/altera_reset_controller</b>"]]></message>
+   <message level="Debug" culprit="spi_avalon_pio">queue size: 3 starting:altera_avalon_pio "submodules/spi_avalon_pio_pio_0"</message>
+   <message level="Info" culprit="pio_0">Starting RTL generation for module 'spi_avalon_pio_pio_0'</message>
+   <message level="Info" culprit="pio_0">  Generation command is [exec C:/altera/14.1/quartus/bin64/perl/bin/perl.exe -I C:/altera/14.1/quartus/bin64/perl/lib -I C:/altera/14.1/quartus/sopc_builder/bin/europa -I C:/altera/14.1/quartus/sopc_builder/bin/perl_lib -I C:/altera/14.1/quartus/sopc_builder/bin -I C:/altera/14.1/quartus/../ip/altera/sopc_builder_ip/common -I C:/altera/14.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio -- C:/altera/14.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio/generate_rtl.pl --name=spi_avalon_pio_pio_0 --dir=C:/Users/noe_q/AppData/Local/Temp/alt6777_706699301393787066.dir/0003_pio_0_gen/ --quartus_dir=C:/altera/14.1/quartus --verilog --config=C:/Users/noe_q/AppData/Local/Temp/alt6777_706699301393787066.dir/0003_pio_0_gen//spi_avalon_pio_pio_0_component_configuration.pl  --do_build_sim=0  ]</message>
+   <message level="Info" culprit="pio_0">Done RTL generation for module 'spi_avalon_pio_pio_0'</message>
+   <message level="Info" culprit="pio_0"><![CDATA["<b>spi_avalon_pio</b>" instantiated <b>altera_avalon_pio</b> "<b>pio_0</b>"]]></message>
+   <message level="Debug" culprit="spi_avalon_pio">queue size: 2 starting:spi_slave_to_avalon_mm_master_bridge "submodules/SPISlaveToAvalonMasterBridge"</message>
+   <message level="Debug">set ALTERA_HW_TCL_KEEP_TEMP_FILES=1 to retain temp files</message>
+   <message level="Debug">Command: C:/altera/14.1/quartus\bin64/quartus_sh.exe -t C:/Users/noe_q/AppData/Local/Temp/alt6777_706699301393787066.dir/0002_sopcqmap/not_a_project_setup.tcl</message>
+   <message level="Debug">Command: C:/altera/14.1/quartus\bin64/quartus_map.exe not_a_project --generate_hdl_interface=C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_spislave_to_avalonmm_bridge/SPISlaveToAvalonMasterBridge.v --set=HDL_INTERFACE_OUTPUT_PATH=C:/Users/noe_q/AppData/Local/Temp/alt6777_706699301393787066.dir/0002_sopcqmap/ --ini=disable_check_quartus_compatibility_qsys_only=on</message>
+   <message level="Debug">Command took 1.812s</message>
+   <message level="Debug">Command took 1.961s</message>
+   <message level="Debug">set ALTERA_HW_TCL_KEEP_TEMP_FILES=1 to retain temp files</message>
+   <message level="Debug">Command: C:/altera/14.1/quartus\bin64/quartus_sh.exe -t C:/Users/noe_q/AppData/Local/Temp/alt6777_706699301393787066.dir/0004_sopcqmap/not_a_project_setup.tcl</message>
+   <message level="Debug">Command: C:/altera/14.1/quartus\bin64/quartus_map.exe not_a_project --generate_hdl_interface=C:\altera\14.1\ip\altera\sopc_builder_ip\altera_avalon_spislave_to_avalonmm_bridge\SPISlaveToAvalonMasterBridge.v --set=HDL_INTERFACE_OUTPUT_PATH=C:/Users/noe_q/AppData/Local/Temp/alt6777_706699301393787066.dir/0004_sopcqmap/ --set=HDL_INTERFACE_INSTANCE_NAME=inst --set=HDL_INTERFACE_INSTANCE_ENTITY=SPISlaveToAvalonMasterBridge "--set=HDL_INTERFACE_INSTANCE_PARAMETERS=SYNC_DEPTH=D\"2\";" --ini=disable_check_quartus_compatibility_qsys_only=on</message>
+   <message level="Debug">Command took 1.862s</message>
+   <message level="Debug">Command took 1.951s</message>
+   <message level="Info" culprit="spi_to_avalon_mm_bridge"><![CDATA["<b>spi_avalon_pio</b>" instantiated <b>spi_slave_to_avalon_mm_master_bridge</b> "<b>spi_to_avalon_mm_bridge</b>"]]></message>
+   <message level="Debug" culprit="spi_avalon_pio">queue size: 1 starting:altera_mm_interconnect "submodules/spi_avalon_pio_mm_interconnect_0"</message>
+   <message level="Progress" culprit="min"></message>
+   <message level="Progress" culprit="max"></message>
+   <message level="Progress" culprit="current"></message>
+   <message level="Debug">Transform: CustomInstructionTransform</message>
+   <message level="Debug">No custom instruction connections, skipping transform </message>
+   <message level="Debug" culprit="merlin_custom_instruction_transform"><![CDATA[After transform: <b>4</b> modules, <b>6</b> connections]]></message>
+   <message level="Debug">Transform: MMTransform</message>
+   <message level="Debug">Transform: InitialInterconnectTransform</message>
+   <message level="Debug" culprit="merlin_initial_interconnect_transform"><![CDATA[After transform: <b>0</b> modules, <b>0</b> connections]]></message>
+   <message level="Debug">Transform: TerminalIdAssignmentUpdateTransform</message>
+   <message level="Debug">Transform: DefaultSlaveTransform</message>
+   <message level="Debug">Transform: TranslatorTransform</message>
+   <message level="Debug">No Avalon connections, skipping transform </message>
+   <message level="Debug">Transform: IDPadTransform</message>
+   <message level="Debug">Transform: DomainTransform</message>
+   <message level="Debug">Transform: RouterTransform</message>
+   <message level="Debug">Transform: TrafficLimiterTransform</message>
+   <message level="Debug">Transform: BurstTransform</message>
+   <message level="Debug">Transform: TreeTransform</message>
+   <message level="Debug">Transform: NetworkToSwitchTransform</message>
+   <message level="Debug">Transform: WidthTransform</message>
+   <message level="Debug">Transform: RouterTableTransform</message>
+   <message level="Debug">Transform: ThreadIDMappingTableTransform</message>
+   <message level="Debug">Transform: ClockCrossingTransform</message>
+   <message level="Debug">Transform: PipelineTransform</message>
+   <message level="Debug">Transform: SpotPipelineTransform</message>
+   <message level="Debug">Transform: PerformanceMonitorTransform</message>
+   <message level="Debug">Transform: TrafficLimiterUpdateTransform</message>
+   <message level="Debug">Transform: InsertClockAndResetBridgesTransform</message>
+   <message level="Debug">Transform: InterconnectConnectionsTagger</message>
+   <message level="Debug">Transform: HierarchyTransform</message>
+   <message level="Debug" culprit="merlin_hierarchy_transform"><![CDATA[After transform: <b>4</b> modules, <b>6</b> connections]]></message>
+   <message level="Debug">Transform: InterruptMapperTransform</message>
+   <message level="Debug">Transform: InterruptSyncTransform</message>
+   <message level="Debug">Transform: InterruptFanoutTransform</message>
+   <message level="Debug">Transform: AvalonStreamingTransform</message>
+   <message level="Debug">Transform: ResetAdaptation</message>
+   <message level="Debug" culprit="mm_interconnect_0"><![CDATA["<b>mm_interconnect_0</b>" reuses <b>altera_merlin_master_translator</b> "<b>submodules/altera_merlin_master_translator</b>"]]></message>
+   <message level="Debug" culprit="mm_interconnect_0"><![CDATA["<b>mm_interconnect_0</b>" reuses <b>altera_merlin_slave_translator</b> "<b>submodules/altera_merlin_slave_translator</b>"]]></message>
+   <message level="Info" culprit="mm_interconnect_0"><![CDATA["<b>spi_avalon_pio</b>" instantiated <b>altera_mm_interconnect</b> "<b>mm_interconnect_0</b>"]]></message>
+   <message level="Debug" culprit="spi_avalon_pio">queue size: 1 starting:altera_merlin_master_translator "submodules/altera_merlin_master_translator"</message>
+   <message
+       level="Info"
+       culprit="spi_to_avalon_mm_bridge_avalon_master_translator"><![CDATA["<b>mm_interconnect_0</b>" instantiated <b>altera_merlin_master_translator</b> "<b>spi_to_avalon_mm_bridge_avalon_master_translator</b>"]]></message>
+   <message level="Debug" culprit="spi_avalon_pio">queue size: 0 starting:altera_merlin_slave_translator "submodules/altera_merlin_slave_translator"</message>
+   <message level="Info" culprit="pio_0_s1_translator"><![CDATA["<b>mm_interconnect_0</b>" instantiated <b>altera_merlin_slave_translator</b> "<b>pio_0_s1_translator</b>"]]></message>
+   <message level="Debug" culprit="spi_avalon_pio">queue size: 2 starting:altera_reset_controller "submodules/altera_reset_controller"</message>
+   <message level="Info" culprit="rst_controller"><![CDATA["<b>spi_avalon_pio</b>" instantiated <b>altera_reset_controller</b> "<b>rst_controller</b>"]]></message>
+  </messages>
+ </entity>
+ <entity
+   path="submodules/"
+   parameterizationKey="altera_avalon_pio:14.1:bitClearingEdgeCapReg=false,bitModifyingOutReg=false,captureEdge=false,clockRate=50000000,derived_capture=false,derived_do_test_bench_wiring=false,derived_edge_type=NONE,derived_has_in=false,derived_has_irq=false,derived_has_out=true,derived_has_tri=false,derived_irq_type=NONE,direction=Output,edgeType=RISING,generateIRQ=false,irqType=LEVEL,resetValue=858993,simDoTestBenchWiring=false,simDrivenValue=0,width=32"
+   instancePathKey="spi_avalon_pio:.:pio_0"
+   kind="altera_avalon_pio"
+   version="14.1"
+   name="spi_avalon_pio_pio_0">
+  <parameter name="derived_do_test_bench_wiring" value="false" />
+  <parameter name="generateIRQ" value="false" />
+  <parameter name="derived_has_irq" value="false" />
+  <parameter name="captureEdge" value="false" />
+  <parameter name="clockRate" value="50000000" />
+  <parameter name="derived_has_out" value="true" />
+  <parameter name="derived_has_in" value="false" />
+  <parameter name="resetValue" value="858993" />
+  <parameter name="derived_has_tri" value="false" />
+  <parameter name="derived_capture" value="false" />
+  <parameter name="simDoTestBenchWiring" value="false" />
+  <parameter name="bitModifyingOutReg" value="false" />
+  <parameter name="simDrivenValue" value="0" />
+  <parameter name="derived_edge_type" value="NONE" />
+  <parameter name="irqType" value="LEVEL" />
+  <parameter name="derived_irq_type" value="NONE" />
+  <parameter name="edgeType" value="RISING" />
+  <parameter name="width" value="32" />
+  <parameter name="bitClearingEdgeCapReg" value="false" />
+  <parameter name="direction" value="Output" />
+  <generatedFiles>
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/spi_avalon_pio_pio_0.v"
+       type="VERILOG"
+       attributes="" />
+  </generatedFiles>
+  <childGeneratedFiles/>
+  <sourceFiles>
+   <file
+       path="C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_pio/altera_avalon_pio_hw.tcl" />
+  </sourceFiles>
+  <childSourceFiles/>
+  <instantiator instantiator="spi_avalon_pio" as="pio_0" />
+  <messages>
+   <message level="Debug" culprit="spi_avalon_pio">queue size: 3 starting:altera_avalon_pio "submodules/spi_avalon_pio_pio_0"</message>
+   <message level="Info" culprit="pio_0">Starting RTL generation for module 'spi_avalon_pio_pio_0'</message>
+   <message level="Info" culprit="pio_0">  Generation command is [exec C:/altera/14.1/quartus/bin64/perl/bin/perl.exe -I C:/altera/14.1/quartus/bin64/perl/lib -I C:/altera/14.1/quartus/sopc_builder/bin/europa -I C:/altera/14.1/quartus/sopc_builder/bin/perl_lib -I C:/altera/14.1/quartus/sopc_builder/bin -I C:/altera/14.1/quartus/../ip/altera/sopc_builder_ip/common -I C:/altera/14.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio -- C:/altera/14.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio/generate_rtl.pl --name=spi_avalon_pio_pio_0 --dir=C:/Users/noe_q/AppData/Local/Temp/alt6777_706699301393787066.dir/0003_pio_0_gen/ --quartus_dir=C:/altera/14.1/quartus --verilog --config=C:/Users/noe_q/AppData/Local/Temp/alt6777_706699301393787066.dir/0003_pio_0_gen//spi_avalon_pio_pio_0_component_configuration.pl  --do_build_sim=0  ]</message>
+   <message level="Info" culprit="pio_0">Done RTL generation for module 'spi_avalon_pio_pio_0'</message>
+   <message level="Info" culprit="pio_0"><![CDATA["<b>spi_avalon_pio</b>" instantiated <b>altera_avalon_pio</b> "<b>pio_0</b>"]]></message>
+  </messages>
+ </entity>
+ <entity
+   path="submodules/"
+   parameterizationKey="spi_slave_to_avalon_mm_master_bridge:14.1:AUTO_CLK_CLOCK_RATE=50000000,AUTO_DEVICE_FAMILY=Cyclone V,SYNC_DEPTH=2"
+   instancePathKey="spi_avalon_pio:.:spi_to_avalon_mm_bridge"
+   kind="spi_slave_to_avalon_mm_master_bridge"
+   version="14.1"
+   name="SPISlaveToAvalonMasterBridge">
+  <parameter name="AUTO_CLK_CLOCK_RATE" value="50000000" />
+  <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone V" />
+  <generatedFiles>
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/spiphyslave.sdc"
+       type="SDC" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/SPISlaveToAvalonMasterBridge.v"
+       type="VERILOG" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/altera_avalon_packets_to_master_inst_for_spichain.v"
+       type="VERILOG" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/altera_avalon_st_bytes_to_packets_inst_for_spichain.v"
+       type="VERILOG" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/altera_avalon_st_packets_to_bytes_inst_for_spichain.v"
+       type="VERILOG" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/channel_adapter_btop_for_spichain.v"
+       type="VERILOG" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/channel_adapter_ptob_for_spichain.v"
+       type="VERILOG" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/spislave_inst_for_spichain.v"
+       type="VERILOG" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/altera_avalon_packets_to_master.v"
+       type="VERILOG" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/altera_avalon_st_bytes_to_packets.v"
+       type="VERILOG" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/altera_avalon_st_packets_to_bytes.v"
+       type="VERILOG" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/spiphyslave.v"
+       type="VERILOG" />
+  </generatedFiles>
+  <childGeneratedFiles/>
+  <sourceFiles>
+   <file
+       path="C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_spislave_to_avalonmm_bridge/SPISlaveToAvalonMasterBridge_hw.tcl" />
+   <file
+       path="C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_spi_phy_slave/spiphyslave.sdc" />
+   <file
+       path="C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_spislave_to_avalonmm_bridge/SPISlaveToAvalonMasterBridge.v" />
+   <file
+       path="C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_spislave_to_avalonmm_bridge/altera_avalon_packets_to_master_inst_for_spichain.v" />
+   <file
+       path="C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_spislave_to_avalonmm_bridge/altera_avalon_st_bytes_to_packets_inst_for_spichain.v" />
+   <file
+       path="C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_spislave_to_avalonmm_bridge/altera_avalon_st_packets_to_bytes_inst_for_spichain.v" />
+   <file
+       path="C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_spislave_to_avalonmm_bridge/channel_adapter_btop_for_spichain.v" />
+   <file
+       path="C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_spislave_to_avalonmm_bridge/channel_adapter_ptob_for_spichain.v" />
+   <file
+       path="C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_spislave_to_avalonmm_bridge/spislave_inst_for_spichain.v" />
+   <file
+       path="C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_packets_to_master/altera_avalon_packets_to_master.v" />
+   <file
+       path="C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_st_bytes_to_packets/altera_avalon_st_bytes_to_packets.v" />
+   <file
+       path="C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_st_packets_to_bytes/altera_avalon_st_packets_to_bytes.v" />
+   <file
+       path="C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_spi_phy_slave/spiphyslave.v" />
+  </sourceFiles>
+  <childSourceFiles/>
+  <instantiator instantiator="spi_avalon_pio" as="spi_to_avalon_mm_bridge" />
+  <messages>
+   <message level="Debug" culprit="spi_avalon_pio">queue size: 2 starting:spi_slave_to_avalon_mm_master_bridge "submodules/SPISlaveToAvalonMasterBridge"</message>
+   <message level="Debug">set ALTERA_HW_TCL_KEEP_TEMP_FILES=1 to retain temp files</message>
+   <message level="Debug">Command: C:/altera/14.1/quartus\bin64/quartus_sh.exe -t C:/Users/noe_q/AppData/Local/Temp/alt6777_706699301393787066.dir/0002_sopcqmap/not_a_project_setup.tcl</message>
+   <message level="Debug">Command: C:/altera/14.1/quartus\bin64/quartus_map.exe not_a_project --generate_hdl_interface=C:/altera/14.1/ip/altera/sopc_builder_ip/altera_avalon_spislave_to_avalonmm_bridge/SPISlaveToAvalonMasterBridge.v --set=HDL_INTERFACE_OUTPUT_PATH=C:/Users/noe_q/AppData/Local/Temp/alt6777_706699301393787066.dir/0002_sopcqmap/ --ini=disable_check_quartus_compatibility_qsys_only=on</message>
+   <message level="Debug">Command took 1.812s</message>
+   <message level="Debug">Command took 1.961s</message>
+   <message level="Debug">set ALTERA_HW_TCL_KEEP_TEMP_FILES=1 to retain temp files</message>
+   <message level="Debug">Command: C:/altera/14.1/quartus\bin64/quartus_sh.exe -t C:/Users/noe_q/AppData/Local/Temp/alt6777_706699301393787066.dir/0004_sopcqmap/not_a_project_setup.tcl</message>
+   <message level="Debug">Command: C:/altera/14.1/quartus\bin64/quartus_map.exe not_a_project --generate_hdl_interface=C:\altera\14.1\ip\altera\sopc_builder_ip\altera_avalon_spislave_to_avalonmm_bridge\SPISlaveToAvalonMasterBridge.v --set=HDL_INTERFACE_OUTPUT_PATH=C:/Users/noe_q/AppData/Local/Temp/alt6777_706699301393787066.dir/0004_sopcqmap/ --set=HDL_INTERFACE_INSTANCE_NAME=inst --set=HDL_INTERFACE_INSTANCE_ENTITY=SPISlaveToAvalonMasterBridge "--set=HDL_INTERFACE_INSTANCE_PARAMETERS=SYNC_DEPTH=D\"2\";" --ini=disable_check_quartus_compatibility_qsys_only=on</message>
+   <message level="Debug">Command took 1.862s</message>
+   <message level="Debug">Command took 1.951s</message>
+   <message level="Info" culprit="spi_to_avalon_mm_bridge"><![CDATA["<b>spi_avalon_pio</b>" instantiated <b>spi_slave_to_avalon_mm_master_bridge</b> "<b>spi_to_avalon_mm_bridge</b>"]]></message>
+  </messages>
+ </entity>
+ <entity
+   path="submodules/"
+   parameterizationKey="altera_mm_interconnect:14.1:AUTO_DEVICE=5CSXFC6D6F31C6,AUTO_DEVICE_FAMILY=Cyclone V,AUTO_DEVICE_SPEEDGRADE=,COMPOSE_CONTENTS=add_instance {spi_to_avalon_mm_bridge_avalon_master_translator} {altera_merlin_master_translator};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_ADDRESS_W} {32};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_DATA_W} {32};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_BURSTCOUNT_W} {1};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_BYTEENABLE_W} {4};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {UAV_ADDRESS_W} {32};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {UAV_BURSTCOUNT_W} {3};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_READLATENCY} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_WRITE_WAIT} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_READ_WAIT} {1};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_DATA_HOLD} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_SETUP_WAIT} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_READDATA} {1};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_WRITEDATA} {1};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_READ} {1};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_WRITE} {1};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_BEGINBURSTTRANSFER} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_BEGINTRANSFER} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_BYTEENABLE} {1};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_CHIPSELECT} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_ADDRESS} {1};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_BURSTCOUNT} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_DEBUGACCESS} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_CLKEN} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_READDATAVALID} {1};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_WAITREQUEST} {1};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_LOCK} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_READRESPONSE} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_WRITERESPONSE} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_SYMBOLS_PER_WORD} {4};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_ADDRESS_SYMBOLS} {1};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_BURSTCOUNT_SYMBOLS} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_CONSTANT_BURST_BEHAVIOR} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {UAV_CONSTANT_BURST_BEHAVIOR} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_LINEWRAPBURSTS} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_MAX_PENDING_READ_TRANSACTIONS} {64};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_BURSTBOUNDARIES} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_INTERLEAVEBURSTS} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_BITS_PER_SYMBOL} {8};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_ISBIGENDIAN} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_ADDRESSGROUP} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {UAV_ADDRESSGROUP} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_REGISTEROUTGOINGSIGNALS} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_REGISTERINCOMINGSIGNALS} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_ALWAYSBURSTMAXBURST} {0};add_instance {pio_0_s1_translator} {altera_merlin_slave_translator};set_instance_parameter_value {pio_0_s1_translator} {AV_ADDRESS_W} {2};set_instance_parameter_value {pio_0_s1_translator} {AV_DATA_W} {32};set_instance_parameter_value {pio_0_s1_translator} {UAV_DATA_W} {32};set_instance_parameter_value {pio_0_s1_translator} {AV_BURSTCOUNT_W} {1};set_instance_parameter_value {pio_0_s1_translator} {AV_BYTEENABLE_W} {1};set_instance_parameter_value {pio_0_s1_translator} {UAV_BYTEENABLE_W} {4};set_instance_parameter_value {pio_0_s1_translator} {UAV_ADDRESS_W} {32};set_instance_parameter_value {pio_0_s1_translator} {UAV_BURSTCOUNT_W} {3};set_instance_parameter_value {pio_0_s1_translator} {AV_READLATENCY} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_SETUP_WAIT} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_WRITE_WAIT} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_READ_WAIT} {1};set_instance_parameter_value {pio_0_s1_translator} {AV_DATA_HOLD} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_TIMING_UNITS} {1};set_instance_parameter_value {pio_0_s1_translator} {USE_READDATA} {1};set_instance_parameter_value {pio_0_s1_translator} {USE_WRITEDATA} {1};set_instance_parameter_value {pio_0_s1_translator} {USE_READ} {0};set_instance_parameter_value {pio_0_s1_translator} {USE_WRITE} {1};set_instance_parameter_value {pio_0_s1_translator} {USE_BEGINBURSTTRANSFER} {0};set_instance_parameter_value {pio_0_s1_translator} {USE_BEGINTRANSFER} {0};set_instance_parameter_value {pio_0_s1_translator} {USE_BYTEENABLE} {0};set_instance_parameter_value {pio_0_s1_translator} {USE_CHIPSELECT} {1};set_instance_parameter_value {pio_0_s1_translator} {USE_ADDRESS} {1};set_instance_parameter_value {pio_0_s1_translator} {USE_BURSTCOUNT} {0};set_instance_parameter_value {pio_0_s1_translator} {USE_READDATAVALID} {0};set_instance_parameter_value {pio_0_s1_translator} {USE_WAITREQUEST} {0};set_instance_parameter_value {pio_0_s1_translator} {USE_WRITEBYTEENABLE} {0};set_instance_parameter_value {pio_0_s1_translator} {USE_LOCK} {0};set_instance_parameter_value {pio_0_s1_translator} {USE_AV_CLKEN} {0};set_instance_parameter_value {pio_0_s1_translator} {USE_UAV_CLKEN} {0};set_instance_parameter_value {pio_0_s1_translator} {USE_OUTPUTENABLE} {0};set_instance_parameter_value {pio_0_s1_translator} {USE_DEBUGACCESS} {0};set_instance_parameter_value {pio_0_s1_translator} {USE_READRESPONSE} {0};set_instance_parameter_value {pio_0_s1_translator} {USE_WRITERESPONSE} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_SYMBOLS_PER_WORD} {4};set_instance_parameter_value {pio_0_s1_translator} {AV_ADDRESS_SYMBOLS} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_BURSTCOUNT_SYMBOLS} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_CONSTANT_BURST_BEHAVIOR} {0};set_instance_parameter_value {pio_0_s1_translator} {UAV_CONSTANT_BURST_BEHAVIOR} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_REQUIRE_UNALIGNED_ADDRESSES} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_LINEWRAPBURSTS} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_MAX_PENDING_READ_TRANSACTIONS} {1};set_instance_parameter_value {pio_0_s1_translator} {AV_MAX_PENDING_WRITE_TRANSACTIONS} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_BURSTBOUNDARIES} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_INTERLEAVEBURSTS} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_BITS_PER_SYMBOL} {8};set_instance_parameter_value {pio_0_s1_translator} {AV_ISBIGENDIAN} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_ADDRESSGROUP} {0};set_instance_parameter_value {pio_0_s1_translator} {UAV_ADDRESSGROUP} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_REGISTEROUTGOINGSIGNALS} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_REGISTERINCOMINGSIGNALS} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_ALWAYSBURSTMAXBURST} {0};set_instance_parameter_value {pio_0_s1_translator} {CHIPSELECT_THROUGH_READLATENCY} {0};add_instance {spi_to_avalon_mm_bridge_clk_reset_reset_bridge} {altera_reset_bridge};set_instance_parameter_value {spi_to_avalon_mm_bridge_clk_reset_reset_bridge} {ACTIVE_LOW_RESET} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_clk_reset_reset_bridge} {SYNCHRONOUS_EDGES} {deassert};set_instance_parameter_value {spi_to_avalon_mm_bridge_clk_reset_reset_bridge} {NUM_RESET_OUTPUTS} {1};set_instance_parameter_value {spi_to_avalon_mm_bridge_clk_reset_reset_bridge} {USE_RESET_REQUEST} {0};add_instance {sys_clk_clk_clock_bridge} {altera_clock_bridge};set_instance_parameter_value {sys_clk_clk_clock_bridge} {EXPLICIT_CLOCK_RATE} {50000000};set_instance_parameter_value {sys_clk_clk_clock_bridge} {NUM_CLOCK_OUTPUTS} {1};add_connection {spi_to_avalon_mm_bridge_avalon_master_translator.avalon_universal_master_0} {pio_0_s1_translator.avalon_universal_slave_0} {avalon};set_connection_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator.avalon_universal_master_0/pio_0_s1_translator.avalon_universal_slave_0} {arbitrationPriority} {1};set_connection_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator.avalon_universal_master_0/pio_0_s1_translator.avalon_universal_slave_0} {baseAddress} {0x0000};set_connection_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator.avalon_universal_master_0/pio_0_s1_translator.avalon_universal_slave_0} {defaultConnection} {false};add_connection {spi_to_avalon_mm_bridge_clk_reset_reset_bridge.out_reset} {spi_to_avalon_mm_bridge_avalon_master_translator.reset} {reset};add_connection {spi_to_avalon_mm_bridge_clk_reset_reset_bridge.out_reset} {pio_0_s1_translator.reset} {reset};add_connection {sys_clk_clk_clock_bridge.out_clk} {spi_to_avalon_mm_bridge_avalon_master_translator.clk} {clock};add_connection {sys_clk_clk_clock_bridge.out_clk} {pio_0_s1_translator.clk} {clock};add_connection {sys_clk_clk_clock_bridge.out_clk} {spi_to_avalon_mm_bridge_clk_reset_reset_bridge.clk} {clock};add_interface {sys_clk_clk} {clock} {slave};set_interface_property {sys_clk_clk} {EXPORT_OF} {sys_clk_clk_clock_bridge.in_clk};add_interface {spi_to_avalon_mm_bridge_clk_reset_reset_bridge_in_reset} {reset} {slave};set_interface_property {spi_to_avalon_mm_bridge_clk_reset_reset_bridge_in_reset} {EXPORT_OF} {spi_to_avalon_mm_bridge_clk_reset_reset_bridge.in_reset};add_interface {spi_to_avalon_mm_bridge_avalon_master} {avalon} {slave};set_interface_property {spi_to_avalon_mm_bridge_avalon_master} {EXPORT_OF} {spi_to_avalon_mm_bridge_avalon_master_translator.avalon_anti_master_0};add_interface {pio_0_s1} {avalon} {master};set_interface_property {pio_0_s1} {EXPORT_OF} {pio_0_s1_translator.avalon_anti_slave_0};set_module_assignment {interconnect_id.pio_0.s1} {0};set_module_assignment {interconnect_id.spi_to_avalon_mm_bridge.avalon_master} {0};(altera_merlin_master_translator:14.1:AV_ADDRESSGROUP=0,AV_ADDRESS_SYMBOLS=1,AV_ADDRESS_W=32,AV_ALWAYSBURSTMAXBURST=0,AV_BITS_PER_SYMBOL=8,AV_BURSTBOUNDARIES=0,AV_BURSTCOUNT_SYMBOLS=0,AV_BURSTCOUNT_W=1,AV_BYTEENABLE_W=4,AV_CONSTANT_BURST_BEHAVIOR=0,AV_DATA_HOLD=0,AV_DATA_W=32,AV_INTERLEAVEBURSTS=0,AV_ISBIGENDIAN=0,AV_LINEWRAPBURSTS=0,AV_MAX_PENDING_READ_TRANSACTIONS=64,AV_READLATENCY=0,AV_READ_WAIT=1,AV_REGISTERINCOMINGSIGNALS=0,AV_REGISTEROUTGOINGSIGNALS=0,AV_SETUP_WAIT=0,AV_SYMBOLS_PER_WORD=4,AV_WRITE_WAIT=0,UAV_ADDRESSGROUP=0,UAV_ADDRESS_W=32,UAV_BURSTCOUNT_W=3,UAV_CONSTANT_BURST_BEHAVIOR=0,USE_ADDRESS=1,USE_BEGINBURSTTRANSFER=0,USE_BEGINTRANSFER=0,USE_BURSTCOUNT=0,USE_BYTEENABLE=1,USE_CHIPSELECT=0,USE_CLKEN=0,USE_DEBUGACCESS=0,USE_LOCK=0,USE_READ=1,USE_READDATA=1,USE_READDATAVALID=1,USE_READRESPONSE=0,USE_WAITREQUEST=1,USE_WRITE=1,USE_WRITEDATA=1,USE_WRITERESPONSE=0)(altera_merlin_slave_translator:14.1:AV_ADDRESSGROUP=0,AV_ADDRESS_SYMBOLS=0,AV_ADDRESS_W=2,AV_ALWAYSBURSTMAXBURST=0,AV_BITS_PER_SYMBOL=8,AV_BURSTBOUNDARIES=0,AV_BURSTCOUNT_SYMBOLS=0,AV_BURSTCOUNT_W=1,AV_BYTEENABLE_W=1,AV_CONSTANT_BURST_BEHAVIOR=0,AV_DATA_HOLD=0,AV_DATA_HOLD_CYCLES=0,AV_DATA_W=32,AV_INTERLEAVEBURSTS=0,AV_ISBIGENDIAN=0,AV_LINEWRAPBURSTS=0,AV_MAX_PENDING_READ_TRANSACTIONS=1,AV_MAX_PENDING_WRITE_TRANSACTIONS=0,AV_READLATENCY=0,AV_READ_WAIT=1,AV_READ_WAIT_CYCLES=1,AV_REGISTERINCOMINGSIGNALS=0,AV_REGISTEROUTGOINGSIGNALS=0,AV_REQUIRE_UNALIGNED_ADDRESSES=0,AV_SETUP_WAIT=0,AV_SETUP_WAIT_CYCLES=0,AV_SYMBOLS_PER_WORD=4,AV_TIMING_UNITS=1,AV_WRITE_WAIT=0,AV_WRITE_WAIT_CYCLES=0,CHIPSELECT_THROUGH_READLATENCY=0,CLOCK_RATE=50000000,UAV_ADDRESSGROUP=0,UAV_ADDRESS_W=32,UAV_BURSTCOUNT_W=3,UAV_BYTEENABLE_W=4,UAV_CONSTANT_BURST_BEHAVIOR=0,UAV_DATA_W=32,USE_ADDRESS=1,USE_AV_CLKEN=0,USE_BEGINBURSTTRANSFER=0,USE_BEGINTRANSFER=0,USE_BURSTCOUNT=0,USE_BYTEENABLE=0,USE_CHIPSELECT=1,USE_DEBUGACCESS=0,USE_LOCK=0,USE_OUTPUTENABLE=0,USE_READ=0,USE_READDATA=1,USE_READDATAVALID=0,USE_READRESPONSE=0,USE_UAV_CLKEN=0,USE_WAITREQUEST=0,USE_WRITE=1,USE_WRITEBYTEENABLE=0,USE_WRITEDATA=1,USE_WRITERESPONSE=0)(altera_reset_bridge:14.1:ACTIVE_LOW_RESET=0,AUTO_CLK_CLOCK_RATE=50000000,NUM_RESET_OUTPUTS=1,SYNCHRONOUS_EDGES=deassert,USE_RESET_REQUEST=0)(altera_clock_bridge:14.1:DERIVED_CLOCK_RATE=0,EXPLICIT_CLOCK_RATE=50000000,NUM_CLOCK_OUTPUTS=1)(avalon:14.1:arbitrationPriority=1,baseAddress=0x0000,defaultConnection=false)(reset:14.1:)(reset:14.1:)(clock:14.1:)(clock:14.1:)(clock:14.1:)"
+   instancePathKey="spi_avalon_pio:.:mm_interconnect_0"
+   kind="altera_mm_interconnect"
+   version="14.1"
+   name="spi_avalon_pio_mm_interconnect_0">
+  <parameter name="AUTO_DEVICE" value="5CSXFC6D6F31C6" />
+  <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone V" />
+  <parameter name="AUTO_DEVICE_SPEEDGRADE" value="" />
+  <parameter
+     name="COMPOSE_CONTENTS"
+     value="add_instance {spi_to_avalon_mm_bridge_avalon_master_translator} {altera_merlin_master_translator};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_ADDRESS_W} {32};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_DATA_W} {32};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_BURSTCOUNT_W} {1};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_BYTEENABLE_W} {4};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {UAV_ADDRESS_W} {32};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {UAV_BURSTCOUNT_W} {3};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_READLATENCY} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_WRITE_WAIT} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_READ_WAIT} {1};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_DATA_HOLD} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_SETUP_WAIT} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_READDATA} {1};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_WRITEDATA} {1};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_READ} {1};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_WRITE} {1};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_BEGINBURSTTRANSFER} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_BEGINTRANSFER} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_BYTEENABLE} {1};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_CHIPSELECT} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_ADDRESS} {1};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_BURSTCOUNT} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_DEBUGACCESS} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_CLKEN} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_READDATAVALID} {1};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_WAITREQUEST} {1};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_LOCK} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_READRESPONSE} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {USE_WRITERESPONSE} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_SYMBOLS_PER_WORD} {4};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_ADDRESS_SYMBOLS} {1};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_BURSTCOUNT_SYMBOLS} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_CONSTANT_BURST_BEHAVIOR} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {UAV_CONSTANT_BURST_BEHAVIOR} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_LINEWRAPBURSTS} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_MAX_PENDING_READ_TRANSACTIONS} {64};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_BURSTBOUNDARIES} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_INTERLEAVEBURSTS} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_BITS_PER_SYMBOL} {8};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_ISBIGENDIAN} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_ADDRESSGROUP} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {UAV_ADDRESSGROUP} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_REGISTEROUTGOINGSIGNALS} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_REGISTERINCOMINGSIGNALS} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator} {AV_ALWAYSBURSTMAXBURST} {0};add_instance {pio_0_s1_translator} {altera_merlin_slave_translator};set_instance_parameter_value {pio_0_s1_translator} {AV_ADDRESS_W} {2};set_instance_parameter_value {pio_0_s1_translator} {AV_DATA_W} {32};set_instance_parameter_value {pio_0_s1_translator} {UAV_DATA_W} {32};set_instance_parameter_value {pio_0_s1_translator} {AV_BURSTCOUNT_W} {1};set_instance_parameter_value {pio_0_s1_translator} {AV_BYTEENABLE_W} {1};set_instance_parameter_value {pio_0_s1_translator} {UAV_BYTEENABLE_W} {4};set_instance_parameter_value {pio_0_s1_translator} {UAV_ADDRESS_W} {32};set_instance_parameter_value {pio_0_s1_translator} {UAV_BURSTCOUNT_W} {3};set_instance_parameter_value {pio_0_s1_translator} {AV_READLATENCY} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_SETUP_WAIT} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_WRITE_WAIT} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_READ_WAIT} {1};set_instance_parameter_value {pio_0_s1_translator} {AV_DATA_HOLD} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_TIMING_UNITS} {1};set_instance_parameter_value {pio_0_s1_translator} {USE_READDATA} {1};set_instance_parameter_value {pio_0_s1_translator} {USE_WRITEDATA} {1};set_instance_parameter_value {pio_0_s1_translator} {USE_READ} {0};set_instance_parameter_value {pio_0_s1_translator} {USE_WRITE} {1};set_instance_parameter_value {pio_0_s1_translator} {USE_BEGINBURSTTRANSFER} {0};set_instance_parameter_value {pio_0_s1_translator} {USE_BEGINTRANSFER} {0};set_instance_parameter_value {pio_0_s1_translator} {USE_BYTEENABLE} {0};set_instance_parameter_value {pio_0_s1_translator} {USE_CHIPSELECT} {1};set_instance_parameter_value {pio_0_s1_translator} {USE_ADDRESS} {1};set_instance_parameter_value {pio_0_s1_translator} {USE_BURSTCOUNT} {0};set_instance_parameter_value {pio_0_s1_translator} {USE_READDATAVALID} {0};set_instance_parameter_value {pio_0_s1_translator} {USE_WAITREQUEST} {0};set_instance_parameter_value {pio_0_s1_translator} {USE_WRITEBYTEENABLE} {0};set_instance_parameter_value {pio_0_s1_translator} {USE_LOCK} {0};set_instance_parameter_value {pio_0_s1_translator} {USE_AV_CLKEN} {0};set_instance_parameter_value {pio_0_s1_translator} {USE_UAV_CLKEN} {0};set_instance_parameter_value {pio_0_s1_translator} {USE_OUTPUTENABLE} {0};set_instance_parameter_value {pio_0_s1_translator} {USE_DEBUGACCESS} {0};set_instance_parameter_value {pio_0_s1_translator} {USE_READRESPONSE} {0};set_instance_parameter_value {pio_0_s1_translator} {USE_WRITERESPONSE} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_SYMBOLS_PER_WORD} {4};set_instance_parameter_value {pio_0_s1_translator} {AV_ADDRESS_SYMBOLS} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_BURSTCOUNT_SYMBOLS} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_CONSTANT_BURST_BEHAVIOR} {0};set_instance_parameter_value {pio_0_s1_translator} {UAV_CONSTANT_BURST_BEHAVIOR} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_REQUIRE_UNALIGNED_ADDRESSES} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_LINEWRAPBURSTS} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_MAX_PENDING_READ_TRANSACTIONS} {1};set_instance_parameter_value {pio_0_s1_translator} {AV_MAX_PENDING_WRITE_TRANSACTIONS} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_BURSTBOUNDARIES} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_INTERLEAVEBURSTS} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_BITS_PER_SYMBOL} {8};set_instance_parameter_value {pio_0_s1_translator} {AV_ISBIGENDIAN} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_ADDRESSGROUP} {0};set_instance_parameter_value {pio_0_s1_translator} {UAV_ADDRESSGROUP} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_REGISTEROUTGOINGSIGNALS} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_REGISTERINCOMINGSIGNALS} {0};set_instance_parameter_value {pio_0_s1_translator} {AV_ALWAYSBURSTMAXBURST} {0};set_instance_parameter_value {pio_0_s1_translator} {CHIPSELECT_THROUGH_READLATENCY} {0};add_instance {spi_to_avalon_mm_bridge_clk_reset_reset_bridge} {altera_reset_bridge};set_instance_parameter_value {spi_to_avalon_mm_bridge_clk_reset_reset_bridge} {ACTIVE_LOW_RESET} {0};set_instance_parameter_value {spi_to_avalon_mm_bridge_clk_reset_reset_bridge} {SYNCHRONOUS_EDGES} {deassert};set_instance_parameter_value {spi_to_avalon_mm_bridge_clk_reset_reset_bridge} {NUM_RESET_OUTPUTS} {1};set_instance_parameter_value {spi_to_avalon_mm_bridge_clk_reset_reset_bridge} {USE_RESET_REQUEST} {0};add_instance {sys_clk_clk_clock_bridge} {altera_clock_bridge};set_instance_parameter_value {sys_clk_clk_clock_bridge} {EXPLICIT_CLOCK_RATE} {50000000};set_instance_parameter_value {sys_clk_clk_clock_bridge} {NUM_CLOCK_OUTPUTS} {1};add_connection {spi_to_avalon_mm_bridge_avalon_master_translator.avalon_universal_master_0} {pio_0_s1_translator.avalon_universal_slave_0} {avalon};set_connection_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator.avalon_universal_master_0/pio_0_s1_translator.avalon_universal_slave_0} {arbitrationPriority} {1};set_connection_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator.avalon_universal_master_0/pio_0_s1_translator.avalon_universal_slave_0} {baseAddress} {0x0000};set_connection_parameter_value {spi_to_avalon_mm_bridge_avalon_master_translator.avalon_universal_master_0/pio_0_s1_translator.avalon_universal_slave_0} {defaultConnection} {false};add_connection {spi_to_avalon_mm_bridge_clk_reset_reset_bridge.out_reset} {spi_to_avalon_mm_bridge_avalon_master_translator.reset} {reset};add_connection {spi_to_avalon_mm_bridge_clk_reset_reset_bridge.out_reset} {pio_0_s1_translator.reset} {reset};add_connection {sys_clk_clk_clock_bridge.out_clk} {spi_to_avalon_mm_bridge_avalon_master_translator.clk} {clock};add_connection {sys_clk_clk_clock_bridge.out_clk} {pio_0_s1_translator.clk} {clock};add_connection {sys_clk_clk_clock_bridge.out_clk} {spi_to_avalon_mm_bridge_clk_reset_reset_bridge.clk} {clock};add_interface {sys_clk_clk} {clock} {slave};set_interface_property {sys_clk_clk} {EXPORT_OF} {sys_clk_clk_clock_bridge.in_clk};add_interface {spi_to_avalon_mm_bridge_clk_reset_reset_bridge_in_reset} {reset} {slave};set_interface_property {spi_to_avalon_mm_bridge_clk_reset_reset_bridge_in_reset} {EXPORT_OF} {spi_to_avalon_mm_bridge_clk_reset_reset_bridge.in_reset};add_interface {spi_to_avalon_mm_bridge_avalon_master} {avalon} {slave};set_interface_property {spi_to_avalon_mm_bridge_avalon_master} {EXPORT_OF} {spi_to_avalon_mm_bridge_avalon_master_translator.avalon_anti_master_0};add_interface {pio_0_s1} {avalon} {master};set_interface_property {pio_0_s1} {EXPORT_OF} {pio_0_s1_translator.avalon_anti_slave_0};set_module_assignment {interconnect_id.pio_0.s1} {0};set_module_assignment {interconnect_id.spi_to_avalon_mm_bridge.avalon_master} {0};" />
+  <generatedFiles>
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/spi_avalon_pio_mm_interconnect_0.v"
+       type="VERILOG" />
+  </generatedFiles>
+  <childGeneratedFiles>
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/altera_merlin_master_translator.sv"
+       type="SYSTEM_VERILOG"
+       attributes="" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/altera_merlin_slave_translator.sv"
+       type="SYSTEM_VERILOG"
+       attributes="" />
+  </childGeneratedFiles>
+  <sourceFiles>
+   <file
+       path="C:/altera/14.1/ip/altera/merlin/altera_mm_interconnect/altera_mm_interconnect_hw.tcl" />
+  </sourceFiles>
+  <childSourceFiles>
+   <file
+       path="C:/altera/14.1/ip/altera/merlin/altera_merlin_master_translator/altera_merlin_master_translator_hw.tcl" />
+   <file
+       path="C:/altera/14.1/ip/altera/merlin/altera_merlin_slave_translator/altera_merlin_slave_translator_hw.tcl" />
+  </childSourceFiles>
+  <instantiator instantiator="spi_avalon_pio" as="mm_interconnect_0" />
+  <messages>
+   <message level="Debug" culprit="spi_avalon_pio">queue size: 1 starting:altera_mm_interconnect "submodules/spi_avalon_pio_mm_interconnect_0"</message>
+   <message level="Progress" culprit="min"></message>
+   <message level="Progress" culprit="max"></message>
+   <message level="Progress" culprit="current"></message>
+   <message level="Debug">Transform: CustomInstructionTransform</message>
+   <message level="Debug">No custom instruction connections, skipping transform </message>
+   <message level="Debug" culprit="merlin_custom_instruction_transform"><![CDATA[After transform: <b>4</b> modules, <b>6</b> connections]]></message>
+   <message level="Debug">Transform: MMTransform</message>
+   <message level="Debug">Transform: InitialInterconnectTransform</message>
+   <message level="Debug" culprit="merlin_initial_interconnect_transform"><![CDATA[After transform: <b>0</b> modules, <b>0</b> connections]]></message>
+   <message level="Debug">Transform: TerminalIdAssignmentUpdateTransform</message>
+   <message level="Debug">Transform: DefaultSlaveTransform</message>
+   <message level="Debug">Transform: TranslatorTransform</message>
+   <message level="Debug">No Avalon connections, skipping transform </message>
+   <message level="Debug">Transform: IDPadTransform</message>
+   <message level="Debug">Transform: DomainTransform</message>
+   <message level="Debug">Transform: RouterTransform</message>
+   <message level="Debug">Transform: TrafficLimiterTransform</message>
+   <message level="Debug">Transform: BurstTransform</message>
+   <message level="Debug">Transform: TreeTransform</message>
+   <message level="Debug">Transform: NetworkToSwitchTransform</message>
+   <message level="Debug">Transform: WidthTransform</message>
+   <message level="Debug">Transform: RouterTableTransform</message>
+   <message level="Debug">Transform: ThreadIDMappingTableTransform</message>
+   <message level="Debug">Transform: ClockCrossingTransform</message>
+   <message level="Debug">Transform: PipelineTransform</message>
+   <message level="Debug">Transform: SpotPipelineTransform</message>
+   <message level="Debug">Transform: PerformanceMonitorTransform</message>
+   <message level="Debug">Transform: TrafficLimiterUpdateTransform</message>
+   <message level="Debug">Transform: InsertClockAndResetBridgesTransform</message>
+   <message level="Debug">Transform: InterconnectConnectionsTagger</message>
+   <message level="Debug">Transform: HierarchyTransform</message>
+   <message level="Debug" culprit="merlin_hierarchy_transform"><![CDATA[After transform: <b>4</b> modules, <b>6</b> connections]]></message>
+   <message level="Debug">Transform: InterruptMapperTransform</message>
+   <message level="Debug">Transform: InterruptSyncTransform</message>
+   <message level="Debug">Transform: InterruptFanoutTransform</message>
+   <message level="Debug">Transform: AvalonStreamingTransform</message>
+   <message level="Debug">Transform: ResetAdaptation</message>
+   <message level="Debug" culprit="mm_interconnect_0"><![CDATA["<b>mm_interconnect_0</b>" reuses <b>altera_merlin_master_translator</b> "<b>submodules/altera_merlin_master_translator</b>"]]></message>
+   <message level="Debug" culprit="mm_interconnect_0"><![CDATA["<b>mm_interconnect_0</b>" reuses <b>altera_merlin_slave_translator</b> "<b>submodules/altera_merlin_slave_translator</b>"]]></message>
+   <message level="Info" culprit="mm_interconnect_0"><![CDATA["<b>spi_avalon_pio</b>" instantiated <b>altera_mm_interconnect</b> "<b>mm_interconnect_0</b>"]]></message>
+   <message level="Debug" culprit="spi_avalon_pio">queue size: 1 starting:altera_merlin_master_translator "submodules/altera_merlin_master_translator"</message>
+   <message
+       level="Info"
+       culprit="spi_to_avalon_mm_bridge_avalon_master_translator"><![CDATA["<b>mm_interconnect_0</b>" instantiated <b>altera_merlin_master_translator</b> "<b>spi_to_avalon_mm_bridge_avalon_master_translator</b>"]]></message>
+   <message level="Debug" culprit="spi_avalon_pio">queue size: 0 starting:altera_merlin_slave_translator "submodules/altera_merlin_slave_translator"</message>
+   <message level="Info" culprit="pio_0_s1_translator"><![CDATA["<b>mm_interconnect_0</b>" instantiated <b>altera_merlin_slave_translator</b> "<b>pio_0_s1_translator</b>"]]></message>
+  </messages>
+ </entity>
+ <entity
+   path="submodules/"
+   parameterizationKey="altera_reset_controller:14.1:ADAPT_RESET_REQUEST=0,MIN_RST_ASSERTION_TIME=3,NUM_RESET_INPUTS=1,OUTPUT_RESET_SYNC_EDGES=deassert,RESET_REQUEST_PRESENT=0,RESET_REQ_EARLY_DSRT_TIME=1,RESET_REQ_WAIT_TIME=1,SYNC_DEPTH=2,USE_RESET_REQUEST_IN0=0,USE_RESET_REQUEST_IN1=0,USE_RESET_REQUEST_IN10=0,USE_RESET_REQUEST_IN11=0,USE_RESET_REQUEST_IN12=0,USE_RESET_REQUEST_IN13=0,USE_RESET_REQUEST_IN14=0,USE_RESET_REQUEST_IN15=0,USE_RESET_REQUEST_IN2=0,USE_RESET_REQUEST_IN3=0,USE_RESET_REQUEST_IN4=0,USE_RESET_REQUEST_IN5=0,USE_RESET_REQUEST_IN6=0,USE_RESET_REQUEST_IN7=0,USE_RESET_REQUEST_IN8=0,USE_RESET_REQUEST_IN9=0,USE_RESET_REQUEST_INPUT=0"
+   instancePathKey="spi_avalon_pio:.:rst_controller"
+   kind="altera_reset_controller"
+   version="14.1"
+   name="altera_reset_controller">
+  <generatedFiles>
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/altera_reset_controller.v"
+       type="VERILOG"
+       attributes="" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/altera_reset_synchronizer.v"
+       type="VERILOG"
+       attributes="" />
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/altera_reset_controller.sdc"
+       type="SDC"
+       attributes="" />
+  </generatedFiles>
+  <childGeneratedFiles/>
+  <sourceFiles>
+   <file
+       path="C:/altera/14.1/ip/altera/merlin/altera_reset_controller/altera_reset_controller_hw.tcl" />
+  </sourceFiles>
+  <childSourceFiles/>
+  <instantiator instantiator="spi_avalon_pio" as="rst_controller" />
+  <messages>
+   <message level="Debug" culprit="spi_avalon_pio">queue size: 2 starting:altera_reset_controller "submodules/altera_reset_controller"</message>
+   <message level="Info" culprit="rst_controller"><![CDATA["<b>spi_avalon_pio</b>" instantiated <b>altera_reset_controller</b> "<b>rst_controller</b>"]]></message>
+  </messages>
+ </entity>
+ <entity
+   path="submodules/"
+   parameterizationKey="altera_merlin_master_translator:14.1:AV_ADDRESSGROUP=0,AV_ADDRESS_SYMBOLS=1,AV_ADDRESS_W=32,AV_ALWAYSBURSTMAXBURST=0,AV_BITS_PER_SYMBOL=8,AV_BURSTBOUNDARIES=0,AV_BURSTCOUNT_SYMBOLS=0,AV_BURSTCOUNT_W=1,AV_BYTEENABLE_W=4,AV_CONSTANT_BURST_BEHAVIOR=0,AV_DATA_HOLD=0,AV_DATA_W=32,AV_INTERLEAVEBURSTS=0,AV_ISBIGENDIAN=0,AV_LINEWRAPBURSTS=0,AV_MAX_PENDING_READ_TRANSACTIONS=64,AV_READLATENCY=0,AV_READ_WAIT=1,AV_REGISTERINCOMINGSIGNALS=0,AV_REGISTEROUTGOINGSIGNALS=0,AV_SETUP_WAIT=0,AV_SYMBOLS_PER_WORD=4,AV_WRITE_WAIT=0,UAV_ADDRESSGROUP=0,UAV_ADDRESS_W=32,UAV_BURSTCOUNT_W=3,UAV_CONSTANT_BURST_BEHAVIOR=0,USE_ADDRESS=1,USE_BEGINBURSTTRANSFER=0,USE_BEGINTRANSFER=0,USE_BURSTCOUNT=0,USE_BYTEENABLE=1,USE_CHIPSELECT=0,USE_CLKEN=0,USE_DEBUGACCESS=0,USE_LOCK=0,USE_READ=1,USE_READDATA=1,USE_READDATAVALID=1,USE_READRESPONSE=0,USE_WAITREQUEST=1,USE_WRITE=1,USE_WRITEDATA=1,USE_WRITERESPONSE=0"
+   instancePathKey="spi_avalon_pio:.:mm_interconnect_0:.:spi_to_avalon_mm_bridge_avalon_master_translator"
+   kind="altera_merlin_master_translator"
+   version="14.1"
+   name="altera_merlin_master_translator">
+  <generatedFiles>
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/altera_merlin_master_translator.sv"
+       type="SYSTEM_VERILOG"
+       attributes="" />
+  </generatedFiles>
+  <childGeneratedFiles/>
+  <sourceFiles>
+   <file
+       path="C:/altera/14.1/ip/altera/merlin/altera_merlin_master_translator/altera_merlin_master_translator_hw.tcl" />
+  </sourceFiles>
+  <childSourceFiles/>
+  <instantiator
+     instantiator="spi_avalon_pio_mm_interconnect_0"
+     as="spi_to_avalon_mm_bridge_avalon_master_translator" />
+  <messages>
+   <message level="Debug" culprit="spi_avalon_pio">queue size: 1 starting:altera_merlin_master_translator "submodules/altera_merlin_master_translator"</message>
+   <message
+       level="Info"
+       culprit="spi_to_avalon_mm_bridge_avalon_master_translator"><![CDATA["<b>mm_interconnect_0</b>" instantiated <b>altera_merlin_master_translator</b> "<b>spi_to_avalon_mm_bridge_avalon_master_translator</b>"]]></message>
+  </messages>
+ </entity>
+ <entity
+   path="submodules/"
+   parameterizationKey="altera_merlin_slave_translator:14.1:AV_ADDRESSGROUP=0,AV_ADDRESS_SYMBOLS=0,AV_ADDRESS_W=2,AV_ALWAYSBURSTMAXBURST=0,AV_BITS_PER_SYMBOL=8,AV_BURSTBOUNDARIES=0,AV_BURSTCOUNT_SYMBOLS=0,AV_BURSTCOUNT_W=1,AV_BYTEENABLE_W=1,AV_CONSTANT_BURST_BEHAVIOR=0,AV_DATA_HOLD=0,AV_DATA_HOLD_CYCLES=0,AV_DATA_W=32,AV_INTERLEAVEBURSTS=0,AV_ISBIGENDIAN=0,AV_LINEWRAPBURSTS=0,AV_MAX_PENDING_READ_TRANSACTIONS=1,AV_MAX_PENDING_WRITE_TRANSACTIONS=0,AV_READLATENCY=0,AV_READ_WAIT=1,AV_READ_WAIT_CYCLES=1,AV_REGISTERINCOMINGSIGNALS=0,AV_REGISTEROUTGOINGSIGNALS=0,AV_REQUIRE_UNALIGNED_ADDRESSES=0,AV_SETUP_WAIT=0,AV_SETUP_WAIT_CYCLES=0,AV_SYMBOLS_PER_WORD=4,AV_TIMING_UNITS=1,AV_WRITE_WAIT=0,AV_WRITE_WAIT_CYCLES=0,CHIPSELECT_THROUGH_READLATENCY=0,CLOCK_RATE=50000000,UAV_ADDRESSGROUP=0,UAV_ADDRESS_W=32,UAV_BURSTCOUNT_W=3,UAV_BYTEENABLE_W=4,UAV_CONSTANT_BURST_BEHAVIOR=0,UAV_DATA_W=32,USE_ADDRESS=1,USE_AV_CLKEN=0,USE_BEGINBURSTTRANSFER=0,USE_BEGINTRANSFER=0,USE_BURSTCOUNT=0,USE_BYTEENABLE=0,USE_CHIPSELECT=1,USE_DEBUGACCESS=0,USE_LOCK=0,USE_OUTPUTENABLE=0,USE_READ=0,USE_READDATA=1,USE_READDATAVALID=0,USE_READRESPONSE=0,USE_UAV_CLKEN=0,USE_WAITREQUEST=0,USE_WRITE=1,USE_WRITEBYTEENABLE=0,USE_WRITEDATA=1,USE_WRITERESPONSE=0"
+   instancePathKey="spi_avalon_pio:.:mm_interconnect_0:.:pio_0_s1_translator"
+   kind="altera_merlin_slave_translator"
+   version="14.1"
+   name="altera_merlin_slave_translator">
+  <generatedFiles>
+   <file
+       path="C:/Projects/FPGA_scketchbook/altera/DC2459A/Arrow_SoCkit/spi_avalon_pio/synthesis/submodules/altera_merlin_slave_translator.sv"
+       type="SYSTEM_VERILOG"
+       attributes="" />
+  </generatedFiles>
+  <childGeneratedFiles/>
+  <sourceFiles>
+   <file
+       path="C:/altera/14.1/ip/altera/merlin/altera_merlin_slave_translator/altera_merlin_slave_translator_hw.tcl" />
+  </sourceFiles>
+  <childSourceFiles/>
+  <instantiator
+     instantiator="spi_avalon_pio_mm_interconnect_0"
+     as="pio_0_s1_translator" />
+  <messages>
+   <message level="Debug" culprit="spi_avalon_pio">queue size: 0 starting:altera_merlin_slave_translator "submodules/altera_merlin_slave_translator"</message>
+   <message level="Info" culprit="pio_0_s1_translator"><![CDATA["<b>mm_interconnect_0</b>" instantiated <b>altera_merlin_slave_translator</b> "<b>pio_0_s1_translator</b>"]]></message>
+  </messages>
+ </entity>
+</deploy>
