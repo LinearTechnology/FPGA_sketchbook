@@ -1,0 +1,91 @@
+
+NET "ltc1668_data[15]" LOC = P144;
+NET "ltc1668_data[14]" LOC = P2;
+NET "ltc1668_data[13]" LOC = P6;
+NET "ltc1668_data[12]" LOC = P8;
+NET "ltc1668_data[11]" LOC = P10;
+NET "ltc1668_data[10]" LOC = P12;
+NET "ltc1668_data[9]" LOC = P15;
+NET "ltc1668_data[8]" LOC = P17;
+NET "ltc1668_data[7]" LOC = P22;
+NET "ltc1668_data[6]" LOC = P24;
+NET "ltc1668_data[5]" LOC = P27;
+NET "ltc1668_data[4]" LOC = P30;
+NET "ltc1668_data[3]" LOC = P33;
+NET "ltc1668_data[2]" LOC = P35;
+NET "ltc1668_data[1]" LOC = P41;
+NET "ltc1668_data[0]" LOC = P51;
+
+NET "ltc1668_data[15]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[14]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[13]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[12]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[11]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[10]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[9]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[8]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[7]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[6]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[5]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[4]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[3]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[2]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[1]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[0]" IOSTANDARD = LVTTL;
+
+NET "mojo_led[6]" LOC = P123;
+NET "mojo_led[5]" LOC = P126;
+NET "mojo_led[4]" LOC = P127;
+NET "mojo_led[3]" LOC = P131;
+NET "mojo_led[2]" LOC = P132;
+NET "mojo_led[1]" LOC = P133;
+NET "mojo_led[0]" LOC = P134;
+
+NET "mojo_led[6]" IOSTANDARD = LVTTL;
+NET "mojo_led[5]" IOSTANDARD = LVTTL;
+NET "mojo_led[4]" IOSTANDARD = LVTTL;
+NET "mojo_led[3]" IOSTANDARD = LVTTL;
+NET "mojo_led[2]" IOSTANDARD = LVTTL;
+NET "mojo_led[1]" IOSTANDARD = LVTTL;
+NET "mojo_led[0]" IOSTANDARD = LVTTL;
+
+NET "mojo_spi_channel[3]" LOC = P65;
+NET "mojo_spi_channel[2]" LOC = P62;
+NET "mojo_spi_channel[1]" LOC = P61;
+NET "mojo_spi_channel[0]" LOC = P46;
+
+NET "mojo_spi_channel[3]" IOSTANDARD = LVTTL;
+NET "mojo_spi_channel[2]" IOSTANDARD = LVTTL;
+NET "mojo_spi_channel[1]" IOSTANDARD = LVTTL;
+NET "mojo_spi_channel[0]" IOSTANDARD = LVTTL;
+
+NET "mojo_avr_rx" LOC = P59;
+NET "mojo_spi_miso" LOC = P45;
+NET "reset_btn" LOC = P38;
+NET "spi_miso" LOC = P50;
+NET "spi_mosi" LOC = P40;
+NET "spi_sck" LOC = P34;
+NET "spi_ss" LOC = P32;
+NET "sys_clk" LOC = P124;
+NET "trig" LOC = P26;
+
+NET "mojo_avr_rx" IOSTANDARD = LVTTL;
+NET "mojo_spi_miso" IOSTANDARD = LVTTL;
+NET "reset_btn" IOSTANDARD = LVTTL;
+NET "spi_miso" IOSTANDARD = LVTTL;
+NET "spi_mosi" IOSTANDARD = LVTTL;
+NET "spi_sck" IOSTANDARD = LVTTL;
+NET "spi_ss" IOSTANDARD = LVTTL;
+NET "sys_clk" IOSTANDARD = LVTTL;
+NET "trig" IOSTANDARD = LVTTL;
+
+#Created by Constraints Editor (xc6slx9-tqg144-2) - 2015/12/10
+NET "sys_clk" TNM_NET = "sys_clk";
+TIMESPEC TS_sys_clk = PERIOD "sys_clk" 20 ns HIGH 50 %;
+NET "spi_sck" CLOCK_DEDICATED_ROUTE = FALSE;
+NET "spi_sck" TNM_NET = "spi_sck";
+TIMESPEC TS_spi_sck = PERIOD "spi_sck" 250 ns HIGH 50 %;
+
+# PlanAhead Generated IO constraints 
+
+NET "spi_sck" PULLUP;

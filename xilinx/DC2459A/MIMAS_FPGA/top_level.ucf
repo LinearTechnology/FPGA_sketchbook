@@ -1,0 +1,64 @@
+
+# PlanAhead Generated IO constraints 
+
+NET "ltc1668_data[15]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[14]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[13]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[12]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[11]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[10]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[9]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[8]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[7]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[6]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[5]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[4]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[3]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[2]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[1]" IOSTANDARD = LVTTL;
+NET "ltc1668_data[0]" IOSTANDARD = LVTTL;
+
+# PlanAhead Generated physical constraints 
+
+NET "ltc1668_data[15]" LOC = P137;
+NET "ltc1668_data[14]" LOC = P139;
+NET "ltc1668_data[13]" LOC = P141;
+NET "ltc1668_data[12]" LOC = P1;
+NET "ltc1668_data[11]" LOC = P5;
+NET "ltc1668_data[10]" LOC = P7;
+NET "ltc1668_data[9]" LOC = P9;
+NET "ltc1668_data[8]" LOC = P11;
+NET "ltc1668_data[7]" LOC = P14;
+NET "ltc1668_data[6]" LOC = P16;
+NET "ltc1668_data[5]" LOC = P21;
+NET "ltc1668_data[4]" LOC = P23;
+NET "ltc1668_data[3]" LOC = P26;
+NET "ltc1668_data[2]" LOC = P29;
+NET "ltc1668_data[1]" LOC = P32;
+NET "ltc1668_data[0]" LOC = P34;
+NET "reset_btn" LOC = P120;
+NET "spi_miso" LOC = P35;
+NET "spi_mosi" LOC = P33;
+NET "spi_sck" LOC = P30;
+NET "spi_ss" LOC = P27;
+NET "sys_clk" LOC = P133;
+NET "trig" LOC = P22;
+
+# PlanAhead Generated IO constraints 
+
+NET "reset_btn" IOSTANDARD = LVTTL;
+NET "spi_miso" IOSTANDARD = LVTTL;
+NET "spi_mosi" IOSTANDARD = LVTTL;
+NET "spi_sck" IOSTANDARD = LVTTL;
+NET "spi_ss" IOSTANDARD = LVTTL;
+NET "sys_clk" IOSTANDARD = LVTTL;
+NET "trig" IOSTANDARD = LVTTL;
+NET "spi_ss" PULLUP;
+NET "reset_btn" PULLUP;
+
+# Created by Constraints Editor (xc6slx9-tqg144-2) - 2015/12/10
+NET "sys_clk" TNM_NET = "sys_clk";
+TIMESPEC TS_sys_clk = PERIOD "sys_clk" 20 ns HIGH 50 %;
+NET "spi_sck" CLOCK_DEDICATED_ROUTE = FALSE;
+NET "spi_sck" TNM_NET = "spi_sck";
+TIMESPEC TS_spi_sck = PERIOD "spi_sck" 250 ns HIGH 50 %;
