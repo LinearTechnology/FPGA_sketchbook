@@ -67,7 +67,14 @@ module LTC2358_controller
                                             // 4400ns / (1/50 Mhz) ~ 220 cycles (rounded up) then -1
     parameter NUM_OF_CLK_PERCNV_H   = 2;    // Number of system clk cycles to have conver high
                                             // 60ns / (1/50 Mhz) ~ 3 cycles then -1
+    parameter NUM_OF_LANES          = 8;    // Valid parameters are 1, 2, 4, 8
 
+    // Enforce the valid parameter options with the genreate statement
+    generate
+        if(NUM_OF_LANES != 1 && NUM_OF_LANES != 2 && NUM_OF_LANES != 3 && NUM_OF_LANES != 4)
+            illegal_parameter_condition_will_instantiate_this non_existing_modue();
+    endgenerate
+    
     ///////////////////////////////////////////////////////////////////////////
     // Port declaration
     ///////////////////////////////////////////////////////////////////////////
@@ -80,11 +87,11 @@ module LTC2358_controller
     input                   go;
 
     // LTC2358 Signals
-    output                  LTC2358_sck;
-    input                   LTC2358_busy;
-    output                  LTC2358_cnv;
-    output                  LTC2358_sdi;
-    input       [7:0]       LTC2358_sdo;
+    output                          LTC2358_sck;
+    input                           LTC2358_busy;
+    output                          LTC2358_cnv;
+    output                          LTC2358_sdi;
+    input       [NUM_OF_LANES-1:0]  LTC2358_sdo;
     
     // Streaming Output
     output  reg [8*24-1:0]  data;
@@ -97,7 +104,7 @@ module LTC2358_controller
 
     reg         [1:0]   state;
     reg         [15:0]  busy_count;
-    reg         [4:0]   data_count;
+    reg         [7:0]   data_count;
     reg         [7:0]   cnv_count;
     wire                q_n;
     wire                s;
@@ -105,7 +112,7 @@ module LTC2358_controller
     reg                 en_sck;
     wire                en_busy_count;
     wire                en_count;
-    reg         [23:0]  data_shift_reg [0:7];
+    reg         [(192/NUM_OF_LANES)-1:0] data_shift_reg [0:NUM_OF_LANES-1];
 
     //*************************************************************************
 
@@ -183,10 +190,10 @@ module LTC2358_controller
     always @ (posedge clk or negedge reset_n)
         begin
             if (!reset_n)
-                data_count <= 5'd23;
+                data_count <= (192 / NUM_OF_LANES)-1;
             else if (state == IDLE)
-                data_count <= 5'd23;
-            else if (en_count && (data_count > 5'b0))
+                data_count <= (192 / NUM_OF_LANES)-1;
+            else if (en_count && (data_count > 0))
                 data_count <= data_count - 1'b1;
         end
 
@@ -211,19 +218,19 @@ module LTC2358_controller
     //*************************************************************************
 
     // Data shift in registers
-    // Generates 8 24-bit shift registers.
+    // Generates the shift in registers.
     // data_shift_reg[x][y] - x is the shift reg number, y is the elements of the 
     // shift register.
     genvar i;
     generate
-        for(i = 0; i <= 7; i = i + 1)
+        for(i = 0; i <= NUM_OF_LANES-1; i = i + 1)
             begin: shift_in_array
                 always @ (posedge clk or negedge reset_n)
                     begin
                         if(!reset_n)
-                            data_shift_reg[i] <= 24'b0;
+                            data_shift_reg[i] <= 0;
                         else if(en_count)
-                            data_shift_reg[i] <= {data_shift_reg[i][22:0], LTC2358_sdo[i]};
+                            data_shift_reg[i] <= {data_shift_reg[i][(192 / NUM_OF_LANES)-2:0], LTC2358_sdo[i]};
                     end
             end
     endgenerate
@@ -231,17 +238,18 @@ module LTC2358_controller
     //*************************************************************************
 
     // Update data out after the data has been shifted in
-    // Generates the 8 24-bit ouutput data.
+    // MSB -> LSB
+    // CH0, CH1, CH2, CH3, CH4, CH5, CH6, CH7 
     genvar j;
     generate
-        for(j = 0; j <= 7; j = j + 1)
+        for(j = NUM_OF_LANES; j >= 1; j = j - 1)
             begin: data_out_array
                 always @ (posedge clk or negedge reset_n)
                     begin
                         if (!reset_n)
-                            data[j*24-1] <= 24'b0;
-                        else if ((data_count == 5'b0) && (state == IDLE))
-                            data[j*24-1] <= data_shift_reg[j];
+                            data[j*(192/NUM_OF_LANES)-1 : 192/NUM_OF_LANES*(j-1)] <= 0;
+                        else if ((data_count == 0) && (state == IDLE))
+                            data[j*(192/NUM_OF_LANES)-1 : 192/NUM_OF_LANES*(j-1)] <= data_shift_reg[(NUM_OF_LANES)-j];
                     end
             end
     endgenerate
