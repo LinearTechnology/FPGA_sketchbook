@@ -39,7 +39,7 @@ module LTC2358_controller
 (
     // Control Signals
     clk,            // Module main clock 
-    ref_gated_clk,  // Clock to be gated. This should lead the system clock when 
+    shft_clk_in,    // Clock to be gated. This should lead the system clock when 
                     // running at higher clock speeds.
     reset_n,        // Reset active low
     cnfg,           // Configure word
@@ -71,8 +71,8 @@ module LTC2358_controller
 
     // Enforce the valid parameter options with the genreate statement
     generate
-        if(NUM_OF_LANES != 1 && NUM_OF_LANES != 2 && NUM_OF_LANES != 3 && NUM_OF_LANES != 4)
-            illegal_parameter_condition_will_instantiate_this non_existing_modue();
+        if(NUM_OF_LANES != 1 && NUM_OF_LANES != 2 && NUM_OF_LANES != 4 && NUM_OF_LANES != 8)
+            illegal_parameter_condition_will_instantiate_this non_existing_module();
     endgenerate
     
     ///////////////////////////////////////////////////////////////////////////
@@ -81,7 +81,7 @@ module LTC2358_controller
 
     // Control Signals
     input                   clk;
-    input                   ref_gated_clk;
+    input                   shft_clk_in;
     input                   reset_n;
     input       [23:0]      cnfg;
     input                   go;
@@ -203,7 +203,7 @@ module LTC2358_controller
     //*************************************************************************
 
     // Generated the gated clock
-    always @ (negedge ref_gated_clk or negedge reset_n)
+    always @ (negedge shft_clk_in or negedge reset_n)
         begin
             if (!reset_n)
                 en_sck <= 1'b0;
@@ -213,7 +213,7 @@ module LTC2358_controller
                 en_sck <= 1'b0;
          end
 
-    assign LTC2358_sck = en_sck & ref_gated_clk;
+    assign LTC2358_sck = en_sck & shft_clk_in;
 
     //*************************************************************************
 
