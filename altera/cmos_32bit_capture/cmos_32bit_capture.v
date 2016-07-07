@@ -118,11 +118,6 @@ module cmos_32bit_capture
 
     // Wires to/from Qsys blob
     wire    [31:0]  std_ctrl_wire;
-    wire    [15:0]  pid_kp, pid_ki, pid_kd;
-    wire    [31:0]  pulse_low, pulse_high;
-    wire    [19:0]  pulse_val;
-    wire    [15:0]  fos_tau, fos_gain;
-
     wire    [15:0]  system_clocks_per_sample;
     wire    [29:0]  num_samples;
     wire    [31:0]  tuning_word;
@@ -132,8 +127,8 @@ module cmos_32bit_capture
     wire            start;
     wire            data_ready;
     wire            mem_adcA_nadcB;
-    wire    [31:0]  adcA_data;
-    wire    [31:0]  adcB_data;
+	 reg     [31:0]  adc_data_reg_posedge;
+	 reg     [31:0]  adc_data_reg_negedge;
     wire    [3:0]   LEDwire;
     wire    [13:0]  n;  // For LTC2378-24, number of samples to average
     wire    [19:0]  control_sys_output;
@@ -166,9 +161,9 @@ module cmos_32bit_capture
     wire            reset_n;
     wire    [53:0]  filt_data_u1;
     wire    [53:0]  filt_data_u2;
-    wire            valid_filt_u1;
-    wire            valid_filt_u2;
-    wire            overflow_error;
+//    wire            valid_filt_u1;
+//    wire            valid_filt_u2;
+    wire            overflow;
     wire            wrfull;
     wire            wrreq;
     wire            rdempty;
@@ -182,8 +177,7 @@ module cmos_32bit_capture
     wire    [31:0]  formatter_nyq_output;
     wire            formatter_nyq_valid;
     reg     [29:0]  num_calculated;
-    wire    [15:0]  countup;
-    wire    [15:0]  countdown;
+    wire    [31:0]  counter_pattern;
     wire    [2:0]   fifo_data_select; // Multiplexer control signal
     wire            mem_ctrl_go_muxout;
     wire            adc_fifo_valid;
@@ -217,7 +211,16 @@ module cmos_32bit_capture
     assign LED[3:0] = LEDwire[3:0];
     assign reset = !KEY[0];
     assign reset_n = ~reset;
-    assign overflow_error = wrfull | wrfull_nyq;
+//    assign overflow = wrfull | wrfull_nyq;
+
+	overflow_det overflow_detector_1
+	(
+		.q(overflow),      // status - asserted means overflow occurred after
+		.qbar(),           // the most recent trigger
+		.r(trig_pulse),    // Trigger rising edge resets
+		.s(adc_fifo_full), // Any assertion of fifo full signal asserts
+		.clk(adc_clk)
+	);
 
     assign adc_clk_out = adc_clk_in;
     assign adc_clk_nshift_out = adc_clk;
@@ -225,12 +228,25 @@ module cmos_32bit_capture
 
     reg [23:0] heartbeat; // Heartbeat blinky
     assign LEDwire[3] = heartbeat[18];
-    assign LEDwire[2] = adc_error_u1 | adc_error_u2;
+    assign LEDwire[2] = overflow;
+	 assign LEDwire[1] = 1'b0;
 
     always @ (posedge adc_clk)
         begin
             heartbeat <= heartbeat + 24'b1;
         end
+
+// Register ADC data... both posedge and negedge versions...
+    always @ (negedge adc_clk)
+        begin
+            adc_data_reg_negedge <= adc_data;
+        end
+    always @ (posedge adc_clk)
+        begin
+            adc_data_reg_posedge <= adc_data;
+        end
+		  
+		  
 	 
     assign DAC_A = 16'b0; // Tie off.
     assign DAC_B = 16'b0;
@@ -266,8 +282,8 @@ module cmos_32bit_capture
 
     // A DC FIFO is used as a width adapter
     // 512 bits to 32 bits
-    assign  formatter_input =  {filt_data_u1, 10'b0, adcA_data, 32'hDEAD_BEEF, 32'h8BAD_F00D, 32'hB105_F00D, 32'hDEAD_C0DE, 32'hD006_F00D,
-                                filt_data_u2, 10'b0, adcB_data, 32'hDEAD_BEEF, 32'h8BAD_F00D, 32'hB105_F00D, 32'hDEAD_C0DE, 32'hD006_F00D};
+    assign  formatter_input =  {32'b0, 32'b0, 32'b0, 32'hDEAD_BEEF, 32'h8BAD_F00D, 32'hB105_F00D, 32'hDEAD_C0DE, 32'hD006_F00D,
+                                32'b0, 32'b0, 32'b0, 32'hDEAD_BEEF, 32'h8BAD_F00D, 32'hB105_F00D, 32'hDEAD_C0DE, 32'hD006_F00D};
     formatter adc_formatter
     (
         .aclr       (reset),
@@ -308,7 +324,7 @@ module cmos_32bit_capture
 
     // A DC FIFO is used as a width adapter
     // 64 bits to 32 bits
-    assign nyquist_data = {adcA_data, adcB_data};
+    assign nyquist_data = {32'b0, 32'b0};
     nyq_formatter nyquist_formatter
     (
         .aclr       (reset),
@@ -346,27 +362,38 @@ module cmos_32bit_capture
 
 assign adc_go = 1'b1; // For CMOS capture, assume we're always a GO!	 
 	 
-    // *********************************************************
-    // Generic counters for creating known data
+//    // *********************************************************
+//    // Generic counters for creating known data
+//
+//    // 16 bit up counter
+//    updown_count16  updown_count16_inst1
+//    (
+//        .clock  (adc_clk),
+//        .cnt_en (adc_go),
+//        .updown (0),            // Zero for down
+//        .q      (countdown)
+//    );
+//
+//    // 16 bit down counter
+//    updown_count16  updown_count16_inst2
+//    (
+//        .clock  (adc_clk),
+//        .cnt_en (adc_go),
+//        .updown (1),            // One for up
+//        .q      (countup)
+//    );
 
-    // 16 bit up counter
-    updown_count16  updown_count16_inst1
-    (
-        .clock  (adc_clk),
-        .cnt_en (adc_go),
-        .updown (0),            // Zero for down
-        .q      (countdown)
-    );
-
-    // 16 bit down counter
-    updown_count16  updown_count16_inst2
-    (
-        .clock  (adc_clk),
-        .cnt_en (adc_go),
-        .updown (1),            // One for up
-        .q      (countup)
-    );
-
+	upcount_32	upcount_32_inst
+	(
+			.clock ( adc_clk ),
+			.cnt_en ( adc_go ),
+			.data ( 32'b0 ),
+			.sclr ( 1'b0 ),
+			.sload ( 1'b0 ),
+			.cout (  ),
+			.q (counter_pattern)
+		);
+	 
     // *********************************************************
     // This multiplexer is right in front of the clock-crossing FIFO.
     // Data inputs consist of the 32 bit data concatenated with the Valid
@@ -374,11 +401,11 @@ assign adc_go = 1'b1; // For CMOS capture, assume we're always a GO!
     mux_8to1_32stream mux_8to1_32stream_inst
     (
         .clock  (adc_clk),
-        .data0x ({adc_data, 1'b1 & delayed_trig}),               // The one and only adc_data source...
-        .data1x ({adcB_data, adcB_done & delayed_trig}),               // ASAP!!!
-        .data2x ({filt_data_u1[53:22], valid_filt_u1 & delayed_trig}),
-        .data3x ({filt_data_u2[53:22], valid_filt_u2 & delayed_trig}),
-        .data4x ({countup[15:0], countdown[15:0], adc_go & delayed_trig}),
+        .data0x ({adc_data_reg_negedge, 1'b1 & delayed_trig}),               // The one and only adc_data source...
+        .data1x ({adc_data_reg_posedge, 1'b1 & delayed_trig}),               // ASAP!!!
+        .data2x ({32'd2222, 1'b1 & delayed_trig}),
+        .data3x ({32'd3333, 1'b1 & delayed_trig}),
+        .data4x ({counter_pattern, adc_go & delayed_trig}), // Counter test pattern
         .data5x ({formatter_output, formatter_valid}),
         .data6x ({formatter_nyq_output, formatter_nyq_valid}),
         .data7x ({32'hDEAD_BEEF, adc_go}),              // Super simple test pattern
@@ -420,13 +447,13 @@ assign adc_go = 1'b1; // For CMOS capture, assume we're always a GO!
     mux_8_to_1  data_valid_mux
     (
         .data0  (1'b1), // Always valid in CMOS parallel capture mode...
-        .data1  (adcB_done),
-        .data2  (valid_filt_u1),
-        .data3  (valid_filt_u2),
-        .data4  (adc_go),
-        .data5  (valid_filt_u1),
-        .data6  (adcA_done),
-        .data7  (adc_go),
+        .data1  (1'b1),
+        .data2  (1'b1),
+        .data3  (1'b1),
+        .data4  (1'b1),
+        .data5  (1'b1),
+        .data6  (1'b1),
+        .data7  (1'b1),
         .sel    (fifo_data_select),
         .result (data_valid)
     );
@@ -453,9 +480,7 @@ assign adc_go = 1'b1; // For CMOS capture, assume we're always a GO!
     // *********************************************************
     // SPI logic
     assign spi_miso = (linduino_miso & (~linduino_cs));
-    assign ltc6954_sdi = spi_mosi;
     assign linduino_mosi = spi_mosi;
-    assign ltc6954_sck = spi_sck;
     assign linduino_sck = spi_sck;
 
     // *********************************************************
@@ -500,15 +525,15 @@ assign adc_go = 1'b1; // For CMOS capture, assume we're always a GO!
         // User registers  .output_std_ctrl_export
         .rev_type_id_export     ({FPGA_REV, FPGA_TYPE}),             // rev_type_id.export
         .output_std_ctrl_export            ({26'b0, lut_write_enable, ltc6954_sync , gpo1, gpo0, force_trig_nosync, start }),            //          output_std_ctrl.export
-        .input_std_stat_export             ({31'b0, delayed_trig}),             //           input_std_stat.export
-        .output_0x40_export                ({2'b0, n, cfg, 4'b0, LEDwire[1:0]}),                //              output_0x40.export
+        .input_std_stat_export             ({29'b0, overflow,1'b0, delayed_trig}),             // input_std_stat.export, Extra zero is a placeholder for PLL lock signal
+        .output_0x40_export                ({2'b0, n, cfg, 5'b0, LEDwire[0]}),                //              output_0x40.export
         .output_0x50_export                (num_samples),                //              output_0x50.export
-        .output_0x60_export                ({16'b0, pid_kp}),                //              output_0x60.export
-        .output_0x70_export                (pid_ki),                //              output_0x70.export
-        .output_0x80_export                (pid_kd),                //              output_0x80.export
-        .output_0x90_export                (pulse_low),                //              output_0x90.export
-        .output_0xa0_export                (pulse_high),                //              output_0xa0.export
-        .output_0xb0_export                (pulse_val),                //              output_0xb0.export
+        .output_0x60_export                (),                //              output_0x60.export
+        .output_0x70_export                (),                //              output_0x70.export
+        .output_0x80_export                (),                //              output_0x80.export
+        .output_0x90_export                (),                //              output_0x90.export
+        .output_0xa0_export                (),                //              output_0xa0.export
+        .output_0xb0_export                (),                //              output_0xb0.export
         .output_0xc0_export                ({lut_addr_div,system_clocks_per_sample}),                //              output_0xc0.export
         .output_0xd0_export                ({16'b0, lut_run_once, 1'b0, lut_addr_select[1:0], 2'b0, dac_a_select[1:0], 2'b0, dac_b_select[1:0],  1'b0, fifo_data_select[2:0]}), // First Order System model parameters
         .output_0xe0_export                ({lut_wraddress, lut_wrdata}),
