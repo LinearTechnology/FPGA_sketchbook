@@ -76,7 +76,6 @@ module top_level
     // Module parameters
     ///////////////////////////////////////////////////////////////////////////
 
-    localparam NCO_DEFAULT_TUNING_WORD = 32'd858993; // 10 KHz
 
     ///////////////////////////////////////////////////////////////////////////
     // Internal signals
@@ -86,6 +85,7 @@ module top_level
     wire                reset_n;
     wire        [17:0]  nco_sin;
     reg         [31:0]  dff;
+	 wire        rx_clk;
 
     //*************************************************************************
 
@@ -101,7 +101,7 @@ module top_level
 	 
 	 
 
-           .clk_24m (sys_clk),       // Clock
+           .clk_24m (rx_clk),       // Clock
            .enb(1'b1),           // High to enable packet detect, low to abort
                                    // (enb low doesn't alter the SPI read buffer)
            .sdao(reset_btn),          // Serial output from 4284
@@ -115,5 +115,10 @@ module top_level
 
 	 );
 
+	 pll_1	pll_1_inst (
+	.inclk0 ( sys_clk ),
+	.c0 ( rx_clk ),
+	.locked ( locked_sig )
+	);
 
 endmodule
