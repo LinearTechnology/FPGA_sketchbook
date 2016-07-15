@@ -9,7 +9,7 @@
 		<user_name>Page_0</user_name>
 		<page_flags>1</page_flags>
 		<bit0>
-			<sof_filename>C:/projects/sockit/Altera/DC2390_multi_application/output_files/fos_control_demo_top.sof</sof_filename> 
+			<sof_filename>C:/projects/FPGA_sketchbook/trunk/altera/DC2390_multi_application/output_files/fos_control_demo_top.sof</sof_filename> 
 		</bit0>
 	</sof_data>
 	<version>7</version>
