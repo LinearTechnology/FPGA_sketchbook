@@ -1119,7 +1119,7 @@
   <parameter name="AC_PACKAGE_DESKEW" value="false" />
   <parameter name="AC_ROM_USER_ADD_0" value="0_0000_0000_0000" />
   <parameter name="AC_ROM_USER_ADD_1" value="0_0000_0000_1000" />
-  <parameter name="ADDR_ORDER" value="0" />
+  <parameter name="ADDR_ORDER" value="2" />
   <parameter name="ADD_EFFICIENCY_MONITOR" value="false" />
   <parameter name="ADD_EXTERNAL_SEQ_DEBUG_NIOS" value="false" />
   <parameter name="ADVANCED_CK_PHASES" value="false" />
@@ -1133,7 +1133,7 @@
   <parameter name="AUTO_PD_CYCLES" value="0" />
   <parameter name="AUTO_POWERDN_EN" value="false" />
   <parameter name="AVL_DATA_WIDTH_PORT" value="32,32,32,32,32,32" />
-  <parameter name="AVL_MAX_SIZE" value="4" />
+  <parameter name="AVL_MAX_SIZE" value="128" />
   <parameter name="BYTE_ENABLE" value="true" />
   <parameter name="C2P_WRITE_CLOCK_ADD_PHASE" value="0.0" />
   <parameter name="CALIBRATION_MODE" value="Full" />
