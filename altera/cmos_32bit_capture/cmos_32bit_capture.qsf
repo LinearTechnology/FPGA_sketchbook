@@ -161,7 +161,6 @@ set_location_assignment PIN_C12 -to DAC_A[3]
 set_location_assignment PIN_B11 -to DAC_A[2]
 set_location_assignment PIN_B13 -to DAC_A[1]
 set_location_assignment PIN_A13 -to DAC_A[0]
-set_location_assignment PIN_A9 -to DAC_B[15]
 set_location_assignment PIN_A8 -to DAC_B[14]
 set_location_assignment PIN_E8 -to DAC_B[13]
 set_location_assignment PIN_D7 -to DAC_B[12]
@@ -194,7 +193,7 @@ set_location_assignment PIN_AD9 -to KEY[2]
 set_location_assignment PIN_AE12 -to KEY[1]
 set_global_assignment -name ENABLE_SIGNALTAP OFF
 set_global_assignment -name USE_SIGNALTAP_FILE stp1.stp
-set_location_assignment PIN_F14 -to adc_clk_out
+set_location_assignment PIN_A9 -to adc_clk_out
 set_location_assignment PIN_AA26 -to adc_clk_in
 set_location_assignment PIN_F15 -to adc_clk_nshift_out
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
@@ -966,6 +965,9 @@ set_instance_assignment -name GLOBAL_SIGNAL OFF -to LTQsys_blob2_inst|mem_if_ddr
 set_instance_assignment -name GLOBAL_SIGNAL OFF -to LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[1].read_capture_clk_buffer -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
 set_instance_assignment -name GLOBAL_SIGNAL OFF -to LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[2].read_capture_clk_buffer -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
 set_instance_assignment -name GLOBAL_SIGNAL OFF -to LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[3].read_capture_clk_buffer -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_global_assignment -name VERILOG_FILE ../../LT_Modules/misc/overflow_det.v
+set_global_assignment -name VERILOG_FILE upcount_32/upcount_32.v
+set_global_assignment -name QIP_FILE upcount_32/upcount_32.qip
 set_global_assignment -name SDC_FILE cmos_32bit_capture.sdc
 set_global_assignment -name QIP_FILE ../../Altera_LT_IP/LTQsys_blob2_hard/LTQsys_blob2/synthesis/LTQsys_blob2.qip
 set_global_assignment -name VERILOG_FILE ../../Altera_LT_IP/mem_master/mem_master.v
