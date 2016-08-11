@@ -437,7 +437,7 @@ module LTC2500_controller
     // Edge dedge detector for sync_flag
     reg sync_flag_d1;
     wire rise_edge_sync_flag;
-    always @ (posedge sck_in or negedge reset_n)
+    always @ (posedge sys_clk or negedge reset_n)
         begin
             if(!reset_n)
                 sync_flag_d1 <= 1'b0;
@@ -447,7 +447,7 @@ module LTC2500_controller
     assign rise_edge_sync_flag = sync_flag & (!sync_flag_d1);
 
     // Send sdo 
-    always @ (posedge sck_in or negedge reset_n)
+    always @ (posedge sys_clk or negedge reset_n)
         begin
             if(!reset_n)
                 mosi <= 12'b0;
