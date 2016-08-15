@@ -1,0 +1,7 @@
+{
+	"common_dir" : "/data/chklim/jesd204b/reference_design/AD9250/avgt_jesd204b_ad9250_ed_14_0_restored/",
+	"acds_version" : "Version 14.0.0",
+	"platform" : "linux",
+	"os" : "CentOS release",
+	"qpf" : "jesd204b_ed_top.qpf"
+}

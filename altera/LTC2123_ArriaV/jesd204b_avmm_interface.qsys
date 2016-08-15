@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<system name="$${FILENAME}">
+ <component
+   name="$${FILENAME}"
+   displayName="$${FILENAME}"
+   version="1.0"
+   description=""
+   tags=""
+   categories="System" />
+ <parameter name="bonusData"><![CDATA[bonusData 
+{
+   element $${FILENAME}
+   {
+   }
+   element merlin_slave_translator_0.avalon_universal_slave_0
+   {
+      datum baseAddress
+      {
+         value = "1024";
+         type = "String";
+      }
+   }
+   element clk_0
+   {
+      datum _sortIndex
+      {
+         value = "0";
+         type = "int";
+      }
+   }
+   element master_0
+   {
+      datum _sortIndex
+      {
+         value = "1";
+         type = "int";
+      }
+   }
+   element merlin_slave_translator_0
+   {
+      datum _sortIndex
+      {
+         value = "2";
+         type = "int";
+      }
+   }
+   element spi_0
+   {
+      datum _sortIndex
+      {
+         value = "3";
+         type = "int";
+      }
+   }
+   element spi_0.spi_control_port
+   {
+      datum baseAddress
+      {
+         value = "0";
+         type = "String";
+      }
+   }
+}
+]]></parameter>
+ <parameter name="clockCrossingAdapter" value="HANDSHAKE" />
+ <parameter name="device" value="5AGTFD7K3F40I3" />
+ <parameter name="deviceFamily" value="Arria V" />
+ <parameter name="deviceSpeedGrade" value="3_H3" />
+ <parameter name="fabricMode" value="QSYS" />
+ <parameter name="generateLegacySim" value="false" />
+ <parameter name="generationId" value="0" />
+ <parameter name="globalResetBus" value="false" />
+ <parameter name="hdlLanguage" value="VERILOG" />
+ <parameter name="hideFromIPCatalog" value="false" />
+ <parameter name="maxAdditionalLatency" value="1" />
+ <parameter name="projectName" value="jtag_9525_qsys.qpf" />
+ <parameter name="sopcBorderPoints" value="false" />
+ <parameter name="systemHash" value="0" />
+ <parameter name="testBenchDutName" value="" />
+ <parameter name="timeStamp" value="0" />
+ <parameter name="useTestBenchNamingPattern" value="false" />
+ <instanceScript></instanceScript>
+ <interface name="clk" internal="clk_0.clk_in" type="clock" dir="end" />
+ <interface name="reset" internal="clk_0.clk_in_reset" type="reset" dir="end" />
+ <interface
+   name="jesd204b_console_interface"
+   internal="merlin_slave_translator_0.avalon_anti_slave_0"
+   type="avalon"
+   dir="start" />
+ <interface
+   name="spi_0_external"
+   internal="spi_0.external"
+   type="conduit"
+   dir="end" />
+ <module kind="clock_source" version="14.0" enabled="1" name="clk_0">
+  <parameter name="clockFrequency" value="100000000" />
+  <parameter name="clockFrequencyKnown" value="true" />
+  <parameter name="inputClockFrequency" value="0" />
+  <parameter name="resetSynchronousEdges" value="NONE" />
+ </module>
+ <module
+   kind="altera_jtag_avalon_master"
+   version="14.0"
+   enabled="1"
+   name="master_0">
+  <parameter name="USE_PLI" value="0" />
+  <parameter name="PLI_PORT" value="50000" />
+  <parameter name="COMPONENT_CLOCK" value="0" />
+  <parameter name="FAST_VER" value="0" />
+  <parameter name="FIFO_DEPTHS" value="2" />
+  <parameter name="AUTO_DEVICE_FAMILY" value="Arria V" />
+  <parameter name="AUTO_DEVICE" value="5AGTFD7K3F40I3" />
+ </module>
+ <module
+   kind="altera_merlin_slave_translator"
+   version="14.0"
+   enabled="1"
+   name="merlin_slave_translator_0">
+  <parameter name="AV_ADDRESS_W" value="10" />
+  <parameter name="AV_DATA_W" value="32" />
+  <parameter name="UAV_DATA_W" value="32" />
+  <parameter name="AV_BURSTCOUNT_W" value="4" />
+  <parameter name="AV_BYTEENABLE_W" value="4" />
+  <parameter name="UAV_BYTEENABLE_W" value="4" />
+  <parameter name="UAV_ADDRESS_W" value="10" />
+  <parameter name="UAV_BURSTCOUNT_W" value="4" />
+  <parameter name="AV_READLATENCY" value="1" />
+  <parameter name="AV_SETUP_WAIT" value="0" />
+  <parameter name="AV_WRITE_WAIT" value="0" />
+  <parameter name="AV_READ_WAIT" value="1" />
+  <parameter name="AV_DATA_HOLD" value="0" />
+  <parameter name="AV_TIMING_UNITS" value="1" />
+  <parameter name="USE_READDATA" value="1" />
+  <parameter name="USE_WRITEDATA" value="1" />
+  <parameter name="USE_READ" value="1" />
+  <parameter name="USE_WRITE" value="1" />
+  <parameter name="USE_BEGINBURSTTRANSFER" value="0" />
+  <parameter name="USE_BEGINTRANSFER" value="0" />
+  <parameter name="USE_BYTEENABLE" value="0" />
+  <parameter name="USE_CHIPSELECT" value="1" />
+  <parameter name="USE_ADDRESS" value="1" />
+  <parameter name="USE_BURSTCOUNT" value="0" />
+  <parameter name="USE_READDATAVALID" value="0" />
+  <parameter name="USE_WAITREQUEST" value="1" />
+  <parameter name="USE_WRITEBYTEENABLE" value="0" />
+  <parameter name="USE_LOCK" value="0" />
+  <parameter name="USE_AV_CLKEN" value="0" />
+  <parameter name="USE_UAV_CLKEN" value="0" />
+  <parameter name="USE_OUTPUTENABLE" value="0" />
+  <parameter name="USE_DEBUGACCESS" value="0" />
+  <parameter name="USE_READRESPONSE" value="0" />
+  <parameter name="USE_WRITERESPONSE" value="0" />
+  <parameter name="AV_SYMBOLS_PER_WORD" value="4" />
+  <parameter name="AV_ADDRESS_SYMBOLS" value="1" />
+  <parameter name="AV_BURSTCOUNT_SYMBOLS" value="1" />
+  <parameter name="AV_CONSTANT_BURST_BEHAVIOR" value="0" />
+  <parameter name="UAV_CONSTANT_BURST_BEHAVIOR" value="0" />
+  <parameter name="AV_REQUIRE_UNALIGNED_ADDRESSES" value="0" />
+  <parameter name="AV_LINEWRAPBURSTS" value="0" />
+  <parameter name="AV_MAX_PENDING_READ_TRANSACTIONS" value="64" />
+  <parameter name="AV_MAX_PENDING_WRITE_TRANSACTIONS" value="0" />
+  <parameter name="AV_BURSTBOUNDARIES" value="0" />
+  <parameter name="AV_INTERLEAVEBURSTS" value="0" />
+  <parameter name="AV_BITS_PER_SYMBOL" value="8" />
+  <parameter name="AV_ISBIGENDIAN" value="0" />
+  <parameter name="AV_ADDRESSGROUP" value="0" />
+  <parameter name="UAV_ADDRESSGROUP" value="0" />
+  <parameter name="AV_REGISTEROUTGOINGSIGNALS" value="0" />
+  <parameter name="AV_REGISTERINCOMINGSIGNALS" value="0" />
+  <parameter name="AV_ALWAYSBURSTMAXBURST" value="0" />
+  <parameter name="CHIPSELECT_THROUGH_READLATENCY" value="0" />
+  <parameter name="CLOCK_RATE" value="100000000" />
+ </module>
+ <module kind="altera_avalon_spi" version="14.0" enabled="1" name="spi_0">
+  <parameter name="clockPhase" value="0" />
+  <parameter name="clockPolarity" value="0" />
+  <parameter name="dataWidth" value="32" />
+  <parameter name="disableAvalonFlowControl" value="false" />
+  <parameter name="insertDelayBetweenSlaveSelectAndSClk" value="false" />
+  <parameter name="insertSync" value="false" />
+  <parameter name="lsbOrderedFirst" value="false" />
+  <parameter name="masterSPI" value="true" />
+  <parameter name="numberOfSlaves" value="1" />
+  <parameter name="syncRegDepth" value="2" />
+  <parameter name="targetClockRate" value="1000000" />
+  <parameter name="targetSlaveSelectToSClkDelay" value="0.0" />
+  <parameter name="avalonSpec" value="2.0" />
+  <parameter name="inputClockRate" value="100000000" />
+ </module>
+ <connection kind="clock" version="14.0" start="clk_0.clk" end="master_0.clk" />
+ <connection
+   kind="reset"
+   version="14.0"
+   start="clk_0.clk_reset"
+   end="master_0.clk_reset" />
+ <connection
+   kind="avalon"
+   version="14.0"
+   start="master_0.master"
+   end="merlin_slave_translator_0.avalon_universal_slave_0">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0400" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="clock"
+   version="14.0"
+   start="clk_0.clk"
+   end="merlin_slave_translator_0.clk" />
+ <connection
+   kind="reset"
+   version="14.0"
+   start="clk_0.clk_reset"
+   end="merlin_slave_translator_0.reset" />
+ <connection kind="clock" version="14.0" start="clk_0.clk" end="spi_0.clk" />
+ <connection kind="reset" version="14.0" start="clk_0.clk_reset" end="spi_0.reset" />
+ <connection
+   kind="avalon"
+   version="14.0"
+   start="master_0.master"
+   end="spi_0.spi_control_port">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0000" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <interconnectRequirement for="$system" name="qsys_mm.clockCrossingAdapter" value="HANDSHAKE" />
+ <interconnectRequirement for="$system" name="qsys_mm.maxAdditionalLatency" value="1" />
+ <interconnectRequirement for="$system" name="qsys_mm.insertDefaultSlave" value="false" />
+</system>
