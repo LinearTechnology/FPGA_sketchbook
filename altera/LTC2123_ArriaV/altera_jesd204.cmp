@@ -1,0 +1,101 @@
+	component altera_jesd204 is
+		port (
+			tx_pll_ref_clk             : in  std_logic                      := 'X';             -- clk
+			txlink_clk                 : in  std_logic                      := 'X';             -- clk
+			txlink_rst_n_reset_n       : in  std_logic                      := 'X';             -- reset_n
+			jesd204_tx_avs_clk         : in  std_logic                      := 'X';             -- clk
+			jesd204_tx_avs_rst_n       : in  std_logic                      := 'X';             -- reset_n
+			jesd204_tx_avs_chipselect  : in  std_logic                      := 'X';             -- chipselect
+			jesd204_tx_avs_address     : in  std_logic_vector(7 downto 0)   := (others => 'X'); -- address
+			jesd204_tx_avs_read        : in  std_logic                      := 'X';             -- read
+			jesd204_tx_avs_readdata    : out std_logic_vector(31 downto 0);                     -- readdata
+			jesd204_tx_avs_waitrequest : out std_logic;                                         -- waitrequest
+			jesd204_tx_avs_write       : in  std_logic                      := 'X';             -- write
+			jesd204_tx_avs_writedata   : in  std_logic_vector(31 downto 0)  := (others => 'X'); -- writedata
+			jesd204_tx_link_data       : in  std_logic_vector(63 downto 0)  := (others => 'X'); -- data
+			jesd204_tx_link_valid      : in  std_logic                      := 'X';             -- valid
+			jesd204_tx_link_ready      : out std_logic;                                         -- ready
+			jesd204_tx_int             : out std_logic;                                         -- export
+			tx_sysref                  : in  std_logic                      := 'X';             -- export
+			sync_n                     : in  std_logic                      := 'X';             -- export
+			tx_dev_sync_n              : out std_logic;                                         -- export
+			mdev_sync_n                : in  std_logic                      := 'X';             -- export
+			jesd204_tx_frame_ready     : out std_logic;                                         -- export
+			tx_csr_l                   : out std_logic_vector(4 downto 0);                      -- export
+			tx_csr_f                   : out std_logic_vector(7 downto 0);                      -- export
+			tx_csr_k                   : out std_logic_vector(4 downto 0);                      -- export
+			tx_csr_m                   : out std_logic_vector(7 downto 0);                      -- export
+			tx_csr_cs                  : out std_logic_vector(1 downto 0);                      -- export
+			tx_csr_n                   : out std_logic_vector(4 downto 0);                      -- export
+			tx_csr_np                  : out std_logic_vector(4 downto 0);                      -- export
+			tx_csr_s                   : out std_logic_vector(4 downto 0);                      -- export
+			tx_csr_hd                  : out std_logic;                                         -- export
+			tx_csr_cf                  : out std_logic_vector(4 downto 0);                      -- export
+			tx_csr_lane_powerdown      : out std_logic_vector(1 downto 0);                      -- export
+			csr_tx_testmode            : out std_logic_vector(3 downto 0);                      -- export
+			csr_tx_testpattern_a       : out std_logic_vector(31 downto 0);                     -- export
+			csr_tx_testpattern_b       : out std_logic_vector(31 downto 0);                     -- export
+			csr_tx_testpattern_c       : out std_logic_vector(31 downto 0);                     -- export
+			csr_tx_testpattern_d       : out std_logic_vector(31 downto 0);                     -- export
+			jesd204_tx_frame_error     : in  std_logic                      := 'X';             -- export
+			jesd204_tx_dlb_data        : out std_logic_vector(63 downto 0);                     -- export
+			jesd204_tx_dlb_kchar_data  : out std_logic_vector(7 downto 0);                      -- export
+			txphy_clk                  : out std_logic_vector(1 downto 0);                      -- tx_std_clkout
+			tx_serial_data             : out std_logic_vector(1 downto 0);                      -- tx_serial_data
+			pll_powerdown              : in  std_logic_vector(0 downto 0)   := (others => 'X'); -- pll_powerdown
+			tx_analogreset             : in  std_logic_vector(1 downto 0)   := (others => 'X'); -- tx_analogreset
+			tx_digitalreset            : in  std_logic_vector(1 downto 0)   := (others => 'X'); -- tx_digitalreset
+			pll_locked                 : out std_logic_vector(1 downto 0);                      -- export
+			tx_cal_busy                : out std_logic_vector(1 downto 0);                      -- export
+			rx_pll_ref_clk             : in  std_logic                      := 'X';             -- clk
+			rxlink_clk                 : in  std_logic                      := 'X';             -- clk
+			rxlink_rst_n_reset_n       : in  std_logic                      := 'X';             -- reset_n
+			jesd204_rx_avs_clk         : in  std_logic                      := 'X';             -- clk
+			jesd204_rx_avs_rst_n       : in  std_logic                      := 'X';             -- reset_n
+			jesd204_rx_avs_chipselect  : in  std_logic                      := 'X';             -- chipselect
+			jesd204_rx_avs_address     : in  std_logic_vector(7 downto 0)   := (others => 'X'); -- address
+			jesd204_rx_avs_read        : in  std_logic                      := 'X';             -- read
+			jesd204_rx_avs_readdata    : out std_logic_vector(31 downto 0);                     -- readdata
+			jesd204_rx_avs_waitrequest : out std_logic;                                         -- waitrequest
+			jesd204_rx_avs_write       : in  std_logic                      := 'X';             -- write
+			jesd204_rx_avs_writedata   : in  std_logic_vector(31 downto 0)  := (others => 'X'); -- writedata
+			jesd204_rx_link_data       : out std_logic_vector(63 downto 0);                     -- data
+			jesd204_rx_link_valid      : out std_logic;                                         -- valid
+			jesd204_rx_link_ready      : in  std_logic                      := 'X';             -- ready
+			jesd204_rx_dlb_data        : in  std_logic_vector(63 downto 0)  := (others => 'X'); -- export
+			jesd204_rx_dlb_data_valid  : in  std_logic_vector(1 downto 0)   := (others => 'X'); -- export
+			jesd204_rx_dlb_kchar_data  : in  std_logic_vector(7 downto 0)   := (others => 'X'); -- export
+			jesd204_rx_dlb_errdetect   : in  std_logic_vector(7 downto 0)   := (others => 'X'); -- export
+			jesd204_rx_dlb_disperr     : in  std_logic_vector(7 downto 0)   := (others => 'X'); -- export
+			alldev_lane_aligned        : in  std_logic                      := 'X';             -- export
+			rx_sysref                  : in  std_logic                      := 'X';             -- export
+			jesd204_rx_frame_error     : in  std_logic                      := 'X';             -- export
+			jesd204_rx_int             : out std_logic;                                         -- export
+			csr_rx_testmode            : out std_logic_vector(3 downto 0);                      -- export
+			dev_lane_aligned           : out std_logic;                                         -- export
+			rx_dev_sync_n              : out std_logic;                                         -- export
+			rx_sof                     : out std_logic_vector(3 downto 0);                      -- export
+			rx_somf                    : out std_logic_vector(3 downto 0);                      -- export
+			rx_csr_f                   : out std_logic_vector(7 downto 0);                      -- export
+			rx_csr_k                   : out std_logic_vector(4 downto 0);                      -- export
+			rx_csr_l                   : out std_logic_vector(4 downto 0);                      -- export
+			rx_csr_m                   : out std_logic_vector(7 downto 0);                      -- export
+			rx_csr_n                   : out std_logic_vector(4 downto 0);                      -- export
+			rx_csr_s                   : out std_logic_vector(4 downto 0);                      -- export
+			rx_csr_cf                  : out std_logic_vector(4 downto 0);                      -- export
+			rx_csr_cs                  : out std_logic_vector(1 downto 0);                      -- export
+			rx_csr_hd                  : out std_logic;                                         -- export
+			rx_csr_np                  : out std_logic_vector(4 downto 0);                      -- export
+			rx_csr_lane_powerdown      : out std_logic_vector(1 downto 0);                      -- export
+			rxphy_clk                  : out std_logic_vector(1 downto 0);                      -- rx_std_clkout
+			rx_serial_data             : in  std_logic_vector(1 downto 0)   := (others => 'X'); -- rx_serial_data
+			rx_analogreset             : in  std_logic_vector(1 downto 0)   := (others => 'X'); -- rx_analogreset
+			rx_digitalreset            : in  std_logic_vector(1 downto 0)   := (others => 'X'); -- rx_digitalreset
+			reconfig_to_xcvr           : in  std_logic_vector(209 downto 0) := (others => 'X'); -- reconfig_to_xcvr
+			reconfig_from_xcvr         : out std_logic_vector(137 downto 0);                    -- reconfig_from_xcvr
+			rx_islockedtodata          : out std_logic_vector(1 downto 0);                      -- export
+			rx_cal_busy                : out std_logic_vector(1 downto 0);                      -- export
+			rx_seriallpbken            : in  std_logic_vector(1 downto 0)   := (others => 'X')  -- rx_seriallpbken
+		);
+	end component altera_jesd204;
+
