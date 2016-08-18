@@ -1,0 +1,6 @@
+
+
+C:/projects/sockit/Altera/DC2390_multi_application/nco/nco.v
+
+Jun 21 12PM:41:02>: Megafunction NCO v13.1 is not listed in any 
+wizard.lst file in the specified library path(s).Wizard launch aborted

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simPackage>
+ <file path="DC2390_pll_sim/DC2390_pll.vo" type="VERILOG" />
+ <topLevel name="DC2390_pll" />
+ <deviceFamily name="cyclonev" />
+</simPackage>
