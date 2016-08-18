@@ -5,7 +5,7 @@
 # This file is for reference only and is not used by Quartus II
 #
 
-INSTANCE: u0|mem_if_ddr3_emif_0
+INSTANCE: LTQsys_blob2_inst|mem_if_ddr3_emif_0
 DQS: {fpga_memory_mem_dqs[0]} {fpga_memory_mem_dqs[1]} {fpga_memory_mem_dqs[2]} {fpga_memory_mem_dqs[3]}
 DQSn: {fpga_memory_mem_dqs_n[0]} {fpga_memory_mem_dqs_n[1]} {fpga_memory_mem_dqs_n[2]} {fpga_memory_mem_dqs_n[3]}
 DQ: {{fpga_memory_mem_dq[0]} {fpga_memory_mem_dq[1]} {fpga_memory_mem_dq[2]} {fpga_memory_mem_dq[3]} {fpga_memory_mem_dq[4]} {fpga_memory_mem_dq[5]} {fpga_memory_mem_dq[6]} {fpga_memory_mem_dq[7]}} {{fpga_memory_mem_dq[8]} {fpga_memory_mem_dq[9]} {fpga_memory_mem_dq[10]} {fpga_memory_mem_dq[11]} {fpga_memory_mem_dq[12]} {fpga_memory_mem_dq[13]} {fpga_memory_mem_dq[14]} {fpga_memory_mem_dq[15]}} {{fpga_memory_mem_dq[16]} {fpga_memory_mem_dq[17]} {fpga_memory_mem_dq[18]} {fpga_memory_mem_dq[19]} {fpga_memory_mem_dq[20]} {fpga_memory_mem_dq[21]} {fpga_memory_mem_dq[22]} {fpga_memory_mem_dq[23]}} {{fpga_memory_mem_dq[24]} {fpga_memory_mem_dq[25]} {fpga_memory_mem_dq[26]} {fpga_memory_mem_dq[27]} {fpga_memory_mem_dq[28]} {fpga_memory_mem_dq[29]} {fpga_memory_mem_dq[30]} {fpga_memory_mem_dq[31]}}
@@ -17,62 +17,62 @@ CMD: fpga_memory_mem_cs_n fpga_memory_mem_we_n fpga_memory_mem_ras_n fpga_memory
 RESET: fpga_memory_mem_reset_n
 BA: {fpga_memory_mem_ba[0]} {fpga_memory_mem_ba[1]} {fpga_memory_mem_ba[2]}
 REF CLK: clk
-PLL AFI: u0|mem_if_ddr3_emif_0|pll0|pll1~PLL_OUTPUT_COUNTER|divclk
-PLL AFI PHY: u0|mem_if_ddr3_emif_0|pll0|pll1_phy~PLL_OUTPUT_COUNTER|divclk
-PLL CK: u0|mem_if_ddr3_emif_0|pll0|pll2_phy~PLL_OUTPUT_COUNTER|divclk
-PLL DQ WRITE: u0|mem_if_ddr3_emif_0|pll0|pll3~PLL_OUTPUT_COUNTER|divclk
-PLL WRITE: u0|mem_if_ddr3_emif_0|pll0|pll2_phy~PLL_OUTPUT_COUNTER|divclk
-PLL AC: u0|mem_if_ddr3_emif_0|pll0|pll4~PLL_OUTPUT_COUNTER|divclk
-PLL AVL: u0|mem_if_ddr3_emif_0|pll0|pll6~PLL_OUTPUT_COUNTER|divclk
-PLL CONFIG: u0|mem_if_ddr3_emif_0|pll0|pll7~PLL_OUTPUT_COUNTER|divclk
+PLL AFI: LTQsys_blob2_inst|mem_if_ddr3_emif_0|pll0|pll1~PLL_OUTPUT_COUNTER|divclk
+PLL AFI PHY: LTQsys_blob2_inst|mem_if_ddr3_emif_0|pll0|pll1_phy~PLL_OUTPUT_COUNTER|divclk
+PLL CK: LTQsys_blob2_inst|mem_if_ddr3_emif_0|pll0|pll2_phy~PLL_OUTPUT_COUNTER|divclk
+PLL DQ WRITE: LTQsys_blob2_inst|mem_if_ddr3_emif_0|pll0|pll3~PLL_OUTPUT_COUNTER|divclk
+PLL WRITE: LTQsys_blob2_inst|mem_if_ddr3_emif_0|pll0|pll2_phy~PLL_OUTPUT_COUNTER|divclk
+PLL AC: LTQsys_blob2_inst|mem_if_ddr3_emif_0|pll0|pll4~PLL_OUTPUT_COUNTER|divclk
+PLL AVL: LTQsys_blob2_inst|mem_if_ddr3_emif_0|pll0|pll6~PLL_OUTPUT_COUNTER|divclk
+PLL CONFIG: LTQsys_blob2_inst|mem_if_ddr3_emif_0|pll0|pll7~PLL_OUTPUT_COUNTER|divclk
 DQS_IN_CLOCK DQS_PIN (0): fpga_memory_mem_dqs[0]
-DQS_IN_CLOCK DQS_SHIFTED_PIN (0): u0|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[0].ubidir_dq_dqs|altdq_dqs2_inst|dqs_delay_chain|dqsbusout
-DQS_IN_CLOCK DIV_NAME (0): u0|mem_if_ddr3_emif_0|div_clock_0
-DQS_IN_CLOCK DIV_PIN (0): u0|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|read_capture_clk_div2[0]
+DQS_IN_CLOCK DQS_SHIFTED_PIN (0): LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[0].ubidir_dq_dqs|altdq_dqs2_inst|dqs_delay_chain|dqsbusout
+DQS_IN_CLOCK DIV_NAME (0): LTQsys_blob2_inst|mem_if_ddr3_emif_0|div_clock_0
+DQS_IN_CLOCK DIV_PIN (0): LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|read_capture_clk_div2[0]
 DQS_IN_CLOCK DQS_PIN (1): fpga_memory_mem_dqs[1]
-DQS_IN_CLOCK DQS_SHIFTED_PIN (1): u0|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[1].ubidir_dq_dqs|altdq_dqs2_inst|dqs_delay_chain|dqsbusout
-DQS_IN_CLOCK DIV_NAME (1): u0|mem_if_ddr3_emif_0|div_clock_1
-DQS_IN_CLOCK DIV_PIN (1): u0|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|read_capture_clk_div2[1]
+DQS_IN_CLOCK DQS_SHIFTED_PIN (1): LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[1].ubidir_dq_dqs|altdq_dqs2_inst|dqs_delay_chain|dqsbusout
+DQS_IN_CLOCK DIV_NAME (1): LTQsys_blob2_inst|mem_if_ddr3_emif_0|div_clock_1
+DQS_IN_CLOCK DIV_PIN (1): LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|read_capture_clk_div2[1]
 DQS_IN_CLOCK DQS_PIN (2): fpga_memory_mem_dqs[2]
-DQS_IN_CLOCK DQS_SHIFTED_PIN (2): u0|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[2].ubidir_dq_dqs|altdq_dqs2_inst|dqs_delay_chain|dqsbusout
-DQS_IN_CLOCK DIV_NAME (2): u0|mem_if_ddr3_emif_0|div_clock_2
-DQS_IN_CLOCK DIV_PIN (2): u0|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|read_capture_clk_div2[2]
+DQS_IN_CLOCK DQS_SHIFTED_PIN (2): LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[2].ubidir_dq_dqs|altdq_dqs2_inst|dqs_delay_chain|dqsbusout
+DQS_IN_CLOCK DIV_NAME (2): LTQsys_blob2_inst|mem_if_ddr3_emif_0|div_clock_2
+DQS_IN_CLOCK DIV_PIN (2): LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|read_capture_clk_div2[2]
 DQS_IN_CLOCK DQS_PIN (3): fpga_memory_mem_dqs[3]
-DQS_IN_CLOCK DQS_SHIFTED_PIN (3): u0|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[3].ubidir_dq_dqs|altdq_dqs2_inst|dqs_delay_chain|dqsbusout
-DQS_IN_CLOCK DIV_NAME (3): u0|mem_if_ddr3_emif_0|div_clock_3
-DQS_IN_CLOCK DIV_PIN (3): u0|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|read_capture_clk_div2[3]
-DQS_OUT_CLOCK SRC (0): u0|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[0].ubidir_dq_dqs|altdq_dqs2_inst|obuf_os_0|o
+DQS_IN_CLOCK DQS_SHIFTED_PIN (3): LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[3].ubidir_dq_dqs|altdq_dqs2_inst|dqs_delay_chain|dqsbusout
+DQS_IN_CLOCK DIV_NAME (3): LTQsys_blob2_inst|mem_if_ddr3_emif_0|div_clock_3
+DQS_IN_CLOCK DIV_PIN (3): LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uread_datapath|read_capture_clk_div2[3]
+DQS_OUT_CLOCK SRC (0): LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[0].ubidir_dq_dqs|altdq_dqs2_inst|obuf_os_0|o
 DQS_OUT_CLOCK DST (0): fpga_memory_mem_dqs[0]
 DQS_OUT_CLOCK DM (0): fpga_memory_mem_dm[0]
-DQS_OUT_CLOCK SRC (1): u0|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[1].ubidir_dq_dqs|altdq_dqs2_inst|obuf_os_0|o
+DQS_OUT_CLOCK SRC (1): LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[1].ubidir_dq_dqs|altdq_dqs2_inst|obuf_os_0|o
 DQS_OUT_CLOCK DST (1): fpga_memory_mem_dqs[1]
 DQS_OUT_CLOCK DM (1): fpga_memory_mem_dm[1]
-DQS_OUT_CLOCK SRC (2): u0|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[2].ubidir_dq_dqs|altdq_dqs2_inst|obuf_os_0|o
+DQS_OUT_CLOCK SRC (2): LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[2].ubidir_dq_dqs|altdq_dqs2_inst|obuf_os_0|o
 DQS_OUT_CLOCK DST (2): fpga_memory_mem_dqs[2]
 DQS_OUT_CLOCK DM (2): fpga_memory_mem_dm[2]
-DQS_OUT_CLOCK SRC (3): u0|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[3].ubidir_dq_dqs|altdq_dqs2_inst|obuf_os_0|o
+DQS_OUT_CLOCK SRC (3): LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[3].ubidir_dq_dqs|altdq_dqs2_inst|obuf_os_0|o
 DQS_OUT_CLOCK DST (3): fpga_memory_mem_dqs[3]
 DQS_OUT_CLOCK DM (3): fpga_memory_mem_dm[3]
-DQSN_OUT_CLOCK SRC (0): u0|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[0].ubidir_dq_dqs|altdq_dqs2_inst|obuf_os_bar_0|o
+DQSN_OUT_CLOCK SRC (0): LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[0].ubidir_dq_dqs|altdq_dqs2_inst|obuf_os_bar_0|o
 DQSN_OUT_CLOCK DST (0): fpga_memory_mem_dqs_n[0]
 DQSN_OUT_CLOCK DM (0): fpga_memory_mem_dm[0]
-DQSN_OUT_CLOCK SRC (1): u0|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[1].ubidir_dq_dqs|altdq_dqs2_inst|obuf_os_bar_0|o
+DQSN_OUT_CLOCK SRC (1): LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[1].ubidir_dq_dqs|altdq_dqs2_inst|obuf_os_bar_0|o
 DQSN_OUT_CLOCK DST (1): fpga_memory_mem_dqs_n[1]
 DQSN_OUT_CLOCK DM (1): fpga_memory_mem_dm[1]
-DQSN_OUT_CLOCK SRC (2): u0|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[2].ubidir_dq_dqs|altdq_dqs2_inst|obuf_os_bar_0|o
+DQSN_OUT_CLOCK SRC (2): LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[2].ubidir_dq_dqs|altdq_dqs2_inst|obuf_os_bar_0|o
 DQSN_OUT_CLOCK DST (2): fpga_memory_mem_dqs_n[2]
 DQSN_OUT_CLOCK DM (2): fpga_memory_mem_dm[2]
-DQSN_OUT_CLOCK SRC (3): u0|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[3].ubidir_dq_dqs|altdq_dqs2_inst|obuf_os_bar_0|o
+DQSN_OUT_CLOCK SRC (3): LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[3].ubidir_dq_dqs|altdq_dqs2_inst|obuf_os_bar_0|o
 DQSN_OUT_CLOCK DST (3): fpga_memory_mem_dqs_n[3]
 DQSN_OUT_CLOCK DM (3): fpga_memory_mem_dm[3]
-READ CAPTURE DDIO: {*:u0|*:mem_if_ddr3_emif_0|*:p0|*:umemphy|*:uio_pads|*:dq_ddio[*].ubidir_dq_dqs|*:altdq_dqs2_inst|*input_path_gen[*].capture_reg~DFFLO} {*:u0|*:mem_if_ddr3_emif_0|*:p0|*:umemphy|*:uio_pads|*:dq_ddio[*].ubidir_dq_dqs|*:altdq_dqs2_inst|*input_path_gen[*].aligned_input[*]}
-AFI RESET REGISTERS: *:u0|*:mem_if_ddr3_emif_0|*:p0|*:umemphy|*:ureset|*:ureset_afi_clk|reset_reg[3]
-SEQ  RESET REGISTERS: *:u0|*:mem_if_ddr3_emif_0|*:s0|*
-SYNCHRONIZERS: *:u0|*:mem_if_ddr3_emif_0|*:p0|*:umemphy|*:uread_datapath|read_buffering[*].seq_read_fifo_reset_sync
-SYNCHRONIZATION FIFO WRITE ADDRESS REGISTERS: *:u0|*:mem_if_ddr3_emif_0|*:p0|*:umemphy|*:uread_datapath|read_buffering[*].read_subgroup[*].wraddress[*]
-SYNCHRONIZATION FIFO WRITE REGISTERS: *:u0|*:mem_if_ddr3_emif_0|*:p0|*:umemphy|*:uio_pads|*:dq_ddio[*].ubidir_dq_dqs|*:altdq_dqs2_inst|input_path_gen[*].read_fifo|*INPUT_DFF*
-SYNCHRONIZATION FIFO READ REGISTERS: *:u0|*:mem_if_ddr3_emif_0|*:p0|*:umemphy|*:uio_pads|*:dq_ddio[*].ubidir_dq_dqs|*:altdq_dqs2_inst|input_path_gen[*].read_fifo|dout[*]
+READ CAPTURE DDIO: {*:LTQsys_blob2_inst|*:mem_if_ddr3_emif_0|*:p0|*:umemphy|*:uio_pads|*:dq_ddio[*].ubidir_dq_dqs|*:altdq_dqs2_inst|*input_path_gen[*].capture_reg~DFFLO} {*:LTQsys_blob2_inst|*:mem_if_ddr3_emif_0|*:p0|*:umemphy|*:uio_pads|*:dq_ddio[*].ubidir_dq_dqs|*:altdq_dqs2_inst|*input_path_gen[*].aligned_input[*]}
+AFI RESET REGISTERS: *:LTQsys_blob2_inst|*:mem_if_ddr3_emif_0|*:p0|*:umemphy|*:ureset|*:ureset_afi_clk|reset_reg[3]
+SEQ  RESET REGISTERS: *:LTQsys_blob2_inst|*:mem_if_ddr3_emif_0|*:s0|*
+SYNCHRONIZERS: *:LTQsys_blob2_inst|*:mem_if_ddr3_emif_0|*:p0|*:umemphy|*:uread_datapath|read_buffering[*].seq_read_fifo_reset_sync
+SYNCHRONIZATION FIFO WRITE ADDRESS REGISTERS: *:LTQsys_blob2_inst|*:mem_if_ddr3_emif_0|*:p0|*:umemphy|*:uread_datapath|read_buffering[*].read_subgroup[*].wraddress[*]
+SYNCHRONIZATION FIFO WRITE REGISTERS: *:LTQsys_blob2_inst|*:mem_if_ddr3_emif_0|*:p0|*:umemphy|*:uio_pads|*:dq_ddio[*].ubidir_dq_dqs|*:altdq_dqs2_inst|input_path_gen[*].read_fifo|*INPUT_DFF*
+SYNCHRONIZATION FIFO READ REGISTERS: *:LTQsys_blob2_inst|*:mem_if_ddr3_emif_0|*:p0|*:umemphy|*:uio_pads|*:dq_ddio[*].ubidir_dq_dqs|*:altdq_dqs2_inst|input_path_gen[*].read_fifo|dout[*]
 
 #
-# END OF INSTANCE: u0|mem_if_ddr3_emif_0
+# END OF INSTANCE: LTQsys_blob2_inst|mem_if_ddr3_emif_0
 

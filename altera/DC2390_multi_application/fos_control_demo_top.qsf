@@ -979,6 +979,8 @@ set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to linduino_cs
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to linduino_miso
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to linduino_mosi
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to linduino_sck
+set_global_assignment -name QIP_FILE upcount_32/upcount_32.qip
+set_global_assignment -name VERILOG_FILE ../../LT_Modules/misc/overflow_det.v
 set_global_assignment -name VERILOG_FILE mux_4_to_1_20bit/mux_4_to_1_20bit.v
 set_global_assignment -name QIP_FILE ../../Altera_LT_IP/LTQsys_blob2_hard/LTQsys_blob2/synthesis/LTQsys_blob2.qip
 set_global_assignment -name VERILOG_FILE ../../LT_Modules/LTC2500_controller_pll/LTC2500_controller.v

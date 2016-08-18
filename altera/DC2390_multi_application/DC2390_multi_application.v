@@ -133,8 +133,8 @@ module DC2390_multi_application
     output          gpo1  // HSMC LVDS RX_p14 (FPGA pin H14)
 );
 
-    `define  LTC2512_DEMO 1
-
+//    `define  LTC2512_DEMO 1
+		`define  LTC2500_DEMO 1
     // *********************************************************
     // Parameters
 
@@ -150,8 +150,10 @@ module DC2390_multi_application
         parameter   NUM_OF_CLK_PER_BSY = 34;
     `endif
 
-    parameter       FPGA_REV = 16'h123B;  // FPGA revision (also accessible from register.)
+    parameter       FPGA_REV = 16'h123E;  // FPGA revision (also accessible from register.)
     // 123B: PLL lock status, alternate sources for PID setpoint.
+	 // 123D: Overflow detector logic, changed counter pattern to a 32-bit up counter
+	 // 123E: Rebuilding with updated LTC2500 controller (see SVN log...)
 
     // *********************************************************
     // Internal Signal Declaration
@@ -214,7 +216,7 @@ module DC2390_multi_application
     wire    [53:0]  filt_data_u2;
     wire            valid_filt_u1;
     wire            valid_filt_u2;
-    wire            overflow_error;
+    wire            overflow;
     wire            wrfull;
     wire            wrreq;
     wire            rdempty;
@@ -228,8 +230,7 @@ module DC2390_multi_application
     wire    [31:0]  formatter_nyq_output;
     wire            formatter_nyq_valid;
     reg     [29:0]  num_calculated;
-    wire    [15:0]  countup;
-    wire    [15:0]  countdown;
+    wire    [31:0]  counter_pattern;
     wire    [2:0]   fifo_data_select; // Multiplexer control signal
     wire            mem_ctrl_go_muxout;
     wire            adc_fifo_valid;
@@ -266,14 +267,23 @@ module DC2390_multi_application
     assign LED[3:0] = LEDwire[3:0];
     assign reset = !KEY[0];
     assign reset_n = ~reset;
-    assign overflow_error = wrfull | wrfull_nyq;
+
+	overflow_det overflow_detector_1
+	(
+		.q(overflow),      // status - asserted means overflow occurred after
+		.qbar(),           // the most recent trigger
+		.r(trig_pulse),    // Trigger rising edge resets
+		.s(adc_fifo_full), // Any assertion of fifo full signal asserts
+		.clk(adc_clk)
+	);
 
     assign adc_clk_out = adc_clk_in;
     assign adc_clk_nshift_out = adc_clk;
     assign adc_clk_shift_out = adc_clk_shift;
 
     assign LEDwire[3] = pll_lock;
-    assign LEDwire[2] = adc_error_u1 | adc_error_u2;
+    assign LEDwire[2] = overflow;
+    assign LEDwire[1] = adc_error_u1 | adc_error_u2;
 
     assign DAC_A = dac_a_data_straight;
     assign DAC_B = dac_b_data_straight;
@@ -644,23 +654,35 @@ module DC2390_multi_application
     // *********************************************************
     // Generic counters for creating known data
 
-    // 16 bit up counter
-    updown_count16  updown_count16_inst1
-    (
-        .clock  (adc_clk),
-        .cnt_en (adc_go),
-        .updown (0),            // Zero for down
-        .q      (countdown)
-    );
+////    16 bit up counter
+    // updown_count16  updown_count16_inst1
+    // (
+        // .clock  (adc_clk),
+        // .cnt_en (adc_go),
+        // .updown (0),            // Zero for down
+        // .q      (countdown)
+    // );
 
-    // 16 bit down counter
-    updown_count16  updown_count16_inst2
-    (
-        .clock  (adc_clk),
-        .cnt_en (adc_go),
-        .updown (1),            // One for up
-        .q      (countup)
-    );
+////    16 bit down counter
+    // updown_count16  updown_count16_inst2
+    // (
+        // .clock  (adc_clk),
+        // .cnt_en (adc_go),
+        // .updown (1),            // One for up
+        // .q      (countup)
+    // );
+
+	upcount_32	upcount_32_inst
+	(
+			.clock ( adc_clk ),
+			.cnt_en ( adc_go ),
+			.data ( 32'b0 ),
+			.sclr ( 1'b0 ),
+			.sload ( 1'b0 ),
+			.cout (  ),
+			.q (counter_pattern)
+		);
+
 
     // *********************************************************
     // This multiplexer is right in front of the clock-crossing FIFO.
@@ -673,7 +695,7 @@ module DC2390_multi_application
         .data1x ({adcB_data, adcB_done & delayed_trig}),               // ASAP!!!
         .data2x ({filt_data_u1[53:22], valid_filt_u1 & delayed_trig}),
         .data3x ({filt_data_u2[53:22], valid_filt_u2 & delayed_trig}),
-        .data4x ({countup[15:0], countdown[15:0], adc_go & delayed_trig}),
+        .data4x ({counter_pattern, adc_go & delayed_trig}),
         .data5x ({formatter_output, formatter_valid}),
         .data6x ({formatter_nyq_output, formatter_nyq_valid}),
         .data7x ({32'hDEAD_BEEF, adc_go}),              // Super simple test pattern
@@ -795,8 +817,8 @@ module DC2390_multi_application
         // User registers  .output_std_ctrl_export
         .rev_type_id_export     ({FPGA_REV, FPGA_TYPE}),             // rev_type_id.export
         .output_std_ctrl_export            ({26'b0, lut_write_enable, ltc6954_sync , gpo1, gpo0, force_trig_nosync, start }),            //          output_std_ctrl.export
-        .input_std_stat_export             ({30'b0, pll_lock, delayed_trig}),             //           input_std_stat.export
-        .output_0x40_export                ({2'b0, n, cfg, 4'b0, LEDwire[1:0]}),                //              output_0x40.export
+        .input_std_stat_export             ({29'b0, overflow, pll_lock, delayed_trig}),             //           input_std_stat.export
+        .output_0x40_export                ({2'b0, n, cfg, 5'b0, LEDwire[0]}),                //              output_0x40.export
         .output_0x50_export                (num_samples),                //              output_0x50.export
         .output_0x60_export                ({16'b0, pid_kp}),                //              output_0x60.export
         .output_0x70_export                (pid_ki),                //              output_0x70.export
