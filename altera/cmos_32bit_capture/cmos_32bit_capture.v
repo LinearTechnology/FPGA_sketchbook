@@ -105,7 +105,10 @@ module cmos_32bit_capture
     // Parameters
 
     parameter       FPGA_TYPE = 16'h0001; // FPGA project type identification. Accessible from register map.
-    parameter       FPGA_REV = 16'h0101;  // FPGA revision (also accessible from register.)
+    parameter       FPGA_REV = 16'h0102;  // FPGA revision (also accessible from register.)
+	 // Revision History
+	 // 0101: Initial release
+	 // 0102: Add CIC filter, edge control via a signal from blob rather than a different MUX input
 
     // *********************************************************
     // Internal Signal Declaration
@@ -126,9 +129,10 @@ module cmos_32bit_capture
 
     wire            start;
     wire            data_ready;
-    wire            mem_adcA_nadcB;
-	 reg     [31:0]  adc_data_reg_posedge;
-	 reg     [31:0]  adc_data_reg_negedge;
+	 reg     [31:0]  adc_data_reg_posedge; // Data captured on positive clock edge
+	 reg     [31:0]  adc_data_reg_negedge; // Data captured on negative clock edge
+	 reg     [31:0]  adc_data_filtered;    // Filtered data from CIC filter
+	 reg     [31:0]  adc_data_reg;         // Selected from posedge, negedge registered data
     wire    [3:0]   LEDwire;
     wire    [13:0]  n;  // For LTC2378-24, number of samples to average
     wire    [19:0]  control_sys_output;
@@ -139,19 +143,6 @@ module cmos_32bit_capture
     wire    [1:0]   lut_addr_select;
     wire            en_trig;
     wire            delayed_trig;
-    wire            lut_run_once;
-    wire            lut_write_enable;
-    wire    [15:0]  lut_output;         // Output of DAC lookup table
-    wire    [15:0]  lut_addr_counter;   // Coutnter for sequencing through LUT memory
-    wire    [15:0]  lut_addr;           // Input to lookup table address
-    wire    [15:0]  lut_wraddress;
-    wire    [15:0]  lut_wrdata;
-    wire    [15:0]  nco_sin_out;
-    wire    [15:0]  nco_cos_out;
-    wire    [15:0]  dac_a_data_signed;
-    wire    [15:0]  dac_b_data_signed;
-    reg     [15:0]  dac_a_data_straight;
-    reg     [15:0]  dac_b_data_straight;
     reg             old_trig;
     wire            trig_pulse;
     wire    [19:0]  setpoint;
@@ -206,6 +197,7 @@ module cmos_32bit_capture
     wire            spi_mosi;
     wire            spi_sck;
     wire    [15:0]  lut_addr_div;
+	 wire	           pos_edge_capture;
 
     // *********************************************************
     assign LED[3:0] = LEDwire[3:0];
@@ -229,7 +221,7 @@ module cmos_32bit_capture
     reg [23:0] heartbeat; // Heartbeat blinky
     assign LEDwire[3] = heartbeat[18];
     assign LEDwire[2] = overflow;
-	 assign LEDwire[1] = 1'b0;
+	 assign LEDwire[1] = cic_valid;
 
     always @ (posedge adc_clk)
         begin
@@ -245,7 +237,14 @@ module cmos_32bit_capture
         begin
             adc_data_reg_posedge <= adc_data;
         end
-		  
+		
+    always @ (posedge adc_clk)
+        begin
+		      if (pos_edge_capture == 1'b1)
+				adc_data_reg <= adc_data_reg_posedge;
+				else
+            adc_data_reg <= adc_data_reg_negedge;
+        end		
 		  
 	 
     assign DAC_A = 16'b0; // Tie off.
@@ -265,90 +264,6 @@ module cmos_32bit_capture
 
 
 
-
-    // *********************************************************
-    // Formatted Data formatter
-
-    // Converts the streaming control signals to the FIFO control signals
-    LT_st_dcfifo_cntr steam_to_fifo_adapter
-    (
-        // Streaming interface
-        .valid  (valid_filt_u1 & delayed_trig),    // Nominally, all valid signals should be the same
-                                                    // Picked the first one for conviniance 
-        // DC FIFO interface
-        .wrfull (wrfull),
-        .wrreq  (wrreq)
-    );
-
-    // A DC FIFO is used as a width adapter
-    // 512 bits to 32 bits
-    assign  formatter_input =  {32'b0, 32'b0, 32'b0, 32'hDEAD_BEEF, 32'h8BAD_F00D, 32'hB105_F00D, 32'hDEAD_C0DE, 32'hD006_F00D,
-                                32'b0, 32'b0, 32'b0, 32'hDEAD_BEEF, 32'h8BAD_F00D, 32'hB105_F00D, 32'hDEAD_C0DE, 32'hD006_F00D};
-    formatter adc_formatter
-    (
-        .aclr       (reset),
-        .data       (formatter_input),
-        .rdclk      (adc_clk),
-        .rdreq      (rdreq),
-        .wrclk      (adc_clk),
-        .wrreq      (wrreq),
-        .q          (formatter_output),
-        .rdempty    (rdempty),
-        .wrfull     (wrfull)
-    );
-
-    // Converts the FIFO control signals to streaming control signals
-    LT_dcfifo_st_cntr  fifo_to_stream
-    (
-        // DC FIFO interface
-        .rdempty    (rdempty),
-        .rdreq      (rdreq),
-        // Streaming interface
-        .valid      (formatter_valid),
-        .ready      (1'b1)
-    );
-
-    // *********************************************************
-    // Nyquist data formatter
-
-    // Converts the streaming control signals to the FIFO control signals
-    LT_st_dcfifo_cntr steam_to_fifo_adapter_nyq
-    (
-        // Streaming interface
-        .valid  (adcA_done & delayed_trig), // Nominally, all valid signals should be the same
-                                            // Picked the first one for conviniance 
-        // DC FIFO interface
-        .wrfull (wrfull_nyq),
-        .wrreq  (wrreq_nyq)
-    );
-
-    // A DC FIFO is used as a width adapter
-    // 64 bits to 32 bits
-    assign nyquist_data = {32'b0, 32'b0};
-    nyq_formatter nyquist_formatter
-    (
-        .aclr       (reset),
-        .data       (nyquist_data),
-        .rdclk      (adc_clk),
-        .rdreq      (rdreq_nyq),
-        .wrclk      (adc_clk),
-        .wrreq      (wrreq_nyq),
-        .q          (formatter_nyq_output),
-        .rdempty    (rdempty_nyq),
-        .wrfull     (wrfull_nyq)
-    );
-
-    // Converts the FIFO control signals to streaming control signals
-    LT_dcfifo_st_cntr fifo_to_stream_nyq
-    (
-        // DC FIFO interface
-        .rdempty    (rdempty_nyq),
-        .rdreq      (rdreq_nyq),
-        // Streaming interface
-        .valid      (formatter_nyq_valid),
-        .ready      (1'b1)
-    );
-
     // *********************************************************
     // Sample rate generator
     sample_rate_controller sample_rate_controller_inst
@@ -362,26 +277,23 @@ module cmos_32bit_capture
 
 assign adc_go = 1'b1; // For CMOS capture, assume we're always a GO!	 
 	 
-//    // *********************************************************
-//    // Generic counters for creating known data
-//
-//    // 16 bit up counter
-//    updown_count16  updown_count16_inst1
-//    (
-//        .clock  (adc_clk),
-//        .cnt_en (adc_go),
-//        .updown (0),            // Zero for down
-//        .q      (countdown)
-//    );
-//
-//    // 16 bit down counter
-//    updown_count16  updown_count16_inst2
-//    (
-//        .clock  (adc_clk),
-//        .cnt_en (adc_go),
-//        .updown (1),            // One for up
-//        .q      (countup)
-//    );
+	 
+// Variable CIC filter capturing the UPPER 18-bits of the input data.
+wire [7:0] rate;
+wire cic_valid;
+	cic_variable_filter cic_variable_filter_inst (
+		.clk       (adc_clk),       //     clock.clk
+		.reset_n   (1'b1),   //     reset.reset_n // Tie high. Data will need to be flushed after change of rate parameter
+		.in_error  (1'b0),  //  av_st_in.error
+		.in_valid  (1'b1),  //          .valid
+		.in_ready  (),  //          .ready
+		.in_data   (adc_data_reg[17:0]),   //          .in_data
+		.out_data  (adc_data_filtered),  // av_st_out.out_data
+		.out_error (), //          .error
+		.out_valid (cic_valid), //          .valid
+		.out_ready (1'b1), //          .ready // Assume sink always ready for data
+		.rate      (rate)       //      rate.conduit
+	);
 
 	upcount_32	upcount_32_inst
 	(
@@ -401,13 +313,13 @@ assign adc_go = 1'b1; // For CMOS capture, assume we're always a GO!
     mux_8to1_32stream mux_8to1_32stream_inst
     (
         .clock  (adc_clk),
-        .data0x ({adc_data_reg_negedge, 1'b1 & delayed_trig}),               // The one and only adc_data source...
-        .data1x ({adc_data_reg_posedge, 1'b1 & delayed_trig}),               // ASAP!!!
+        .data0x ({adc_data_reg, 1'b1 & delayed_trig}),               // raw ADC data
+        .data1x ({adc_data_filtered[24:0], 7'b0, cic_valid & delayed_trig}),   // filtered ADC data
         .data2x ({32'd2222, 1'b1 & delayed_trig}),
         .data3x ({32'd3333, 1'b1 & delayed_trig}),
         .data4x ({counter_pattern, adc_go & delayed_trig}), // Counter test pattern
-        .data5x ({formatter_output, formatter_valid}),
-        .data6x ({formatter_nyq_output, formatter_nyq_valid}),
+        .data5x ({32'd5555, 1'b1 & delayed_trig}),
+        .data6x ({32'd6666, 1'b1 & delayed_trig}),
         .data7x ({32'hDEAD_BEEF, adc_go}),              // Super simple test pattern
         .sel    (fifo_data_select),
         .result ({mem_ctrl_data, mem_ctrl_go_muxout})
@@ -447,7 +359,7 @@ assign adc_go = 1'b1; // For CMOS capture, assume we're always a GO!
     mux_8_to_1  data_valid_mux
     (
         .data0  (1'b1), // Always valid in CMOS parallel capture mode...
-        .data1  (1'b1),
+        .data1  (cic_valid), // When capturing filtered data
         .data2  (1'b1),
         .data3  (1'b1),
         .data4  (1'b1),
@@ -524,20 +436,20 @@ assign adc_go = 1'b1; // For CMOS capture, assume we're always a GO!
         .mem_pll_pll_locked     (),                                  //            .pll_locked
         // User registers  .output_std_ctrl_export
         .rev_type_id_export     ({FPGA_REV, FPGA_TYPE}),             // rev_type_id.export
-        .output_std_ctrl_export            ({26'b0, lut_write_enable, ltc6954_sync , gpo1, gpo0, force_trig_nosync, start }),            //          output_std_ctrl.export
+        .output_std_ctrl_export            ({26'b0, lut_write_enable, pos_edge_capture , gpo1, gpo0, force_trig_nosync, start }),            //          output_std_ctrl.export
         .input_std_stat_export             ({29'b0, overflow,1'b0, delayed_trig}),             // input_std_stat.export, Extra zero is a placeholder for PLL lock signal
         .output_0x40_export                ({2'b0, n, cfg, 5'b0, LEDwire[0]}),                //              output_0x40.export
         .output_0x50_export                (num_samples),                //              output_0x50.export
-        .output_0x60_export                (),                //              output_0x60.export
+        .output_0x60_export                ({24'b0, rate}),                //              output_0x60.export
         .output_0x70_export                (),                //              output_0x70.export
         .output_0x80_export                (),                //              output_0x80.export
         .output_0x90_export                (),                //              output_0x90.export
         .output_0xa0_export                (),                //              output_0xa0.export
         .output_0xb0_export                (),                //              output_0xb0.export
-        .output_0xc0_export                ({lut_addr_div,system_clocks_per_sample}),                //              output_0xc0.export
-        .output_0xd0_export                ({16'b0, lut_run_once, 1'b0, lut_addr_select[1:0], 2'b0, dac_a_select[1:0], 2'b0, dac_b_select[1:0],  1'b0, fifo_data_select[2:0]}), // First Order System model parameters
-        .output_0xe0_export                ({lut_wraddress, lut_wrdata}),
-        .output_0xf0_export                (tuning_word),  // DAC sinewave tuning word
+        .output_0xc0_export                ({16'b0,system_clocks_per_sample}),                //              output_0xc0.export
+        .output_0xd0_export                ({28'b0,  1'b0, fifo_data_select[2:0]}), // Multiplexer input selection
+        .output_0xe0_export                (),
+        .output_0xf0_export                (),  // DAC sinewave tuning word
         .input_0x100_export                ({2'b0, stop_address[29:0]}), // After capture, this is where to start reading
         // SPI port for configuring various things
         .spi_0_external_MISO               (spi_miso),               //           spi_0_external.MISO
@@ -559,3 +471,104 @@ assign adc_go = 1'b1; // For CMOS capture, assume we're always a GO!
           );
 
 endmodule
+
+
+//    wire            mem_adcA_nadcB;
+//    wire            lut_run_once;
+//    wire            lut_write_enable;
+//    wire    [15:0]  lut_output;         // Output of DAC lookup table
+//    wire    [15:0]  lut_addr_counter;   // Coutnter for sequencing through LUT memory
+//    wire    [15:0]  lut_addr;           // Input to lookup table address
+//    wire    [15:0]  lut_wraddress;
+//    wire    [15:0]  lut_wrdata;
+//    wire    [15:0]  nco_sin_out;
+//    wire    [15:0]  nco_cos_out;
+//    wire    [15:0]  dac_a_data_signed;
+//    wire    [15:0]  dac_b_data_signed;
+//    reg     [15:0]  dac_a_data_straight;
+//    reg     [15:0]  dac_b_data_straight;
+
+
+
+//    // *********************************************************
+//    // Formatted Data formatter
+//
+//    // Converts the streaming control signals to the FIFO control signals
+//    LT_st_dcfifo_cntr steam_to_fifo_adapter
+//    (
+//        // Streaming interface
+//        .valid  (valid_filt_u1 & delayed_trig),    // Nominally, all valid signals should be the same
+//                                                    // Picked the first one for conviniance 
+//        // DC FIFO interface
+//        .wrfull (wrfull),
+//        .wrreq  (wrreq)
+//    );
+
+//    // A DC FIFO is used as a width adapter
+//    // 512 bits to 32 bits
+//    assign  formatter_input =  {32'b0, 32'b0, 32'b0, 32'hDEAD_BEEF, 32'h8BAD_F00D, 32'hB105_F00D, 32'hDEAD_C0DE, 32'hD006_F00D,
+//                                32'b0, 32'b0, 32'b0, 32'hDEAD_BEEF, 32'h8BAD_F00D, 32'hB105_F00D, 32'hDEAD_C0DE, 32'hD006_F00D};
+//    formatter adc_formatter
+//    (
+//        .aclr       (reset),
+//        .data       (formatter_input),
+//        .rdclk      (adc_clk),
+//        .rdreq      (rdreq),
+//        .wrclk      (adc_clk),
+//        .wrreq      (wrreq),
+//        .q          (formatter_output),
+//        .rdempty    (rdempty),
+//        .wrfull     (wrfull)
+//    );
+//
+//    // Converts the FIFO control signals to streaming control signals
+//    LT_dcfifo_st_cntr  fifo_to_stream
+//    (
+//        // DC FIFO interface
+//        .rdempty    (rdempty),
+//        .rdreq      (rdreq),
+//        // Streaming interface
+//        .valid      (formatter_valid),
+//        .ready      (1'b1)
+//    );
+
+//    // *********************************************************
+//    // Nyquist data formatter
+//
+//    // Converts the streaming control signals to the FIFO control signals
+//    LT_st_dcfifo_cntr steam_to_fifo_adapter_nyq
+//    (
+//        // Streaming interface
+//        .valid  (adcA_done & delayed_trig), // Nominally, all valid signals should be the same
+//                                            // Picked the first one for conviniance 
+//        // DC FIFO interface
+//        .wrfull (wrfull_nyq),
+//        .wrreq  (wrreq_nyq)
+//    );
+
+//    // A DC FIFO is used as a width adapter
+//    // 64 bits to 32 bits
+//    assign nyquist_data = {32'b0, 32'b0};
+//    nyq_formatter nyquist_formatter
+//    (
+//        .aclr       (reset),
+//        .data       (nyquist_data),
+//        .rdclk      (adc_clk),
+//        .rdreq      (rdreq_nyq),
+//        .wrclk      (adc_clk),
+//        .wrreq      (wrreq_nyq),
+//        .q          (formatter_nyq_output),
+//        .rdempty    (rdempty_nyq),
+//        .wrfull     (wrfull_nyq)
+//    );
+//
+//    // Converts the FIFO control signals to streaming control signals
+//    LT_dcfifo_st_cntr fifo_to_stream_nyq
+//    (
+//        // DC FIFO interface
+//        .rdempty    (rdempty_nyq),
+//        .rdreq      (rdreq_nyq),
+//        // Streaming interface
+//        .valid      (formatter_nyq_valid),
+//        .ready      (1'b1)
+//    );

@@ -965,6 +965,7 @@ set_instance_assignment -name GLOBAL_SIGNAL OFF -to LTQsys_blob2_inst|mem_if_ddr
 set_instance_assignment -name GLOBAL_SIGNAL OFF -to LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[1].read_capture_clk_buffer -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
 set_instance_assignment -name GLOBAL_SIGNAL OFF -to LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[2].read_capture_clk_buffer -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
 set_instance_assignment -name GLOBAL_SIGNAL OFF -to LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[3].read_capture_clk_buffer -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_global_assignment -name QSYS_FILE cic_variable_filter.qsys
 set_global_assignment -name VERILOG_FILE ../../LT_Modules/misc/overflow_det.v
 set_global_assignment -name VERILOG_FILE upcount_32/upcount_32.v
 set_global_assignment -name QIP_FILE upcount_32/upcount_32.qip
