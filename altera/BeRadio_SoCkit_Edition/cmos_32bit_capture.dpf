@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<pin_planner>
+	<pin_info>
+		<pin name="fpga_memory_mem_ck" direction="Output" source="Hierarchy Database" diff_pair_node="fpga_memory_mem_ck_n" >
+		</pin>
+		<pin name="fpga_memory_mem_ck_n" direction="Output" source="Hierarchy Database" diff_pair_node="fpga_memory_mem_ck" >
+		</pin>
+		<pin name="fpga_memory_mem_dqs[3]" direction="Bidir" source="Hierarchy Database" diff_pair_node="fpga_memory_mem_dqs_n[3]" >
+		</pin>
+		<pin name="fpga_memory_mem_dqs[2]" direction="Bidir" source="Hierarchy Database" diff_pair_node="fpga_memory_mem_dqs_n[2]" >
+		</pin>
+		<pin name="fpga_memory_mem_dqs[1]" direction="Bidir" source="Hierarchy Database" diff_pair_node="fpga_memory_mem_dqs_n[1]" >
+		</pin>
+		<pin name="fpga_memory_mem_dqs[0]" direction="Bidir" source="Hierarchy Database" diff_pair_node="fpga_memory_mem_dqs_n[0]" >
+		</pin>
+		<pin name="fpga_memory_mem_dqs_n[3]" direction="Bidir" source="Hierarchy Database" diff_pair_node="fpga_memory_mem_dqs[3]" >
+		</pin>
+		<pin name="fpga_memory_mem_dqs_n[2]" direction="Bidir" source="Hierarchy Database" diff_pair_node="fpga_memory_mem_dqs[2]" >
+		</pin>
+		<pin name="fpga_memory_mem_dqs_n[1]" direction="Bidir" source="Hierarchy Database" diff_pair_node="fpga_memory_mem_dqs[1]" >
+		</pin>
+		<pin name="fpga_memory_mem_dqs_n[0]" direction="Bidir" source="Hierarchy Database" diff_pair_node="fpga_memory_mem_dqs[0]" >
+		</pin>
+	</pin_info>
+	<buses>
+	</buses>
+	<group_file_association>
+	</group_file_association>
+	<pin_planner_file_specifies>
+	</pin_planner_file_specifies>
+</pin_planner>
