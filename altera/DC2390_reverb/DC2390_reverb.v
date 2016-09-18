@@ -35,12 +35,10 @@
 
 
     Description:
-        The purpose of this module is to interface with the DC2390. This is the top 
-        level module which instantiates the fos control demo which will interface
-        with linux and allow the user to run different experiment.
+        The purpose of this module is to implement a simple audio reverb with the DC2390.
 */
 
-module DC2390_multi_application
+module DC2390_reverb
 (
     input           clk,                    // Input OSC_50_B3B, // Original name...
     input           adc_clk_in,
@@ -133,24 +131,14 @@ module DC2390_multi_application
     output          gpo1  // HSMC LVDS RX_p14 (FPGA pin H14)
 );
 
-//    `define  LTC2512_DEMO 1
-		`define  LTC2500_DEMO 1
-    // *********************************************************
+
     // Parameters
 
-    `ifdef LTC2512_DEMO
-        parameter   FPGA_TYPE = 16'hABCE;
-        parameter   NYQ_TRUNK_VALUE = 8;
-        parameter   FILT_TRUNK_VALUE = 32;
-        parameter   NUM_OF_CLK_PER_BSY = 24;
-    `else
-        parameter   FPGA_TYPE = 16'hABCD; // FPGA project type identification. Accessible from register map.
-        parameter   NYQ_TRUNK_VALUE = 32;
-        parameter   FILT_TRUNK_VALUE = 54;
-        parameter   NUM_OF_CLK_PER_BSY = 34;
-    `endif
-
-    parameter       FPGA_REV = 16'h123E;  // FPGA revision (also accessible from register.)
+    parameter       FPGA_TYPE = 16'h0002; // FPGA project type identification. Accessible from register map.
+    parameter       FPGA_REV = 16'h0101;  // FPGA revision (also accessible from register.)
+	 parameter   NYQ_TRUNK_VALUE = 32;
+    parameter   FILT_TRUNK_VALUE = 54;
+    parameter   NUM_OF_CLK_PER_BSY = 34;
     // 123B: PLL lock status, alternate sources for PID setpoint.
 	 // 123D: Overflow detector logic, changed counter pattern to a 32-bit up counter
 	 // 123E: Rebuilding with updated LTC2500 controller (see SVN log...)
@@ -173,18 +161,17 @@ module DC2390_multi_application
 
     wire    [15:0]  system_clocks_per_sample;
     wire    [29:0]  num_samples;
-    wire    [31:0]  tuning_word;
+    wire    [15:0]  fb_factor;
     wire    [31:0]  stop_address;
     wire    [31:0]  datapath_control;
 
     wire            start;
     wire            data_ready;
     wire            mem_adcA_nadcB;
-    wire    [31:0]  adcA_data;
-    wire    [31:0]  adcB_data;
+    wire signed    [31:0]  adcA_data;
+    wire signed    [31:0]  adcB_data;
     wire    [3:0]   LEDwire;
     wire    [13:0]  n;                  // For LTC2378-24, number of samples to average
-    wire    [19:0]  control_sys_output;
     wire            adcA_done;
     wire            adc_go;             // Trigger to ADC controller
     wire    [1:0]   dac_a_select;
@@ -194,23 +181,17 @@ module DC2390_multi_application
     wire            delayed_trig;
     wire            lut_run_once;
     wire            lut_write_enable;
-    wire    [15:0]  lut_output;         // Output of DAC lookup table
+    wire signed   [15:0]  lut_output;         // Output of DAC lookup table
     wire    [15:0]  lut_addr_counter;   // Coutnter for sequencing through LUT memory
     wire    [15:0]  lut_addr;           // Input to lookup table address
     wire    [15:0]  lut_wraddress;
     wire    [15:0]  lut_wrdata;
-    wire    [15:0]  nco_sin_out;
-    wire    [15:0]  nco_cos_out;
     wire    [15:0]  dac_a_data_signed;
     wire    [15:0]  dac_b_data_signed;
     reg     [15:0]  dac_a_data_straight;
     reg     [15:0]  dac_b_data_straight;
     reg             old_trig;
     wire            trig_pulse;
-    wire    [19:0]  setpoint;
-    wire    [15:0]  pid_output;
-    wire            pid_done;
-    wire            adc_done;
     wire            reset_n;
     wire    [53:0]  filt_data_u1;
     wire    [53:0]  filt_data_u2;
@@ -221,14 +202,9 @@ module DC2390_multi_application
     wire            wrreq;
     wire            rdempty;
     wire            rdreq;
-    wire    [31:0]  formatter_output;
-    wire    [511:0] formatter_input;
-    wire            formatter_valid;
     wire    [63:0]  nyquist_data;
     wire            wrfull_nyq;
     wire            wrreq_nyq;
-    wire    [31:0]  formatter_nyq_output;
-    wire            formatter_nyq_valid;
     reg     [29:0]  num_calculated;
     wire    [31:0]  counter_pattern;
     wire    [2:0]   fifo_data_select; // Multiplexer control signal
@@ -242,7 +218,7 @@ module DC2390_multi_application
     wire    [31:0]  adc_fifo_data;
     wire            data_valid;
     wire    [9:0]   cfg;
-    reg     [23:0]  counter;
+//    reg     [23:0]  counter;
     wire            force_trig_nosync;
     reg             force_trig, ft1, ft2;
     wire            lut_count_carry;
@@ -268,6 +244,9 @@ module DC2390_multi_application
     assign reset = !KEY[0];
     assign reset_n = ~reset;
 
+//	 assign pid_output = 16'b0;
+//    assign pid_done = 1'b0;
+	 
 	overflow_det overflow_detector_1
 	(
 		.q(overflow),      // status - asserted means overflow occurred after
@@ -297,7 +276,7 @@ module DC2390_multi_application
         .rst        (reset),            // reset.reset
         .outclk_0   (adc_clk),          // outclk0.clk
         .outclk_1   (adc_clk_shift),    // outclk1.clk
-        .locked     (pll_lock),         // locked.export
+        .locked     (pll_lock)         // locked.export
     );
 
     // *********************************************************
@@ -313,10 +292,10 @@ module DC2390_multi_application
     mux_4to1_16 mux_4to1_16_DAC_A_ins
     (
         .clock  (adc_clk),
-        .data0x (nco_sin_out),
-        .data1x (pid_output),
-        .data2x (pulse_val_trigd[15:0]),
-        .data3x (pulse_val[15:0]),
+        .data0x (16'h0000),
+        .data1x (16'h1000),
+        .data2x (16'h2000),
+        .data3x (16'hFFFF), // Mainly to get rid of "stuck at ground/Vcc warnings!
         .sel    (dac_a_select),
         .result (dac_a_data_signed)
     );
@@ -324,10 +303,11 @@ module DC2390_multi_application
     mux_4to1_16 mux_4to1_16_DAC_B_inst
     (
         .clock  (adc_clk),
-        .data0x (nco_cos_out),
-        .data1x (lut_output),
-        .data2x (16'hC000),
-        .data3x (16'h4000),
+		  // Right-shift and sign-extend ADC data, add to LUT output (oldest stored sample.)
+        .data0x ({adcB_data[31], adcB_data[31:16]} + {lut_output[15], lut_output[15:1]}),
+        .data1x (16'h1000),
+        .data2x (16'h2000),
+        .data3x (16'h3000),
         .sel    (dac_b_select),
         .result (dac_b_data_signed)
     );
@@ -341,132 +321,77 @@ module DC2390_multi_application
             old_trig <= force_trig;
         end
 
+//wire [15:0] lut_addr_counter_unmasked;
+		  
     // *********************************************************
-    // Counter to sequence through LUT.
-    upcount_mem_addr  upcount_mem_addr_lut_addr_inst
+    // Counter to sequence through LUT. Changed to "with load" for reverb to allow smaller loops.
+	 // Multi-application board gave the ability to independently adjust LUT rate and ADC sample rate,
+	 // not necessary for reverb.
+//    upcount_mem_addr  upcount_mem_addr_lut_addr_inst // OLD instantiation (no load)
+    up_count_with_load  upcount_mem_addr_lut_addr_inst
     (
         .clock  (adc_clk), // Run once on start pulse, override with lut_run_once = 0 (default)
-        .cnt_en ((lut_addr_div_cout & (~(lut_count_carry & lut_run_once)))),
-        .sclr   (trig_pulse),
+        .cnt_en (adcB_done), // Increment whenever ADCB has a new sample //((lut_addr_div_cout & (~(lut_count_carry & lut_run_once)))),
+        .sclr   (1'b0), //(trig_pulse),
+		  .data   (lut_addr_div), // LUT length = 2^16 - lut_addr_div.
+		  .sload  (lut_count_carry), // Load whenever counter hits 2^16
         .cout   (lut_count_carry),
         .q      (lut_addr_counter)
     );
 
-    // Divide the LUT adderssor
-    up_count_with_load up_count_with_load_inst
-    (
-        .clock  (adc_clk),
-        .sclr   (reset),
-        .cnt_en (1'b1),
-        .data   (lut_addr_div),
-        .sload  (lut_addr_div_cout | trig_pulse),
-        .cout   (lut_addr_div_cout),
-        .q      ()
-    );
+
+//    // Divide the LUT adderssor
+//    up_count_with_load up_count_with_load_inst
+//    (
+//        .clock  (adc_clk),
+//        .sclr   (reset),
+//        .cnt_en (1'b1),
+//        .data   (lut_addr_div),
+//        .sload  (lut_addr_div_cout | trig_pulse),
+//        .cout   (lut_addr_div_cout),
+//        .q      ()
+//    );
 
     // *********************************************************
     // Lookup table address mux
     mux_4to1_16 mux_4to1_16_lut_addr_inst
     (
         .clock  (adc_clk),
-        .data0x (lut_addr_counter), // This is for pattern, pulse generation
+        .data0x (lut_addr_counter), // Here is where the LUT length selection occurs. Bitwise OR with mask
         .data1x (dac_a_data_signed), // This is for distortion correction
         .data2x (16'h4000),
         .data3x (16'hC000),
         .sel    (lut_addr_select),
         .result (lut_addr)
     );
+reg adcB_done_delayed;
+reg [15:0] lut_addr_counter_delayed;
+    always @ (posedge adc_clk)
+        begin
+            lut_addr_counter_delayed <= lut_addr_counter;
+				adcB_done_delayed <= adcB_done;
+        end
+
+wire signed [15:0] lut_data_in;
+wire signed [31:0] fb;
+assign fb = lut_output * fb_factor;
+assign lut_data_in = {adcB_data[31], adcB_data[31:17]} + {fb[31], fb[31:17]};
 
     // *********************************************************
     // Lookup table (16x16)
     ram_lut ram_lut_inst
     (
-        .data       (lut_wrdata),
-        .rdaddress  (lut_addr),
+        .data       (lut_data_in), // Write in new data //(lut_wrdata), // Data INTO the LUT, needs to come from ADC for reverb
+        .rdaddress  (lut_addr_counter), // REVERB: Update DAC immediately
         .rdclock    (adc_clk),
-        .wraddress  (lut_wraddress),
-        .wrclock    (clk),
-        .wren       (lut_write_enable), // High to enable writing
+        .wraddress  (lut_addr_counter_delayed), // REVERB: Write to previous address
+        .wrclock    (adc_clk), // CHANGED to adc_clk domain
+        .wren       (adcB_done_delayed), // REVERB: Write new data(lut_write_enable), // High to enable writing
         .q          (lut_output)
     );
 
-    // *********************************************************
-    // Step generator
-    pulse_gen #
-    (
-        .OUTPUT_WIDTH(20)
-    )
-    step
-    (
-        .clk(adc_clk),
-        .reset(reset),
-        .trig(trig_pulse),
-        .low_period(pulse_low),
-        .high_period(pulse_high),
-        .value(pulse_val),
-        .out(pulse_out)
-    );
 
-    // *********************************************************
-    // NCO set up with data width of 18 to try to trick it into overkill ;)
-    nco_iq_14_1 nco_iq_14_1_inst
-    (
-        .clk        (adc_clk),                      // clk.clk
-        .reset_n    (1'b1),                         // rst.reset_n
-        .clken      (lut_addr_div_cout),            // in.clken
-        .phi_inc_i  (tuning_word),                  // phi_inc_i
-        .fsin_o     ({nco_sin_out[15:0], 2'bzz}),   // Snag 16 MS bits...
-        .fcos_o     ({nco_cos_out[15:0], 2'bzz}),
-        .out_valid  (1'bz)                          // out valid
-    );
 
-    // Make version of pulse_val that updates when trig_pulse asserts
-    always @ (posedge adc_clk) 
-        begin
-            if (trig_pulse) begin
-                pulse_val_trigd <= pulse_val;
-            end
-            else begin
-                pulse_val_trigd <= pulse_val_trigd;
-            end
-        end
-
-    mux_4_to_1_20bit mux_4_to_1_20bit_inst 
-    (
-        .clock  ( adc_clk ),
-        .data0x ( pulse_out ),          // Direct output from fancy pulse generator
-        .data1x ( pulse_val_trigd ),    // Pulse value, but updated at start of capture
-        .data2x ( pulse_val ),          // Pulse value, straight from blob register
-        .data3x ( 20'b0 ),              // Zero.
-        .sel    ( setpoint_source_select ),
-        .result ( setpoint )            // Setpoint output to PID controller
-    );
-
-    // *********************************************************
-    // PID controller
-    pid #
-    (
-        .INPUT_WIDTH            (20),
-        .OUTPUT_WIDTH           (16),
-        .PID_PARAM_WIDTH        (16),
-        .PID_PARAM_FP_PRECISION (8),    // fixed point decimal places (must be <= PID_PARAM_WIDTH-1)
-        .MAX_OVF_SUM            (4)     // overflow bits for err_sum
-    )
-    ctrl
-    (
-        .clk        (adc_clk),
-        .reset      (reset),
-        //PID settings
-        .kp         (pid_kp),       //signed binary fixed point
-        .ki         (pid_ki),       //signed binary fixed point
-        .kd         (pid_kd),       //signed binary fixed point
-        .setpoint   (setpoint),     //signed integer
-        //PID signals
-        .feedback   (adcA_data[31:12]),    //signed integer
-        .sig_out    (pid_output),   //signed integer
-        .trig       (adcA_done),    //triggers new calculation (1 clock pulse)
-        .done       (pid_done)      //signals new valid data on output (1 clock pulse)
-    );
 
     // *********************************************************
     // Controller for ADC A
@@ -557,88 +482,6 @@ module DC2390_multi_application
         .error          (adc_error_u2)  // The filtered data is valid
     );
 
-    // *********************************************************
-    // Formatted data formatter
-
-    // Converts the streaming control signals to the FIFO control signals
-    LT_st_dcfifo_cntr steam_to_fifo_adapter
-    (
-        // Streaming interface
-        .valid  (valid_filt_u1 & delayed_trig),    // Nominally, all valid signals should be the same
-                                                    // Picked the first one for conviniance 
-        // DC FIFO interface
-        .wrfull (wrfull),
-        .wrreq  (wrreq)
-    );
-
-    // A DC FIFO is used as a width adapter
-    // 512 bits to 32 bits
-    assign  formatter_input =  {filt_data_u1, 10'b0, adcA_data, 32'hDEAD_BEEF, 32'h8BAD_F00D, 32'hB105_F00D, 32'hDEAD_C0DE, 32'hD006_F00D,
-                                filt_data_u2, 10'b0, adcB_data, 32'hDEAD_BEEF, 32'h8BAD_F00D, 32'hB105_F00D, 32'hDEAD_C0DE, 32'hD006_F00D};
-    formatter adc_formatter
-    (
-        .aclr       (reset),
-        .data       (formatter_input),
-        .rdclk      (adc_clk),
-        .rdreq      (rdreq),
-        .wrclk      (adc_clk),
-        .wrreq      (wrreq),
-        .q          (formatter_output),
-        .rdempty    (rdempty),
-        .wrfull     (wrfull)
-    );
-
-    // Converts the FIFO control signals to streaming control signals
-    LT_dcfifo_st_cntr  fifo_to_stream
-    (
-        // DC FIFO interface
-        .rdempty    (rdempty),
-        .rdreq      (rdreq),
-        // Streaming interface
-        .valid      (formatter_valid),
-        .ready      (1'b1)
-    );
-
-    // *********************************************************
-    // Nyquist data formatter
-
-    // Converts the streaming control signals to the FIFO control signals
-    LT_st_dcfifo_cntr steam_to_fifo_adapter_nyq
-    (
-        // Streaming interface
-        .valid  (adcA_done & delayed_trig), // Nominally, all valid signals should be the same
-                                            // Picked the first one for conviniance 
-        // DC FIFO interface
-        .wrfull (wrfull_nyq),
-        .wrreq  (wrreq_nyq)
-    );
-
-    // A DC FIFO is used as a width adapter
-    // 64 bits to 32 bits
-    assign nyquist_data = {adcA_data, adcB_data};
-    nyq_formatter nyquist_formatter
-    (
-        .aclr       (reset),
-        .data       (nyquist_data),
-        .rdclk      (adc_clk),
-        .rdreq      (rdreq_nyq),
-        .wrclk      (adc_clk),
-        .wrreq      (wrreq_nyq),
-        .q          (formatter_nyq_output),
-        .rdempty    (rdempty_nyq),
-        .wrfull     (wrfull_nyq)
-    );
-
-    // Converts the FIFO control signals to streaming control signals
-    LT_dcfifo_st_cntr fifo_to_stream_nyq
-    (
-        // DC FIFO interface
-        .rdempty    (rdempty_nyq),
-        .rdreq      (rdreq_nyq),
-        // Streaming interface
-        .valid      (formatter_nyq_valid),
-        .ready      (1'b1)
-    );
 
     // *********************************************************
     // Sample rate generator
@@ -651,26 +494,6 @@ module DC2390_multi_application
         .go             (adc_go)
     );
 
-    // *********************************************************
-    // Generic counters for creating known data
-
-////    16 bit up counter
-    // updown_count16  updown_count16_inst1
-    // (
-        // .clock  (adc_clk),
-        // .cnt_en (adc_go),
-        // .updown (0),            // Zero for down
-        // .q      (countdown)
-    // );
-
-////    16 bit down counter
-    // updown_count16  updown_count16_inst2
-    // (
-        // .clock  (adc_clk),
-        // .cnt_en (adc_go),
-        // .updown (1),            // One for up
-        // .q      (countup)
-    // );
 
 	upcount_32	upcount_32_inst
 	(
@@ -696,9 +519,9 @@ module DC2390_multi_application
         .data2x ({filt_data_u1[53:22], valid_filt_u1 & delayed_trig}),
         .data3x ({filt_data_u2[53:22], valid_filt_u2 & delayed_trig}),
         .data4x ({counter_pattern, adc_go & delayed_trig}),
-        .data5x ({formatter_output, formatter_valid}),
-        .data6x ({formatter_nyq_output, formatter_nyq_valid}),
-        .data7x ({32'hDEAD_BEEF, adc_go}),              // Super simple test pattern
+        .data5x ({32'hDEAD_BEEF, adc_go}),
+        .data6x ({32'hDEAD_C0DE, adc_go}),
+        .data7x ({32'hDEAD_BABA, adc_go}),              // Super simple test pattern
         .sel    (fifo_data_select),
         .result ({mem_ctrl_data, mem_ctrl_go_muxout})
     );
@@ -828,8 +651,8 @@ module DC2390_multi_application
         .output_0xb0_export                (pulse_val),                //              output_0xb0.export
         .output_0xc0_export                ({lut_addr_div,system_clocks_per_sample}),                //              output_0xc0.export
         .output_0xd0_export                ({14'b0, setpoint_source_select,  lut_run_once, 1'b0, lut_addr_select[1:0], 2'b0, dac_a_select[1:0], 2'b0, dac_b_select[1:0],  1'b0, fifo_data_select[2:0]}), // First Order System model parameters
-        .output_0xe0_export                ({lut_wraddress, lut_wrdata}),
-        .output_0xf0_export                (tuning_word),  // DAC sinewave tuning word
+        .output_0xe0_export                (), //({lut_wraddress, lut_wrdata}),
+        .output_0xf0_export                ({16'b0, fb_factor}),  // Feedback factor, 16'hFFFF = unity
         .input_0x100_export                ({2'b0, stop_address[29:0]}), // After capture, this is where to start reading
         // SPI port for configuring various things
         .spi_0_external_MISO               (spi_miso),               //           spi_0_external.MISO
@@ -851,3 +674,4 @@ module DC2390_multi_application
     );
 
 endmodule
+
