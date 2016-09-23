@@ -348,6 +348,22 @@
          type = "String";
       }
    }
+   element pio_0
+   {
+      datum _sortIndex
+      {
+         value = "22";
+         type = "int";
+      }
+   }
+   element pio_1
+   {
+      datum _sortIndex
+      {
+         value = "23";
+         type = "int";
+      }
+   }
    element revision_type_id
    {
       datum _sortIndex
@@ -380,6 +396,22 @@
          type = "String";
       }
    }
+   element sysid_qsys_0
+   {
+      datum _sortIndex
+      {
+         value = "24";
+         type = "int";
+      }
+   }
+   element sysid_qsys_0.control_slave
+   {
+      datum baseAddress
+      {
+         value = "3840";
+         type = "String";
+      }
+   }
 }
 ]]></parameter>
  <parameter name="clockCrossingAdapter" value="HANDSHAKE" />
@@ -407,6 +439,16 @@
    type="conduit"
    dir="end" />
  <interface name="hps_memory" internal="hps_0.memory" type="conduit" dir="end" />
+ <interface
+   name="i2c_inputs"
+   internal="pio_1.external_connection"
+   type="conduit"
+   dir="end" />
+ <interface
+   name="i2c_outputs"
+   internal="pio_0.external_connection"
+   type="conduit"
+   dir="end" />
  <interface
    name="input_0x100"
    internal="input_0x100.external_connection"
@@ -1664,6 +1706,34 @@
   <parameter name="simDrivenValue" value="0" />
   <parameter name="width" value="32" />
  </module>
+ <module name="pio_0" kind="altera_avalon_pio" version="14.1" enabled="1">
+  <parameter name="bitClearingEdgeCapReg" value="false" />
+  <parameter name="bitModifyingOutReg" value="true" />
+  <parameter name="captureEdge" value="false" />
+  <parameter name="clockRate" value="50000000" />
+  <parameter name="direction" value="Output" />
+  <parameter name="edgeType" value="RISING" />
+  <parameter name="generateIRQ" value="false" />
+  <parameter name="irqType" value="LEVEL" />
+  <parameter name="resetValue" value="4294967295" />
+  <parameter name="simDoTestBenchWiring" value="false" />
+  <parameter name="simDrivenValue" value="0" />
+  <parameter name="width" value="32" />
+ </module>
+ <module name="pio_1" kind="altera_avalon_pio" version="14.1" enabled="1">
+  <parameter name="bitClearingEdgeCapReg" value="false" />
+  <parameter name="bitModifyingOutReg" value="false" />
+  <parameter name="captureEdge" value="false" />
+  <parameter name="clockRate" value="50000000" />
+  <parameter name="direction" value="Input" />
+  <parameter name="edgeType" value="RISING" />
+  <parameter name="generateIRQ" value="false" />
+  <parameter name="irqType" value="LEVEL" />
+  <parameter name="resetValue" value="0" />
+  <parameter name="simDoTestBenchWiring" value="false" />
+  <parameter name="simDrivenValue" value="0" />
+  <parameter name="width" value="32" />
+ </module>
  <module
    name="revision_type_id"
    kind="altera_avalon_pio"
@@ -1697,6 +1767,15 @@
   <parameter name="syncRegDepth" value="2" />
   <parameter name="targetClockRate" value="500000" />
   <parameter name="targetSlaveSelectToSClkDelay" value="1000.0" />
+ </module>
+ <module
+   name="sysid_qsys_0"
+   kind="altera_avalon_sysid_qsys"
+   version="14.1"
+   enabled="1">
+  <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone V" />
+  <parameter name="id" value="131074" />
+  <parameter name="timestamp" value="0" />
  </module>
  <connection
    kind="avalon"
@@ -1732,6 +1811,15 @@
    end="address_span_extender_0.cntl">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x0000" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="14.1"
+   start="hps_0.h2f_lw_axi_master"
+   end="sysid_qsys_0.control_slave">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0f00" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -1882,6 +1970,24 @@
    kind="avalon"
    version="14.1"
    start="hps_0.h2f_lw_axi_master"
+   end="pio_0.s1">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0120" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="14.1"
+   start="hps_0.h2f_lw_axi_master"
+   end="pio_1.s1">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0140" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="14.1"
+   start="hps_0.h2f_lw_axi_master"
    end="spi_0.spi_control_port">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x0800" />
@@ -1916,6 +2022,9 @@
  <connection kind="clock" version="14.1" start="clk_0.clk" end="output_0xf0.clk" />
  <connection kind="clock" version="14.1" start="clk_0.clk" end="spi_0.clk" />
  <connection kind="clock" version="14.1" start="clk_0.clk" end="input_0x100.clk" />
+ <connection kind="clock" version="14.1" start="clk_0.clk" end="pio_1.clk" />
+ <connection kind="clock" version="14.1" start="clk_0.clk" end="pio_0.clk" />
+ <connection kind="clock" version="14.1" start="clk_0.clk" end="sysid_qsys_0.clk" />
  <connection
    kind="clock"
    version="14.1"
@@ -2067,6 +2176,13 @@
    version="14.1"
    start="clk_0.clk_reset"
    end="input_0x100.reset" />
+ <connection kind="reset" version="14.1" start="clk_0.clk_reset" end="pio_1.reset" />
+ <connection kind="reset" version="14.1" start="clk_0.clk_reset" end="pio_0.reset" />
+ <connection
+   kind="reset"
+   version="14.1"
+   start="clk_0.clk_reset"
+   end="sysid_qsys_0.reset" />
  <connection
    kind="reset"
    version="14.1"
