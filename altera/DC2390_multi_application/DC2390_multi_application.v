@@ -49,6 +49,8 @@ module DC2390_multi_application
     output          adc_clk_out,            // Raw ADC out
     output          adc_clk_nshift_out,     // PLL clock out 0 deg shift
     output          adc_clk_shift_out,      // PLL clock out -90 deg shift
+    inout sda,  //PIN_AE29
+    inout scl,  //PIN_AA28
 
     //////////// DDR3 /////////
     output  [14:0]  fpga_memory_mem_a,          // fpga_memory.mem_a
@@ -150,10 +152,11 @@ module DC2390_multi_application
         parameter   NUM_OF_CLK_PER_BSY = 34;
     `endif
 
-    parameter       FPGA_REV = 16'h123E;  // FPGA revision (also accessible from register.)
+    parameter       FPGA_REV = 16'h123F;  // FPGA revision (also accessible from register.)
     // 123B: PLL lock status, alternate sources for PID setpoint.
 	 // 123D: Overflow detector logic, changed counter pattern to a 32-bit up counter
 	 // 123E: Rebuilding with updated LTC2500 controller (see SVN log...)
+	 // 123F: Add I2C connections!
 
     // *********************************************************
     // Internal Signal Declaration
@@ -847,7 +850,25 @@ module DC2390_multi_application
         .ltscope_controller_read_go         (1'b0),         //                             .read_go
         .ltscope_controller_read_start_addr (32'b0), //                             .read_start_addr
         .ltscope_controller_read_length     (32'b0),     //                             .read_length
-        .ltscope_controller_read_done       (1'bz)        //                             .read_done
+        .ltscope_controller_read_done       (1'bz),        //                             .read_done
+		  .i2c_outputs_export                 ({30'bz, scl_out, sda_out}),                 //        i2c_outputs.export
+        .i2c_inputs_export                  ({30'b0, scl_in,  sda_in}) 
     );
+
+wire sda_in, sda_out, scl_in, scl_out;
+			 
+tristate_iobuf	tristate_iobuf_sda (
+	.datain ( 1'b0 ), // Data INTO the IO primitive... zero to emulate open-drain
+	.oe ( ~sda_out ), // LOW to enable!!
+	.dataio ( sda ), // The actual SDA pin
+	.dataout ( sda_in ) // The state of the SDA signal
+	);
+tristate_iobuf	tristate_iobuf_scl (
+	.datain ( 1'b0 ), // Data INTO the IO primitive... zero to emulate open-drain
+	.oe ( ~scl_out ), // LOW to enable!!
+	.dataio ( scl ),// The actual SCL pin
+	.dataout ( scl_in ) // The actual state of the SCL signal
+	);		
+
 
 endmodule
