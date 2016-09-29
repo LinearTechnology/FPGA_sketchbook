@@ -965,7 +965,15 @@ set_instance_assignment -name GLOBAL_SIGNAL OFF -to LTQsys_blob2_inst|mem_if_ddr
 set_instance_assignment -name GLOBAL_SIGNAL OFF -to LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[1].read_capture_clk_buffer -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
 set_instance_assignment -name GLOBAL_SIGNAL OFF -to LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[2].read_capture_clk_buffer -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
 set_instance_assignment -name GLOBAL_SIGNAL OFF -to LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[3].read_capture_clk_buffer -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
-set_global_assignment -name QSYS_FILE cic_variable_filter.qsys
+set_global_assignment -name VERILOG_FILE z_cic.v
+set_global_assignment -name VERILOG_FILE output_fir_rom.v
+set_global_assignment -name VERILOG_FILE output_fir.v
+set_global_assignment -name VERILOG_FILE lut_sin.v
+set_global_assignment -name VERILOG_FILE lut_cos.v
+set_global_assignment -name VERILOG_FILE z_nco.v
+set_global_assignment -name HEX_FILE sin.hex
+set_global_assignment -name HEX_FILE output_fir_rom.hex
+set_global_assignment -name HEX_FILE cos.hex
 set_global_assignment -name VERILOG_FILE ../../LT_Modules/misc/overflow_det.v
 set_global_assignment -name VERILOG_FILE upcount_32/upcount_32.v
 set_global_assignment -name QIP_FILE upcount_32/upcount_32.qip
@@ -994,4 +1002,8 @@ set_global_assignment -name QIP_FILE data_valid_mux.qip
 set_global_assignment -name QIP_FILE mux_8_to_1.qip
 set_global_assignment -name QIP_FILE up_count_with_load.qip
 set_global_assignment -name VERILOG_FILE tb_lut_addr.v
+set_location_assignment PIN_AE29 -to scl
+set_location_assignment PIN_AA28 -to sda
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to scl
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sda
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
