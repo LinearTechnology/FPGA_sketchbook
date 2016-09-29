@@ -136,7 +136,7 @@ module DC2390_reverb
     // Parameters
 
     parameter       FPGA_TYPE = 16'h0002; // FPGA project type identification. Accessible from register map.
-    parameter       FPGA_REV = 16'h0103;  // FPGA revision (also accessible from register.)
+    parameter       FPGA_REV = 16'h0104;  // FPGA revision (also accessible from register.)
 	 parameter   NYQ_TRUNK_VALUE = 32;
     parameter   FILT_TRUNK_VALUE = 54;
     parameter   NUM_OF_CLK_PER_BSY = 34;
@@ -383,14 +383,14 @@ wire signed [15:0] reverb_out;
 wire signed [31:0] echo;
 //assign fb = lut_output * fb_gain; // Switching to LPM_MULT
 
-mult_16_16_16	fb_gain_mult (
+mult_16x16_eq_32	fb_gain_mult (
 	.dataa ( lut_output ),
 	.datab ( fb_gain ),
 	.result ( fb )
 	);
 
 
-mult_16_16_16	echo_gain_mult (
+mult_16x16_eq_32	echo_gain_mult (
 	.dataa ( lut_output ),
 	.datab ( echo_gain ),
 	.result ( echo )
