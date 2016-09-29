@@ -2,32 +2,32 @@ Core: LTQsys_blob2_mem_if_ddr3_emif_0_p0 - Instance: LTQsys_blob2_inst|mem_if_dd
 Path, Setup Margin, Hold Margin
 "Address Command (Slow 1100mV 85C Model)",0.876,0.874
 "Bus Turnaround Time (Slow 1100mV 85C Model)",5.296,--
-"Core (Slow 1100mV 85C Model)",1.984,0.248
-"Core Recovery/Removal (Slow 1100mV 85C Model)",7.703,0.829
+"Core (Slow 1100mV 85C Model)",1.86,0.163
+"Core Recovery/Removal (Slow 1100mV 85C Model)",8.918,0.834
 "DQS vs CK (Slow 1100mV 85C Model)",0.44,0.572
 "Postamble (Slow 1100mV 85C Model)",0.731,0.731
 "Read Capture (Slow 1100mV 85C Model)",0.297,0.25
 "Write (Slow 1100mV 85C Model)",0.322,0.326
 "Address Command (Slow 1100mV 0C Model)",0.849,0.863
 "Bus Turnaround Time (Slow 1100mV 0C Model)",5.357,--
-"Core (Slow 1100mV 0C Model)",1.899,0.297
-"Core Recovery/Removal (Slow 1100mV 0C Model)",8.091,0.782
+"Core (Slow 1100mV 0C Model)",1.906,0.234
+"Core Recovery/Removal (Slow 1100mV 0C Model)",9.252,0.782
 "DQS vs CK (Slow 1100mV 0C Model)",0.513,0.563
 "Postamble (Slow 1100mV 0C Model)",0.719,0.719
 "Read Capture (Slow 1100mV 0C Model)",0.309,0.262
 "Write (Slow 1100mV 0C Model)",0.351,0.354
 "Address Command (Fast 1100mV 85C Model)",0.963,0.961
 "Bus Turnaround Time (Fast 1100mV 85C Model)",5.73,--
-"Core (Fast 1100mV 85C Model)",2.818,0.156
-"Core Recovery/Removal (Fast 1100mV 85C Model)",11.547,0.301
+"Core (Fast 1100mV 85C Model)",2.828,0.156
+"Core Recovery/Removal (Fast 1100mV 85C Model)",12.369,0.308
 "DQS vs CK (Fast 1100mV 85C Model)",0.695,0.777
 "Postamble (Fast 1100mV 85C Model)",0.932,0.932
 "Read Capture (Fast 1100mV 85C Model)",0.512,0.465
 "Write (Fast 1100mV 85C Model)",0.488,0.488
 "Address Command (Fast 1100mV 0C Model)",0.945,0.973
 "Bus Turnaround Time (Fast 1100mV 0C Model)",5.733,--
-"Core (Fast 1100mV 0C Model)",2.838,0.13
-"Core Recovery/Removal (Fast 1100mV 0C Model)",12.223,0.274
+"Core (Fast 1100mV 0C Model)",2.848,0.142
+"Core Recovery/Removal (Fast 1100mV 0C Model)",12.908,0.282
 "DQS vs CK (Fast 1100mV 0C Model)",0.686,0.794
 "Postamble (Fast 1100mV 0C Model)",0.948,0.948
 "Read Capture (Fast 1100mV 0C Model)",0.515,0.468
