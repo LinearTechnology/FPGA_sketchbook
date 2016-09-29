@@ -47,7 +47,8 @@ module DC2390_reverb
     output          adc_clk_out,            // Raw ADC out
     output          adc_clk_nshift_out,     // PLL clock out 0 deg shift
     output          adc_clk_shift_out,      // PLL clock out -90 deg shift
-
+    inout sda,  //PIN_AE29
+    inout scl,  //PIN_AA28
     //////////// DDR3 /////////
     output  [14:0]  fpga_memory_mem_a,          // fpga_memory.mem_a
     output  [2:0]   fpga_memory_mem_ba,         //            .mem_ba
@@ -135,7 +136,7 @@ module DC2390_reverb
     // Parameters
 
     parameter       FPGA_TYPE = 16'h0002; // FPGA project type identification. Accessible from register map.
-    parameter       FPGA_REV = 16'h0101;  // FPGA revision (also accessible from register.)
+    parameter       FPGA_REV = 16'h0103;  // FPGA revision (also accessible from register.)
 	 parameter   NYQ_TRUNK_VALUE = 32;
     parameter   FILT_TRUNK_VALUE = 54;
     parameter   NUM_OF_CLK_PER_BSY = 34;
@@ -161,7 +162,8 @@ module DC2390_reverb
 
     wire    [15:0]  system_clocks_per_sample;
     wire    [29:0]  num_samples;
-    wire    [15:0]  fb_factor;
+    wire signed    [15:0]  fb_gain;
+	 wire signed    [15:0]  echo_gain;
     wire    [31:0]  stop_address;
     wire    [31:0]  datapath_control;
 
@@ -304,7 +306,7 @@ module DC2390_reverb
     (
         .clock  (adc_clk),
 		  // Right-shift and sign-extend ADC data, add to LUT output (oldest stored sample.)
-        .data0x ({adcB_data[31], adcB_data[31:16]} + {lut_output[15], lut_output[15:1]}),
+        .data0x (reverb_out),
         .data1x (16'h1000),
         .data2x (16'h2000),
         .data3x (16'h3000),
@@ -364,6 +366,8 @@ module DC2390_reverb
         .sel    (lut_addr_select),
         .result (lut_addr)
     );
+	 
+// Make delayed version of ring buffer address
 reg adcB_done_delayed;
 reg [15:0] lut_addr_counter_delayed;
     always @ (posedge adc_clk)
@@ -371,11 +375,31 @@ reg [15:0] lut_addr_counter_delayed;
             lut_addr_counter_delayed <= lut_addr_counter;
 				adcB_done_delayed <= adcB_done;
         end
-
+		  
+// Reverb logic!!
 wire signed [15:0] lut_data_in;
 wire signed [31:0] fb;
-assign fb = lut_output * fb_factor;
-assign lut_data_in = {adcB_data[31], adcB_data[31:17]} + {fb[31], fb[31:17]};
+wire signed [15:0] reverb_out;
+wire signed [31:0] echo;
+//assign fb = lut_output * fb_gain; // Switching to LPM_MULT
+
+mult_16_16_16	fb_gain_mult (
+	.dataa ( lut_output ),
+	.datab ( fb_gain ),
+	.result ( fb )
+	);
+
+
+mult_16_16_16	echo_gain_mult (
+	.dataa ( lut_output ),
+	.datab ( echo_gain ),
+	.result ( echo )
+	);	
+	
+	
+
+assign lut_data_in = adcB_data[31:16] + fb[30:15]; // Select proper bits from multiplier output here...
+assign reverb_out = adcB_data[31:16] + echo[30:15]; // 
 
     // *********************************************************
     // Lookup table (16x16)
@@ -386,7 +410,7 @@ assign lut_data_in = {adcB_data[31], adcB_data[31:17]} + {fb[31], fb[31:17]};
         .rdclock    (adc_clk),
         .wraddress  (lut_addr_counter_delayed), // REVERB: Write to previous address
         .wrclock    (adc_clk), // CHANGED to adc_clk domain
-        .wren       (adcB_done_delayed), // REVERB: Write new data(lut_write_enable), // High to enable writing
+        .wren       (adcB_done), // REVERB: Write new data(lut_write_enable), // High to enable writing
         .q          (lut_output)
     );
 
@@ -652,7 +676,7 @@ assign lut_data_in = {adcB_data[31], adcB_data[31:17]} + {fb[31], fb[31:17]};
         .output_0xc0_export                ({lut_addr_div,system_clocks_per_sample}),                //              output_0xc0.export
         .output_0xd0_export                ({14'b0, setpoint_source_select,  lut_run_once, 1'b0, lut_addr_select[1:0], 2'b0, dac_a_select[1:0], 2'b0, dac_b_select[1:0],  1'b0, fifo_data_select[2:0]}), // First Order System model parameters
         .output_0xe0_export                (), //({lut_wraddress, lut_wrdata}),
-        .output_0xf0_export                ({16'b0, fb_factor}),  // Feedback factor, 16'hFFFF = unity
+        .output_0xf0_export                ({echo_gain, fb_gain}),  // Feedback factor, 16'hFFFF = unity
         .input_0x100_export                ({2'b0, stop_address[29:0]}), // After capture, this is where to start reading
         // SPI port for configuring various things
         .spi_0_external_MISO               (spi_miso),               //           spi_0_external.MISO
@@ -670,8 +694,26 @@ assign lut_data_in = {adcB_data[31], adcB_data[31:17]} + {fb[31], fb[31:17]};
         .ltscope_controller_read_go         (1'b0),         //                             .read_go
         .ltscope_controller_read_start_addr (32'b0), //                             .read_start_addr
         .ltscope_controller_read_length     (32'b0),     //                             .read_length
-        .ltscope_controller_read_done       (1'bz)        //                             .read_done
+        .ltscope_controller_read_done       (1'bz),        //                             .read_done
+		  .i2c_outputs_export                 ({30'bz, scl_out, sda_out}),                 //        i2c_outputs.export
+        .i2c_inputs_export                  ({30'b0, scl_in,  sda_in}) 
     );
 
+wire sda_in, sda_out, scl_in, scl_out;
+			 
+tristate_iobuf	tristate_iobuf_sda (
+	.datain ( 1'b0 ), // Data INTO the IO primitive... zero to emulate open-drain
+	.oe ( ~sda_out ), // LOW to enable!!
+	.dataio ( sda ), // The actual SDA pin
+	.dataout ( sda_in ) // The state of the SDA signal
+	);
+tristate_iobuf	tristate_iobuf_scl (
+	.datain ( 1'b0 ), // Data INTO the IO primitive... zero to emulate open-drain
+	.oe ( ~scl_out ), // LOW to enable!!
+	.dataio ( scl ),// The actual SCL pin
+	.dataout ( scl_in ) // The actual state of the SCL signal
+	);		 
+	 
+	 
 endmodule
 

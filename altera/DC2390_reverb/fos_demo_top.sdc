@@ -3,7 +3,8 @@ create_clock -period 20.000 [get_ports adc_clk_in]
 
 #create_clock -period 20000 [get_ports {KEY[0]}]
 
-derive_pll_clocks -create_base_clocks
+#derive_pll_clocks -create_base_clocks
+derive_pll_clocks -create_base_clocks -use_net_name
 derive_clock_uncertainty
 
 
