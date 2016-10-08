@@ -1,5 +1,10 @@
+# Onboard 50MHz clock, used for Qsys blob. Always present.
 create_clock -period 20.000 [get_ports clk]
+# 50MHz from LTC6954 divider.
 create_clock -period 20.000 [get_ports adc_clk_in]
+# Virtual clock for LTC1668 DACs. Delayed by 5ns (same as advanced by 15ns)
+# such that data has an extra 5ns to meet 4ns minimum hold time.
+create_clock -name ext_dac_clk -period 20.000# -waveform {5 15}
 
 #create_clock -period 20000 [get_ports {KEY[0]}]
 
@@ -7,9 +12,10 @@ create_clock -period 20.000 [get_ports adc_clk_in]
 derive_pll_clocks -create_base_clocks -use_net_name
 derive_clock_uncertainty
 
-
-set_output_delay -clock [get_clocks adc_clk] -max 2 [get_ports DAC_*]
-set_output_delay -clock [get_clocks adc_clk] -min -1 [get_ports DAC_*] -add_delay
+# Constrain to meet 8ns setup time
+set_output_delay -clock [get_clocks ext_dac_clk] -max 8 [get_ports {DAC_*}]
+# Constrain to meet 4ns hold time
+set_output_delay -clock [get_clocks ext_dac_clk] -min 4 [get_ports {DAC_*}] -add_delay
 
 #set_output_delay -clock clk -min 0 [get_ports {ADC_sclk_A ADC_sclk_B}]
 #set_output_delay -clock clk -max 1 [get_ports {ADC_sclk_A ADC_sclk_B}]
@@ -58,5 +64,11 @@ set_false_path -to [get_ports ltc6954_sdo]
 set_false_path -to [get_ports gpo0]
 set_false_path -to [get_ports gpo1]
 
-set_false_path -to [get_ports KEY[0]]
-set_false_path -to [get_ports KEY[1]]
+
+# Asynchronous I/O
+set_false_path -from [get_ports {KEY*}]    -to [get_pins -hierarchical {*}]
+
+set_false_path -from [get_ports              {*}] -to [get_ports {LED*}]
+set_false_path -from [get_pins -hierarchical {*}] -to [get_ports {LED*}]
+#set_false_path -to [get_ports {KEY*}]
+#set_false_path -to [get_ports {LED*}]

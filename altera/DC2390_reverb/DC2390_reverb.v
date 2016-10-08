@@ -136,7 +136,12 @@ module DC2390_reverb
     // Parameters
 
     parameter       FPGA_TYPE = 16'h0002; // FPGA project type identification. Accessible from register map.
-    parameter       FPGA_REV = 16'h0104;  // FPGA revision (also accessible from register.)
+    parameter       FPGA_REV = 16'h0105;  // FPGA revision (also accessible from register.)
+	 // Revision history:
+	 // Rev 01 04 - Working!!! incuding infinite sustain.
+	 // Rev 0105 - Experimenting with constraints... DAC mostly.
+	 
+	 
 	 parameter   NYQ_TRUNK_VALUE = 32;
     parameter   FILT_TRUNK_VALUE = 54;
     parameter   NUM_OF_CLK_PER_BSY = 34;

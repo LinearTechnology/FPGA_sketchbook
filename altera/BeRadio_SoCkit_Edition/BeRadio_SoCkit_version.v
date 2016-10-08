@@ -40,7 +40,7 @@
 		  specific ADC controller.
 */
 
-module cmos_32bit_capture
+module BeRadio_SoCkit_version
 (
     input           clk,                    // Input OSC_50_B3B, // Original name...
     input           adc_clk_in,
@@ -107,7 +107,7 @@ module cmos_32bit_capture
     // Parameters
 
     parameter       FPGA_TYPE = 16'h0003; // FPGA project type identification. Accessible from register map.
-    parameter       FPGA_REV = 16'h0101;  // FPGA revision (also accessible from register.)
+    parameter       FPGA_REV = 16'h0102;  // FPGA revision (also accessible from register.)
 	 // Revision History
 	 // 0101: Initial release
 	 // 0102: Add CIC filter, edge control via a signal from blob rather than a different MUX input
@@ -213,7 +213,7 @@ assign rst_n = KEY[0];
 
 reg [22:0] rstcount;                   // Reset counter
 wire reset_n;                          // internal reset
-always @(posedge adc_clk_out or negedge rst_n) begin
+always @(posedge adc_clk_in or negedge rst_n) begin
     if (!rst_n) begin
         rstcount       <= 23'h0;
     end
@@ -323,7 +323,7 @@ assign linduino_cs = dac_cs_l;//P27 = dac_cs_l;
 reg [23:0] hbcount;                    // Heartbeat counter
 wire hb_led;                           // Heartbeat LED output
 
-always @(posedge adc_clk_out or negedge reset_n) begin
+always @(posedge adc_clk_in or negedge reset_n) begin
     if (!reset_n) begin
         hbcount <= 24'h0;
     end
@@ -390,7 +390,7 @@ wire [31:0] nco_phi_inc;				// Frequency from the blob.
 // Instantiate Numerically Controlled Oscillator (NCO) to implement local oscillator.
 z_nco z_nco_inst (
     .phase_inc (nco_phi_inc),
-    .clk       (adc_clk_out),
+    .clk       (adc_clk_in),
     .reset_n   (reset_n),
     .fsin      (fsin),
     .fcos      (fcos)
@@ -398,7 +398,7 @@ z_nco z_nco_inst (
 
 //NCOMega z_nco_inst (
 //		.phi_inc_i(nco_phi_inc),
-//		.clk(adc_clk_out),
+//		.clk(adc_clk_in),
 //		.reset_n(reset_n),
 //		.clken(reset_n),
 //		.fsin_o(fsin),
@@ -407,7 +407,7 @@ z_nco z_nco_inst (
 //);
 
 // Shift received signal to zero by multiplying (mixing) with the local oscillator.
-always @(posedge adc_clk_out or negedge reset_n) begin
+always @(posedge adc_clk_in or negedge reset_n) begin
     if (!reset_n) begin
         i_data <= 28'h0;
         q_data <= 28'h0;
@@ -461,7 +461,7 @@ z_cic #(
     .N_STAGES  (5),
     .DEC_RATE  (25)
 ) z_cic1_inst (
-    .clk       (adc_clk_out),
+    .clk       (adc_clk_in),
     .reset_n   (reset_n),
     .instrobe  (1'b1),
     .in1_data  (cic_in_i),
@@ -478,7 +478,7 @@ z_cic #(
     .N_STAGES  (14),
     .DEC_RATE  (8)
 ) z_cic2_inst (
-    .clk       (adc_clk_out),
+    .clk       (adc_clk_in),
     .reset_n   (reset_n),
     .instrobe  (cic1_strb),
     .in1_data  (cic1_i),
@@ -525,7 +525,7 @@ output_fir #(
     .DATA_SIZE     (16),
     .COEF_SIZE     (16)
 ) output_fir_inst (
-    .clk           (adc_clk_out),
+    .clk           (adc_clk_in),
     .reset_n       (reset_n),
     .strobe_in     (cic2_strb), //(am_strb),
     .ch1_in        (fir_in_i),//(am_data),
@@ -563,7 +563,7 @@ sat_rnd #(
 am_demod #(
     .DATA_SIZE     (16)
 ) am_demod_inst (
-    .clk           (adc_clk_out),
+    .clk           (adc_clk_in),
     .reset_n       (reset_n),
     .strobe_in     (am_strb),
     .i_in          (fir_in_i), //(am_in_sr_i),
@@ -598,7 +598,7 @@ assign scaled_audio = audio_data * (audio_gain + 8'b1);
 
 // If nios_phi_inc is zero, select unscaled audio (unipolar_data), else select scaled audio (scaled_audio).
 // The nios_phi_inc value is non-zero whenever NIOS takes control of the receiver.
-always @(posedge adc_clk_out or negedge reset_n) begin
+//always @(posedge adc_clk_in or negedge reset_n) begin
 //	if (!reset_n) begin
 //		audio_out <= unipolar_data;
 //   end
@@ -608,17 +608,29 @@ always @(posedge adc_clk_out or negedge reset_n) begin
 //		end
 //		else begin
 			// bits selected empiricaly to trade off output audio volume versus distortion
-			audio_out <= unipolar_data; // Try with No scaling
+//			audio_out <= unipolar_data; // Try with No scaling
 			//audio_out <= {~scaled_audio[23],scaled_audio[20:6]};
 //		end
 //   end
+//end
+
+
+// If nios_phi_inc is zero, select unscaled audio (unipolar_data), else select scaled audio (scaled_audio).
+// The nios_phi_inc value is non-zero whenever NIOS takes control of the receiver.
+always @(posedge adc_clk_in) begin
+
+			// bits selected empiricaly to trade off output audio volume versus distortion
+			audio_out <= unipolar_data; // Try with No scaling
+
 end
+
+
 
 // Instantiate the SPI interface component.
 spi_if #(
     .DATA_SIZE (16)
 ) spi_if_inst (
-    .clk       (adc_clk_out),
+    .clk       (adc_clk_in),
     .reset_n   (reset_n),
     .strobe_in (audio_strb),
     .data_in   (audio_out),
@@ -645,31 +657,31 @@ wire bcd_strb;                         					// BCD frequency value valid strobe
 wire [BCD_SIZE-1:0] freq_bcd;          					// Current frequency in BCD
 wire [3:0] leds_out;                   					// BCD LED outputs
 
-// Instantiate the BCD conversion component.
-binary_to_bcd #(
-    .IN_BITS       (FREQ_SIZE),
-    .OUT_DIGITS    (BCD_DIGITS)
-) binary_to_bcd_inst (
-    .clk           (adc_clk_out),
-    .reset_n       (reset_n),
-    .strobe_in     (freq_strb),
-    .data_in       (freq),
-    .strobe_out    (bcd_strb),
-    .data_out      (freq_bcd)
-);
-
-// Instantiate the LED digit display component.
-digit_display #(
-    .NUM_DIGITS    (BCD_DIGITS)
-) digit_display_inst (
-    .clk           (adc_clk_out),
-    .reset_n       (reset_n),
-    .sync          (hb_led),
-    .abort         (pb_strb),
-    .strobe_in     (bcd_strb),
-    .data_in       (freq_bcd),
-    .leds_out      (leds_out)
-);
+//// Instantiate the BCD conversion component.
+//binary_to_bcd #(
+//    .IN_BITS       (FREQ_SIZE),
+//    .OUT_DIGITS    (BCD_DIGITS)
+//) binary_to_bcd_inst (
+//    .clk           (adc_clk_out),
+//    .reset_n       (reset_n),
+//    .strobe_in     (freq_strb),
+//    .data_in       (freq),
+//    .strobe_out    (bcd_strb),
+//    .data_out      (freq_bcd)
+//);
+//
+//// Instantiate the LED digit display component.
+//digit_display #(
+//    .NUM_DIGITS    (BCD_DIGITS)
+//) digit_display_inst (
+//    .clk           (adc_clk_out),
+//    .reset_n       (reset_n),
+//    .sync          (hb_led),
+//    .abort         (pb_strb),
+//    .strobe_in     (bcd_strb),
+//    .data_in       (freq_bcd),
+//    .leds_out      (leds_out)
+//);
 // ---- NIOS -------------------------------------------------------------------------------------------
 // The NIOS processor controls the audio gain and frequency via commands from the 
 // BeMicroSDK USB port. The antenna capacitor selection is also made by NIOS, based

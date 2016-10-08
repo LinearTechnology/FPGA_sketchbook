@@ -979,6 +979,13 @@ set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to linduino_cs
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to linduino_miso
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to linduino_mosi
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to linduino_sck
+set_location_assignment PIN_AE29 -to sda
+set_location_assignment PIN_AA28 -to scl
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to scl
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sda
+set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to scl
+set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to sda
+set_global_assignment -name SDC_FILE DC2390.sdc
 set_global_assignment -name QIP_FILE upcount_32/upcount_32.qip
 set_global_assignment -name VERILOG_FILE ../../LT_Modules/misc/overflow_det.v
 set_global_assignment -name VERILOG_FILE mux_4_to_1_20bit/mux_4_to_1_20bit.v
@@ -1001,7 +1008,6 @@ set_global_assignment -name VERILOG_FILE ../../Altera_LT_IP/LTscope_reader/reade
 set_global_assignment -name VERILOG_FILE ../../Altera_LT_IP/LTscope_ring_buffer/ring_buffer.v
 set_global_assignment -name QIP_FILE ADC_fifo/ADC_fifo.qip
 set_global_assignment -name VERILOG_FILE DC2390_multi_application.v
-set_global_assignment -name SDC_FILE fos_demo_top.sdc
 set_global_assignment -name QIP_FILE ram_lut/ram_lut.qip
 set_global_assignment -name MIF_FILE ram_lut/lut_initialization.mif
 set_global_assignment -name QIP_FILE updown_count16/updown_count16.qip
@@ -1016,10 +1022,4 @@ set_global_assignment -name QIP_FILE DC2390_pll.qip
 set_global_assignment -name SIP_FILE DC2390_pll.sip
 set_global_assignment -name QIP_FILE up_count_with_load.qip
 set_global_assignment -name VERILOG_FILE tb_lut_addr.v
-set_location_assignment PIN_AE29 -to sda
-set_location_assignment PIN_AA28 -to scl
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to scl
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sda
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to scl
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to sda
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
