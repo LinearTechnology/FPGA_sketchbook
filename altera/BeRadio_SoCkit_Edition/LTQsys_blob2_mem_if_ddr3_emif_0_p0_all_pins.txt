@@ -22,7 +22,7 @@ PLL CK: LTQsys_blob2_inst|mem_if_ddr3_emif_0|pll0|pll2_phy~PLL_OUTPUT_COUNTER|di
 PLL DQ WRITE: LTQsys_blob2_inst|mem_if_ddr3_emif_0|pll0|pll3~PLL_OUTPUT_COUNTER|divclk
 PLL WRITE: LTQsys_blob2_inst|mem_if_ddr3_emif_0|pll0|pll2_phy~PLL_OUTPUT_COUNTER|divclk
 PLL AVL: LTQsys_blob2_inst|mem_if_ddr3_emif_0|pll0|pll6~PLL_OUTPUT_COUNTER|divclk
-PLL AVL PHY: _UNDEFINED_PIN_
+PLL AVL PHY: LTQsys_blob2_inst|mem_if_ddr3_emif_0|pll0|pll6_phy~PLL_OUTPUT_COUNTER|divclk
 PLL CONFIG: LTQsys_blob2_inst|mem_if_ddr3_emif_0|pll0|pll7~PLL_OUTPUT_COUNTER|divclk
 PLL DRIVER CORE: _UNDEFINED_PIN_
 DQS_IN_CLOCK DQS_PIN (0): fpga_memory_mem_dqs[0]

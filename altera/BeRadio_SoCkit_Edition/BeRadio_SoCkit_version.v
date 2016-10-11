@@ -342,7 +342,7 @@ reg [19:0] of_count;                   // Overflow delay counter
 wire of_led;                           // ADC overflow LED output
 
 // Register the ADC data at the pins.
-always @(posedge adc_clk_out or negedge reset_n) begin
+always @(posedge adc_clk or negedge reset_n) begin // Changed to other edge... demo board has an inverter!
     if (!reset_n) begin
         rx_data     <= 12'h0;
     end
