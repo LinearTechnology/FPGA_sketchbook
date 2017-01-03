@@ -381,7 +381,7 @@ module LTC2500_controller
     assign en_filt_count = rd_filt_flag && (state != WAIT_4_BUSY) && (!mclk);
 
     // Filtered data shift in register
-    always @ (posedge sck_in or negedge reset_n)
+    always @ (posedge sys_clk or negedge reset_n)
         begin
             if(!reset_n)
                 filt_data_shift_reg <= 0;
