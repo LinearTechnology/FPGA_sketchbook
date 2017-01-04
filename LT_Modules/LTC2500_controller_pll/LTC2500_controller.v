@@ -4,7 +4,7 @@
     Created by: Noe Quintero
     E-mail: nquintero@linear.com
 
-    Copyright (c) 2015, Linear Technology Corp.(LTC)
+    Copyright (c) 2017, Linear Technology Corp.(LTC)
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -94,7 +94,7 @@ module LTC2500_controller
     input               sdo_nyq;
     input               busy;
     input               drdy_n;
-    output              mclk;
+    output  reg         mclk;
     output              sync;
     output  reg [31:0]  data_nyq;
     output  reg         valid_nyq;
@@ -193,13 +193,25 @@ module LTC2500_controller
                 n_buff <= n;
         end
 
-    // // Generate the mclk signal with an SR latch
-    assign mclk = ~(r | q_n);
-    assign q_n  = ~(s | mclk);
-    assign s = go & (state == IDLE);
-    assign r = ((state == GET_DATA)             ||
-                (state == GET_DATA_WITH_SYNC)   ||
-                !reset_n) ? 1'b1 : 1'b0;
+    // Generate the mclk signal with an SR latch
+    // assign mclk = ~(r | q_n);
+    // assign q_n  = ~(s | mclk);
+     assign s = go & (state == IDLE);
+    // assign r = ((state == GET_DATA)             ||
+                // (state == GET_DATA_WITH_SYNC)   ||
+                // !reset_n) ? 1'b1 : 1'b0;
+    
+    always @ (posedge sys_clk or negedge reset_n)
+        begin
+            if(!reset_n)
+                mclk <= 1'b0;
+            else if (go && state == IDLE)
+                mclk <= 1'b1;
+            else if (state == GET_DATA || state == GET_DATA_WITH_SYNC)
+                mclk <= 1'b0;
+            else
+                mclk <= mclk;
+        end
 
     // Counter for busy signal timing
     always @ (posedge sys_clk or negedge reset_n)
@@ -248,7 +260,7 @@ module LTC2500_controller
             else
                 en_nyq_sck <= 1'b0;
          end
-    assign sck_nyq = (en_nyq_sck) ? sck_in : 1'b0;
+    assign sck_nyq = en_nyq_sck & sck_in;
 
     // The rdl Nyquist signal can be continuously be active low
     assign rdl_nyq = 1'b0;
@@ -347,7 +359,7 @@ module LTC2500_controller
         begin
             if (!reset_n)
                 rd_filt_flag <= 1'b0;
-            else if (filt_data_count == FILT_TRUNK_VALUE-1)
+            else if (filt_data_count >= FILT_TRUNK_VALUE-1)
                 rd_filt_flag <= 1'b0;
             else if (sync_flag)
                 rd_filt_flag <= 1'b1;
@@ -361,12 +373,12 @@ module LTC2500_controller
         begin
             if (!reset_n)
                 en_filt_sck <= 1'b0;
-            else if (en_filt_count || state == GET_DATA_WITH_SYNC)
+            else if (en_filt_count || state == GET_DATA_WITH_SYNC && !mclk)
                 en_filt_sck <= 1'b1;
             else
                 en_filt_sck <= 1'b0;
          end
-    assign sck_filt  =  (en_filt_sck&(!mclk)) ? sck_in : 1'b0;
+    assign sck_filt  = en_filt_sck & sck_in;
 
     // Count for filtered data
     always @ (posedge sys_clk or negedge reset_n)
@@ -375,10 +387,10 @@ module LTC2500_controller
                 filt_data_count <= 6'b0;
             else if (!rd_filt_flag)
                 filt_data_count <= 6'b0;
-            else if (rd_filt_flag && (state != WAIT_4_BUSY) & (!mclk))
+            else if (en_filt_count)
                 filt_data_count <= filt_data_count + 1'b1;
         end
-    assign en_filt_count = rd_filt_flag && (state != WAIT_4_BUSY) && (!mclk);
+    assign en_filt_count = rd_filt_flag && (state != WAIT_4_BUSY) && (!mclk) && (filt_data_count < FILT_TRUNK_VALUE);
 
     // Filtered data shift in register
     always @ (posedge sys_clk or negedge reset_n)
