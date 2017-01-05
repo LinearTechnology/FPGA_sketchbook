@@ -105,8 +105,6 @@ module LTC2500_controller
     // Internal signals
     reg     [3:0]                   state;
     reg                             sync_flag;
-    reg     [9:0]                   config_buff;
-    reg     [15:0]                  n_buff;
     reg     [5:0]                   nyq_data_count;
     reg     [NYQ_TRUNK_VALUE-1:0]   nyq_data_shift_reg;
     reg     [15:0]                  busy_count;
@@ -117,11 +115,11 @@ module LTC2500_controller
     wire                            en_filt_count;
     reg                             rd_filt_flag;
     reg     [FILT_TRUNK_VALUE-1:0]  filt_data_shift_reg;
-    wire                            set_dsf_avg_count;
-    wire                            en_dsf_avg_count;
     reg                             en_filt_sck;
     reg     [14:0]                  dsf_avg_sample_num;
     reg     [11:0]                  mosi;
+    reg                             sync_flag_d1;
+    wire                            rise_edge_sync_flag;
 
     // One Hot FSM
     localparam IDLE                 = 4'b0001;
@@ -169,24 +167,6 @@ module LTC2500_controller
                 sync_flag <= 1'b0;
             else if ((state == IDLE && sync_req_recfg && go) || dsf_avg_count == 14'b0)
                 sync_flag <= 1'b1;
-        end
-
-    // Store the configuration word with a go
-    always @ (posedge sys_clk or negedge reset_n)
-        begin
-            if (!reset_n)
-                config_buff <= 10'b00010110;
-            else if (state == IDLE && go)
-                config_buff <= cfg;
-        end
-
-    // Store the averaging ratio with a go
-    always @ (posedge sys_clk or negedge reset_n)
-        begin
-            if(!reset_n)
-                n_buff <= 16'b0;
-            else if(state == IDLE && go)
-                n_buff <= n;
         end
 
     // Generate the mclk signal
@@ -317,13 +297,11 @@ module LTC2500_controller
         begin
             if (!reset_n)
                 dsf_avg_count <= 15'd63;
-            else if (set_dsf_avg_count)
+            else if (state == GET_DATA_WITH_SYNC)
                 dsf_avg_count <= dsf_avg_sample_num;
-            else if (en_dsf_avg_count)
+            else if (go & (state == IDLE) && dsf_avg_count != 14'b0)
                 dsf_avg_count <= dsf_avg_count - 1'b1;
         end
-    assign en_dsf_avg_count = go & (state == IDLE) && dsf_avg_count != 14'b0;
-    assign set_dsf_avg_count = state == GET_DATA_WITH_SYNC;
 
     // Send error if DSF is not correct
     always @ (posedge sys_clk or negedge reset_n)
@@ -433,8 +411,6 @@ module LTC2500_controller
     // Generate the sdi filt signal
 
     // Edge dedge detector for sync_flag
-    reg sync_flag_d1;
-    wire rise_edge_sync_flag;
     always @ (posedge sys_clk or negedge reset_n)
         begin
             if(!reset_n)
