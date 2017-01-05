@@ -103,10 +103,6 @@ module LTC2500_controller
     output  reg         error;
 
     // Internal signals
-    wire                            q_n;
-    wire                            r;
-    wire                            s;
-    wire                            en_busy_count;
     reg     [3:0]                   state;
     reg                             sync_flag;
     reg     [9:0]                   config_buff;
@@ -193,14 +189,7 @@ module LTC2500_controller
                 n_buff <= n;
         end
 
-    // Generate the mclk signal with an SR latch
-    // assign mclk = ~(r | q_n);
-    // assign q_n  = ~(s | mclk);
-     assign s = go & (state == IDLE);
-    // assign r = ((state == GET_DATA)             ||
-                // (state == GET_DATA_WITH_SYNC)   ||
-                // !reset_n) ? 1'b1 : 1'b0;
-    
+    // Generate the mclk signal
     always @ (posedge sys_clk or negedge reset_n)
         begin
             if(!reset_n)
@@ -220,12 +209,9 @@ module LTC2500_controller
                 busy_count <= NUM_OF_CLK_PER_BSY + DFF_CYCLE_COMP - 1;
             else if (state == IDLE)
                 busy_count <= NUM_OF_CLK_PER_BSY + DFF_CYCLE_COMP - 1;
-            else if (en_busy_count)
+            else if ((state == WAIT_4_BUSY) && (busy_count != 16'b0))
                 busy_count <= busy_count - 1'b1;
         end
-
-    // Generate the enable busy count
-    assign en_busy_count = ((state == WAIT_4_BUSY) && (busy_count != 16'b0)) ? 1'b1 : 1'b0;
 
     // Generate the enable Nyquist count
     assign en_nyq_count = ((state == GET_DATA) || (state == GET_DATA_WITH_SYNC)) && (nyq_data_count < NYQ_TRUNK_VALUE);
@@ -255,7 +241,7 @@ module LTC2500_controller
         begin
             if (!reset_n)
                 en_nyq_sck <= 1'b0;
-            else if (en_nyq_count || state == GET_DATA || state == GET_DATA_WITH_SYNC)
+            else if (en_nyq_count)
                 en_nyq_sck <= 1'b1;
             else
                 en_nyq_sck <= 1'b0;
@@ -336,7 +322,7 @@ module LTC2500_controller
             else if (en_dsf_avg_count)
                 dsf_avg_count <= dsf_avg_count - 1'b1;
         end
-    assign en_dsf_avg_count = s && dsf_avg_count != 14'b0;
+    assign en_dsf_avg_count = go & (state == IDLE) && dsf_avg_count != 14'b0;
     assign set_dsf_avg_count = state == GET_DATA_WITH_SYNC;
 
     // Send error if DSF is not correct
@@ -373,7 +359,7 @@ module LTC2500_controller
         begin
             if (!reset_n)
                 en_filt_sck <= 1'b0;
-            else if (en_filt_count || state == GET_DATA_WITH_SYNC && !mclk)
+            else if (en_filt_count)
                 en_filt_sck <= 1'b1;
             else
                 en_filt_sck <= 1'b0;
@@ -390,14 +376,14 @@ module LTC2500_controller
             else if (en_filt_count)
                 filt_data_count <= filt_data_count + 1'b1;
         end
-    assign en_filt_count = rd_filt_flag && (state != WAIT_4_BUSY) && (!mclk) && (filt_data_count < FILT_TRUNK_VALUE);
+    assign en_filt_count = rd_filt_flag && (state != WAIT_4_BUSY) && (filt_data_count < FILT_TRUNK_VALUE);
 
     // Filtered data shift in register
     always @ (posedge sys_clk or negedge reset_n)
         begin
             if(!reset_n)
                 filt_data_shift_reg <= 0;
-            else if (rd_filt_flag && filt_data_count < FILT_TRUNK_VALUE && (state != WAIT_4_BUSY) && !mclk)
+            else if (en_filt_count)
                 filt_data_shift_reg <= {filt_data_shift_reg[FILT_TRUNK_VALUE-2:0], sdo_filt};
         end
 
