@@ -51,6 +51,7 @@ module DC2390_multi_application
     output          adc_clk_shift_out,      // PLL clock out -90 deg shift
     inout sda,  //PIN_AE29
     inout scl,  //PIN_AA28
+	 input ext_trig_in, // External trigger input. Test point X10, HSMC RX8P, (FPGA pin F11)
 
     //////////// DDR3 /////////
     output  [14:0]  fpga_memory_mem_a,          // fpga_memory.mem_a
@@ -131,8 +132,8 @@ module DC2390_multi_application
     output          linduino_mosi,
     input           linduino_miso,
 
-    output          gpo0, // HSMC LVDS RX_p15 (FPGA pin F13)
-    output          gpo1  // HSMC LVDS RX_p14 (FPGA pin H14)
+    output          gpo0, // Test Point X7, HSMC LVDS RX_p15 (FPGA pin F13)
+    output          gpo1  // Test Point X9, HSMC LVDS RX_p14 (FPGA pin H14)
 );
 
 //    `define  LTC2512_DEMO 1
@@ -152,12 +153,16 @@ module DC2390_multi_application
         parameter   NUM_OF_CLK_PER_BSY = 34;
     `endif
 
-    parameter       FPGA_REV = 16'h123F;  // FPGA revision (also accessible from register.)
+    parameter       FPGA_REV = 16'h1246;  // FPGA revision (also accessible from register.)
     // 123B: PLL lock status, alternate sources for PID setpoint.
 	 // 123D: Overflow detector logic, changed counter pattern to a 32-bit up counter
 	 // 123E: Rebuilding with updated LTC2500 controller (see SVN log...)
 	 // 123F: Add I2C connections!
-
+	 // 1240: Change PID feedback input from [31:12] to [30:11] to account for overflow bit in final silicon.
+    // 1241: Rebuilding with updated LTC2500 controller again... register filt data from nonshifted clock
+	 // 1242: SDI timing constraint adjustments
+	 // 1245: Another LTC2500 controller update, add resync signals from blob.
+	 // 1246: Further constraint file cleanup, false-path to I/O that is not directly related to clock signals.
     // *********************************************************
     // Internal Signal Declaration
 
@@ -248,6 +253,7 @@ module DC2390_multi_application
     reg     [23:0]  counter;
     wire            force_trig_nosync;
     reg             force_trig, ft1, ft2;
+	 reg             ext_trig, eti1, eti2;
     wire            lut_count_carry;
     wire            adcB_done;
     wire            rdreq_nyq;
@@ -305,6 +311,7 @@ module DC2390_multi_application
 
     // *********************************************************
     // DAC data signals and control
+	 // Invert MSb to convert from 2's complement to straight binary
     always @ (posedge adc_clk)
         begin
             dac_a_data_straight <= {~dac_a_data_signed[15], dac_a_data_signed[14:0]};
@@ -465,7 +472,7 @@ module DC2390_multi_application
         .kd         (pid_kd),       //signed binary fixed point
         .setpoint   (setpoint),     //signed integer
         //PID signals
-        .feedback   (adcA_data[31:12]),    //signed integer
+        .feedback   (adcA_data[30:11]),    //signed integer, changed FROM [31:12] for final silicon!!!
         .sig_out    (pid_output),   //signed integer
         .trig       (adcA_done),    //triggers new calculation (1 clock pulse)
         .done       (pid_done)      //signals new valid data on output (1 clock pulse)
@@ -487,7 +494,7 @@ module DC2390_multi_application
         .sck_in         (adc_clk_shift),// The serial clock from PLL to be gated for the sck of the LTC2500
         .reset_n        (reset_n),      // Reset active low
         .go             (adc_go),       // Start a ADC read
-        .sync_req_recfg (1'b0),         // Request a synchronisation or reconfigure ADC
+        .sync_req_recfg (sync_req_u1 | sync_req_both),         // Request a synchronisation or reconfigure ADC
         .cfg            (cfg),          // The configuration word 
         .n              (n),            // The averaging ratio
 
@@ -531,7 +538,7 @@ module DC2390_multi_application
         .sck_in         (adc_clk_shift),// The serial clock from PLL to be gated for the sck of the LTC2500
         .reset_n        (reset_n),      // Reset active low
         .go             (adc_go),       // Start a ADC read
-        .sync_req_recfg (1'b0),         // Request a synchronisation or reconfigure ADC
+        .sync_req_recfg (sync_req_u2 | sync_req_both),         // Request a synchronisation or reconfigure ADC
         .cfg            (cfg),          // The configuration word 
         .n              (n),            // The averaging ratio
 
@@ -727,14 +734,21 @@ module DC2390_multi_application
     );
 
     // *********************************************************
-    // Synchronizer for trigger pulse
+    // Synchronizers for trigger pulse, external trigger intput
     always @ (posedge adc_clk)
         begin
             ft1<= force_trig_nosync;
             ft2<= ft1;
             force_trig <= ft2;
-        end
 
+				eti1 <= ext_trig_in;
+				eti2 <= eti1;
+				ext_trig <= eti2;
+			end
+
+		  
+		  
+		  
     // *********************************************************
     // Used to switch data_valid_signals
     mux_8_to_1  data_valid_mux
@@ -759,7 +773,7 @@ module DC2390_multi_application
         .reset_n                (reset_n),
 
         .data_valid             (data_valid),
-        .trig_in                (~KEY[1]),
+        .trig_in                (~KEY[1] | (ext_trig_en & ext_trig)),
         .force_trig             (force_trig), // Pushbutton trigger
 
         .pre_trig_counter       (32'd128),
@@ -777,6 +791,9 @@ module DC2390_multi_application
     assign linduino_mosi = spi_mosi;
     assign ltc6954_sck = spi_sck;
     assign linduino_sck = spi_sck;
+
+// Some additional control signals
+wire sync_req_both, sync_req_u2, sync_req_u1, ext_trig_en;
 
     // *********************************************************
     // Initialize qsys generated system
@@ -819,7 +836,7 @@ module DC2390_multi_application
         .mem_pll_pll_locked     (),                                  //            .pll_locked
         // User registers  .output_std_ctrl_export
         .rev_type_id_export     ({FPGA_REV, FPGA_TYPE}),             // rev_type_id.export
-        .output_std_ctrl_export            ({26'b0, lut_write_enable, ltc6954_sync , gpo1, gpo0, force_trig_nosync, start }),            //          output_std_ctrl.export
+        .output_std_ctrl_export            ({22'b0, sync_req_both, sync_req_u2, sync_req_u1, ext_trig_en, lut_write_enable, ltc6954_sync , gpo1, gpo0, force_trig_nosync, start }),            //          output_std_ctrl.export
         .input_std_stat_export             ({29'b0, overflow, pll_lock, delayed_trig}),             //           input_std_stat.export
         .output_0x40_export                ({2'b0, n, cfg, 5'b0, LEDwire[0]}),                //              output_0x40.export
         .output_0x50_export                (num_samples),                //              output_0x50.export

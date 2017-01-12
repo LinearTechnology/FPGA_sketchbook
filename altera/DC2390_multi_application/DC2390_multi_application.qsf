@@ -195,8 +195,6 @@ set_location_assignment PIN_B5 -to drdyl_u1
 set_location_assignment PIN_J9 -to drdyl_u2
 set_location_assignment PIN_E11 -to mclk_u1
 set_location_assignment PIN_F10 -to mclk_u2
-set_location_assignment PIN_F11 -to pre_u1
-set_location_assignment PIN_G10 -to pre_u2
 set_location_assignment PIN_C13 -to rdl_filt_u1
 set_location_assignment PIN_F9 -to rdl_filt_u2
 set_location_assignment PIN_B12 -to rdl_u1
@@ -700,8 +698,6 @@ set_instance_assignment -name ENABLE_BENEFICIAL_SKEW_OPTIMIZATION_FOR_NON_GLOBAL
 set_instance_assignment -name PLL_COMPENSATION_MODE DIRECT -to u0|mem_if_ddr3_emif_0|pll0|fbout -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
 set_instance_assignment -name IO_STANDARD "SSTL-15" -to clk
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to adc_clk
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to pre_u1
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to pre_u2
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to rdl_filt_u1
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to rdl_filt_u2
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to rdl_u1
@@ -1022,4 +1018,9 @@ set_global_assignment -name QIP_FILE DC2390_pll.qip
 set_global_assignment -name SIP_FILE DC2390_pll.sip
 set_global_assignment -name QIP_FILE up_count_with_load.qip
 set_global_assignment -name VERILOG_FILE tb_lut_addr.v
+set_global_assignment -name TIMEQUEST_MULTICORNER_ANALYSIS ON
+set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
+set_global_assignment -name OPTIMIZATION_MODE "AGGRESSIVE PERFORMANCE"
+set_location_assignment PIN_F11 -to ext_trig_in
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to ext_trig_in
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

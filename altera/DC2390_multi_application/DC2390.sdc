@@ -8,6 +8,9 @@ create_clock -period 20.000 [get_ports clk]
 # is not a problem.
 create_clock -period 20.000 [get_ports adc_clk_in]
 
+# JTAG clock
+create_clock -name altera_reserved_tck -period 100 [get_ports altera_reserved_tck]
+
 # Virtual clock for LTC1668 DACs. Delayed by 5ns (same as advanced by 15ns)
 # such that data has an extra 5ns to meet 4ns minimum hold time.
 # STILL EXPERIMENTING WITH THIS!! The clock is currently configured for a delay
@@ -46,10 +49,12 @@ set_output_delay -clock [get_clocks ext_dac_clk] -min 4 [get_ports {DAC_*}] -add
 # enough information to do this - the phase shift of adc_clk_shift, and the propagation delay
 # of the AND gate...
 
-create_generated_clock -name sclk_u1 -source [get_pins {LTC2500_u1|sck_nyq~0|combout}]
-create_generated_clock -name sclk_u2 -source [get_pins {LTC2500_u2|sck_nyq~0|combout}]
-create_generated_clock -name sclk_filt_u1 -source [get_pins {LTC2500_u1|sck_filt~0|combout}]
-create_generated_clock -name sclk_filt_u2 -source [get_pins {LTC2500_u2|sck_filt~0|combout}]
+# WAS sck_nyq~0, sck_filt~0, got rid of ~0 after last update to controller.
+#create_generated_clock -name sclk_u1 -source [get_pins {LTC2500_u1|sck_nyq~0|combout}]
+create_generated_clock -name sclk_u1 -source [get_pins {LTC2500_u1|sck_nyq|combout}] 
+create_generated_clock -name sclk_u2 -source [get_pins {LTC2500_u2|sck_nyq|combout}]
+create_generated_clock -name sclk_filt_u1 -source [get_pins {LTC2500_u1|sck_filt|combout}]
+create_generated_clock -name sclk_filt_u2 -source [get_pins {LTC2500_u2|sck_filt|combout}]
 
 # Cut paths to generated clocks...
 set_false_path -to [get_ports sclk_u1]
@@ -79,14 +84,15 @@ set_multicycle_path -from sclk_filt_u2 -to DC2390_pll:DC2390_pll_inst|DC2390_pll
 # max delay of the LTC2380-24 is 8ns, experimenting
 # around with various delays to see if stuff can break...
 
-set_input_delay -clock sclk_u1 -max 5 [get_ports {sdo_u1}]
+# Changing from 5ns to 10ns, rev 1242
+set_input_delay -clock sclk_u1 -max 10 [get_ports {sdo_u1}]
 set_input_delay -clock sclk_u1 -min 2 [get_ports {sdo_u1}] -add_delay
-set_input_delay -clock sclk_filt_u1 -max 5 [get_ports {sdo_filt_u1}]
+set_input_delay -clock sclk_filt_u1 -max 10 [get_ports {sdo_filt_u1}]
 set_input_delay -clock sclk_filt_u1 -min 2 [get_ports {sdo_filt_u1}] -add_delay
 
-set_input_delay -clock sclk_u2 -max 5 [get_ports {sdo_u2}]
+set_input_delay -clock sclk_u2 -max 10 [get_ports {sdo_u2}]
 set_input_delay -clock sclk_u2 -min 2 [get_ports {sdo_u2}] -add_delay
-set_input_delay -clock sclk_filt_u2 -max 5 [get_ports {sdo_filt_u2}]
+set_input_delay -clock sclk_filt_u2 -max 10 [get_ports {sdo_filt_u2}]
 set_input_delay -clock sclk_filt_u2 -min 2 [get_ports {sdo_filt_u2}] -add_delay
 
 
@@ -106,6 +112,24 @@ set_false_path -from [get_pins -hierarchical {*}] -to [get_ports ltc6954_sdo]
 set_false_path -from [get_pins -hierarchical {*}] -to [get_ports gpo0]
 set_false_path -from [get_pins -hierarchical {*}] -to [get_ports gpo1]
 
+# Miscellaneous outputs
+set_false_path -from [get_pins -hierarchical {*}] -to [get_ports adc_clk_nshift_out]
+set_false_path -from [get_pins -hierarchical {*}] -to [get_ports adc_clk_out]
+set_false_path -from [get_pins -hierarchical {*}] -to [get_ports adc_clk_shift_out]
+set_false_path -from [get_pins -hierarchical {*}] -to [get_ports linduino_cs]
+set_false_path -from [get_pins -hierarchical {*}] -to [get_ports linduino_mosi]
+set_false_path -from [get_pins -hierarchical {*}] -to [get_ports linduino_sck]
+set_false_path -from [get_pins -hierarchical {*}] -to [get_ports {mclk_u*}]
+set_false_path -from [get_pins -hierarchical {*}] -to [get_ports {rdl_filt_u*}]
+set_false_path -from [get_pins -hierarchical {*}] -to [get_ports {sync_u*}]
+
+# Miscellaneous inputs
+set_false_path -from [get_ports {busy_u*}]    -to [get_pins -hierarchical {*}]
+set_false_path -from [get_ports {drdyl_u*}]    -to [get_pins -hierarchical {*}]
+set_false_path -from [get_ports ext_trig_in]    -to [get_pins -hierarchical {*}]
+set_false_path -from [get_ports linduino_miso]    -to [get_pins -hierarchical {*}]
+set_false_path -from [get_ports ltc6954_sdo]    -to [get_pins -hierarchical {*}]
+
 
 # Asynchronous I/O.
 set_false_path -from [get_ports {KEY*}]    -to [get_pins -hierarchical {*}]
@@ -119,3 +143,15 @@ set_false_path -from [get_ports scl]    -to [get_pins -hierarchical {*}]
 set_false_path -from [get_pins -hierarchical {*}] -to [get_ports sda]
 set_false_path -from [get_pins -hierarchical {*}] -to [get_ports scl]
 
+
+# *********************************************************************************
+# JTAG
+# *********************************************************************************
+# Constrain the NTRST port
+# set_input_delay -clock altera_reserved_tck 20 [get_ports altera_reserved_ntrst]
+# Constrain the TDI port
+set_input_delay -clock altera_reserved_tck 20 [get_ports altera_reserved_tdi]
+# Constrain the TMS port
+set_input_delay -clock altera_reserved_tck 20 [get_ports altera_reserved_tms]
+# Constrain the TDO port
+set_output_delay -clock altera_reserved_tck 20 [get_ports altera_reserved_tdo]
