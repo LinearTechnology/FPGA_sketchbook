@@ -145,37 +145,6 @@ set_global_assignment -name USE_DLL_FREQUENCY_FOR_DQS_DELAY_CHAIN ON
 set_global_assignment -name UNIPHY_SEQUENCER_DQS_CONFIG_ENABLE ON
 set_global_assignment -name OPTIMIZE_MULTI_CORNER_TIMING ON
 set_global_assignment -name ECO_REGENERATE_REPORT ON
-set_location_assignment PIN_D2 -to DAC_A[15]
-set_location_assignment PIN_C2 -to DAC_A[14]
-set_location_assignment PIN_B2 -to DAC_A[13]
-set_location_assignment PIN_B1 -to DAC_A[12]
-set_location_assignment PIN_A4 -to DAC_A[11]
-set_location_assignment PIN_A3 -to DAC_A[10]
-set_location_assignment PIN_A6 -to DAC_A[9]
-set_location_assignment PIN_A5 -to DAC_A[8]
-set_location_assignment PIN_C7 -to DAC_A[7]
-set_location_assignment PIN_B7 -to DAC_A[6]
-set_location_assignment PIN_C8 -to DAC_A[5]
-set_location_assignment PIN_B8 -to DAC_A[4]
-set_location_assignment PIN_C12 -to DAC_A[3]
-set_location_assignment PIN_B11 -to DAC_A[2]
-set_location_assignment PIN_B13 -to DAC_A[1]
-set_location_assignment PIN_A13 -to DAC_A[0]
-set_location_assignment PIN_A8 -to DAC_B[14]
-set_location_assignment PIN_E8 -to DAC_B[13]
-set_location_assignment PIN_D7 -to DAC_B[12]
-set_location_assignment PIN_G7 -to DAC_B[11]
-set_location_assignment PIN_F6 -to DAC_B[10]
-set_location_assignment PIN_D6 -to DAC_B[9]
-set_location_assignment PIN_C5 -to DAC_B[8]
-set_location_assignment PIN_D5 -to DAC_B[7]
-set_location_assignment PIN_C4 -to DAC_B[6]
-set_location_assignment PIN_E3 -to DAC_B[5]
-set_location_assignment PIN_E2 -to DAC_B[4]
-set_location_assignment PIN_E4 -to DAC_B[3]
-set_location_assignment PIN_D4 -to DAC_B[2]
-set_location_assignment PIN_C3 -to DAC_B[1]
-set_location_assignment PIN_B3 -to DAC_B[0]
 set_global_assignment -name ENABLE_OCT_DONE OFF
 set_global_assignment -name ENABLE_CONFIGURATION_PINS OFF
 set_global_assignment -name ENABLE_BOOT_SEL_PIN OFF
@@ -193,9 +162,7 @@ set_location_assignment PIN_AD9 -to KEY[2]
 set_location_assignment PIN_AE12 -to KEY[1]
 set_global_assignment -name ENABLE_SIGNALTAP OFF
 set_global_assignment -name USE_SIGNALTAP_FILE stp1.stp
-set_location_assignment PIN_A9 -to adc_clk_out
 set_location_assignment PIN_AA26 -to adc_clk_in
-set_location_assignment PIN_F15 -to adc_clk_nshift_out
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
@@ -561,70 +528,6 @@ set_instance_assignment -name GLOBAL_SIGNAL OFF -to soc_system|hps_0|hps_io|bord
 set_instance_assignment -name GLOBAL_SIGNAL OFF -to soc_system|hps_0|hps_io|border|hps_sdram_inst|p0|umemphy|uread_datapath|reset_n_fifo_wraddress[3] -tag __hps_sdram_p0
 set_instance_assignment -name ENABLE_BENEFICIAL_SKEW_OPTIMIZATION_FOR_NON_GLOBAL_CLOCKS ON -to soc_system|hps_0|hps_io|border|hps_sdram_inst -tag __hps_sdram_p0
 set_instance_assignment -name PLL_COMPENSATION_MODE DIRECT -to soc_system|hps_0|hps_io|border|hps_sdram_inst|pll0|fbout -tag __hps_sdram_p0
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_A[15]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_A[14]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_A[13]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_A[12]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_A[11]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_A[10]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_A[9]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_A[8]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_A[7]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_A[6]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_A[5]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_A[4]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_A[3]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_A[2]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_A[1]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_A[0]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_B[15]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_B[14]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_B[13]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_B[12]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_B[11]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_B[10]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_B[9]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_B[8]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_B[7]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_B[6]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_B[5]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_B[4]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_B[3]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_B[2]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_B[1]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to DAC_B[0]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_A[15]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_A[14]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_A[13]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_A[12]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_A[11]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_A[10]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_A[9]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_A[8]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_A[7]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_A[6]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_A[5]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_A[4]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_A[3]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_A[2]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_A[1]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_A[0]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_B[15]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_B[14]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_B[13]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_B[12]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_B[11]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_B[10]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_B[9]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_B[8]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_B[7]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_B[6]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_B[5]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_B[4]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_B[3]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_B[2]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_B[1]
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to DAC_B[0]
 set_instance_assignment -name GLOBAL_SIGNAL "GLOBAL CLOCK" -to u0|mem_if_ddr3_emif_0|pll0|pll_afi_clk -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
 set_instance_assignment -name GLOBAL_SIGNAL "DUAL-REGIONAL CLOCK" -to u0|mem_if_ddr3_emif_0|pll0|pll_addr_cmd_clk -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
 set_instance_assignment -name GLOBAL_SIGNAL "DUAL-REGIONAL CLOCK" -to u0|mem_if_ddr3_emif_0|pll0|pll_avl_clk -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
@@ -881,10 +784,7 @@ set_instance_assignment -name GLOBAL_SIGNAL OFF -to LTQsys_blob2_inst|hps_0|hps_
 set_instance_assignment -name GLOBAL_SIGNAL OFF -to LTQsys_blob2_inst|hps_0|hps_io|border|hps_sdram_inst|p0|umemphy|uread_datapath|reset_n_fifo_wraddress[3] -tag __hps_sdram_p0
 set_instance_assignment -name ENABLE_BENEFICIAL_SKEW_OPTIMIZATION_FOR_NON_GLOBAL_CLOCKS ON -to LTQsys_blob2_inst|hps_0|hps_io|border|hps_sdram_inst -tag __hps_sdram_p0
 set_instance_assignment -name PLL_COMPENSATION_MODE DIRECT -to LTQsys_blob2_inst|hps_0|hps_io|border|hps_sdram_inst|pll0|fbout -tag __hps_sdram_p0
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to adc_clk_out
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to adc_clk_in
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to adc_clk_nshift_out
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to adc_clk_shift_out
 set_location_assignment PIN_C9 -to linduino_cs
 set_location_assignment PIN_H12 -to linduino_miso
 set_location_assignment PIN_H13 -to linduino_mosi
@@ -965,6 +865,13 @@ set_instance_assignment -name GLOBAL_SIGNAL OFF -to LTQsys_blob2_inst|mem_if_ddr
 set_instance_assignment -name GLOBAL_SIGNAL OFF -to LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[1].read_capture_clk_buffer -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
 set_instance_assignment -name GLOBAL_SIGNAL OFF -to LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[2].read_capture_clk_buffer -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
 set_instance_assignment -name GLOBAL_SIGNAL OFF -to LTQsys_blob2_inst|mem_if_ddr3_emif_0|p0|umemphy|uio_pads|dq_ddio[3].read_capture_clk_buffer -tag __LTQsys_blob2_mem_if_ddr3_emif_0_p0
+set_location_assignment PIN_AA28 -to scl
+set_location_assignment PIN_AE29 -to sda
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to scl
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sda
+set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to scl
+set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to sda
+set_global_assignment -name VERILOG_FILE cmos_32bit_capture.v
 set_global_assignment -name QSYS_FILE cic_variable_filter.qsys
 set_global_assignment -name VERILOG_FILE ../../LT_Modules/misc/overflow_det.v
 set_global_assignment -name VERILOG_FILE upcount_32/upcount_32.v
@@ -992,6 +899,4 @@ set_global_assignment -name QIP_FILE nyq_formatter.qip
 set_global_assignment -name SIGNALTAP_FILE stp1.stp
 set_global_assignment -name QIP_FILE data_valid_mux.qip
 set_global_assignment -name QIP_FILE mux_8_to_1.qip
-set_global_assignment -name QIP_FILE up_count_with_load.qip
-set_global_assignment -name VERILOG_FILE tb_lut_addr.v
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

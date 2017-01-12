@@ -46,9 +46,9 @@ module cmos_32bit_capture
     input           adc_clk_in,
     input   [3:0]   KEY ,                   // Keys are normally high, low when pressed
     output  [3:0]   LED,                    // HIGH to turn ON
-    output          adc_clk_out,            // Raw ADC out
-    output          adc_clk_nshift_out,     // PLL clock out 0 deg shift
-    output          adc_clk_shift_out,      // PLL clock out -90 deg shift
+
+	 inout sda,  //PIN_AE29
+	 inout scl,  //PIN_AA28
 
     // ///////// DDR3 /////////
     output  [14:0]  fpga_memory_mem_a,          // fpga_memory.mem_a
@@ -86,9 +86,6 @@ module cmos_32bit_capture
     output  [4:0]   hps_memory_mem_dm,
     input           hps_memory_oct_rzqin,
 
-    ////// DACs ////////////
-    output  [15:0]  DAC_A,
-    output  [15:0]  DAC_B,
 	 
 	 input [31:0]     adc_data, // 32-bit CMOS data bus
 
@@ -105,10 +102,12 @@ module cmos_32bit_capture
     // Parameters
 
     parameter       FPGA_TYPE = 16'h0001; // FPGA project type identification. Accessible from register map.
-    parameter       FPGA_REV = 16'h0102;  // FPGA revision (also accessible from register.)
+    parameter       FPGA_REV = 16'h0104;  // FPGA revision (also accessible from register.)
 	 // Revision History
 	 // 0101: Initial release
 	 // 0102: Add CIC filter, edge control via a signal from blob rather than a different MUX input
+    // 0103: Add I2C port
+	 // 0104: Port cleanup, constraint cleanup
 
     // *********************************************************
     // Internal Signal Declaration
@@ -204,6 +203,7 @@ module cmos_32bit_capture
     assign reset = !KEY[0];
     assign reset_n = ~reset;
 //    assign overflow = wrfull | wrfull_nyq;
+	 assign adc_clk = adc_clk_in; // Assign clock to the one and only ADC clock
 
 	overflow_det overflow_detector_1
 	(
@@ -246,11 +246,6 @@ module cmos_32bit_capture
             adc_data_reg <= adc_data_reg_negedge;
         end		
 		  
-	 
-    assign DAC_A = 16'b0; // Tie off.
-    assign DAC_B = 16'b0;
-
-	 assign adc_clk = adc_clk_in; // Assign clock to the one and only ADC clock
 
     // *********************************************************
     // Create single trigger pulse from force_trig's posedge
@@ -467,8 +462,26 @@ wire cic_valid;
         .ltscope_controller_read_go         (1'b0),         //                             .read_go
         .ltscope_controller_read_start_addr (32'b0), //                             .read_start_addr
         .ltscope_controller_read_length     (32'b0),     //                             .read_length
-        .ltscope_controller_read_done       (1'bz)        //                             .read_done
+        .ltscope_controller_read_done       (1'bz),        //                             .read_done
+		.i2c_outputs_export                 ({30'bz, scl_out, sda_out}),                 //        i2c_outputs.export
+        .i2c_inputs_export                  ({30'b0, scl_in,  sda_in}) 
           );
+
+wire sda_in, sda_out, scl_in, scl_out;
+			 
+tristate_iobuf	tristate_iobuf_sda (
+	.datain ( 1'b0 ), // Data INTO the IO primitive... zero to emulate open-drain
+	.oe ( ~sda_out ), // LOW to enable!!
+	.dataio ( sda ), // The actual SDA pin
+	.dataout ( sda_in ) // The state of the SDA signal
+	);
+tristate_iobuf	tristate_iobuf_scl (
+	.datain ( 1'b0 ), // Data INTO the IO primitive... zero to emulate open-drain
+	.oe ( ~scl_out ), // LOW to enable!!
+	.dataio ( scl ),// The actual SCL pin
+	.dataout ( scl_in ) // The actual state of the SCL signal
+	);	
+
 
 endmodule
 
