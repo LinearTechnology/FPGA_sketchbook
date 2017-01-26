@@ -136,18 +136,17 @@ module DC2390_reverb
     // Parameters
 
     parameter       FPGA_TYPE = 16'h0002; // FPGA project type identification. Accessible from register map.
-    parameter       FPGA_REV = 16'h0105;  // FPGA revision (also accessible from register.)
+    parameter       FPGA_REV = 16'h0106;  // FPGA revision (also accessible from register.)
 	 // Revision history:
 	 // Rev 01 04 - Working!!! incuding infinite sustain.
 	 // Rev 0105 - Experimenting with constraints... DAC mostly.
+	 // Rev 0106 - Update ADC bitfield for new silicon.
 	 
 	 
 	 parameter   NYQ_TRUNK_VALUE = 32;
     parameter   FILT_TRUNK_VALUE = 54;
     parameter   NUM_OF_CLK_PER_BSY = 34;
-    // 123B: PLL lock status, alternate sources for PID setpoint.
-	 // 123D: Overflow detector logic, changed counter pattern to a 32-bit up counter
-	 // 123E: Rebuilding with updated LTC2500 controller (see SVN log...)
+
 
     // *********************************************************
     // Internal Signal Declaration
@@ -403,8 +402,8 @@ mult_16x16_eq_32	echo_gain_mult (
 	
 	
 
-assign lut_data_in = adcB_data[31:16] + fb[30:15]; // Select proper bits from multiplier output here...
-assign reverb_out = adcB_data[31:16] + echo[30:15]; // 
+assign lut_data_in = adcB_data[30:15] + fb[30:15]; // Select proper bits from multiplier output here...
+assign reverb_out = adcB_data[30:15] + echo[30:15]; // UPDATED for final silicon, bit 31 is OVERRANGE detect.
 
     // *********************************************************
     // Lookup table (16x16)
