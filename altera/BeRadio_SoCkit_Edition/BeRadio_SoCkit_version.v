@@ -224,7 +224,7 @@ end
 
 // Internal reset is the MSB of the counter. CHANGED to coming straight from KEY[0]
 assign reset_n = KEY[0]; //rstcount[22];
-assign reset = reset_n;
+assign reset = ~reset_n;
 //    assign reset_n = ~reset;
 //    assign overflow = wrfull | wrfull_nyq;
 
@@ -870,7 +870,7 @@ assign adc_go = 1'b1; // For CMOS capture, assume we're always a GO!
     LTQsys_blob2 LTQsys_blob2_inst
     (
         .clk_clk                (clk),                               //         clk.clk
-        .reset_reset_n          (!reset),                            //       reset.reset_n
+        .reset_reset_n          (reset_n),                            //       reset.reset_n
         .hps_memory_mem_a       (hps_memory_mem_a),                  //  hps_memory.mem_a
         .hps_memory_mem_ba      (hps_memory_mem_ba),                 //            .mem_ba
         .hps_memory_mem_ck      (hps_memory_mem_ck),                 //            .mem_ck
@@ -938,7 +938,7 @@ assign adc_go = 1'b1; // For CMOS capture, assume we're always a GO!
         .ltscope_controller_read_start_addr (32'b0), //                             .read_start_addr
         .ltscope_controller_read_length     (32'b0),     //                             .read_length
         .ltscope_controller_read_done       (1'bz),        //                             .read_done
-		  .i2c_outputs_export                 ({30'bz, scl_out, sda_out}),                 //        i2c_outputs.export
+		.i2c_outputs_export                 ({30'bz, scl_out, sda_out}),                 //        i2c_outputs.export
         .i2c_inputs_export                  ({30'b0, scl_in,  sda_in}) 
           );
 
